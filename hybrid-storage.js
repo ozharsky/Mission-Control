@@ -107,26 +107,30 @@ class HybridStorage {
     // Don't backup if recently backed up
     if (Date.now() - this.lastBackup < 60000) return; // Min 1 min between backups
     
+    const path = 'data/mc-data.json';
+    const apiBase = 'https://api.github.com';
+    const branch = 'main'; // Your repo uses 'main'
+    
     try {
-      const path = 'data/mc-data.json';
-      const apiBase = 'https://api.github.com';
-      
-      // Get current file SHA
-      const getRes = await fetch(`${apiBase}/repos/${this.githubOwner}/${this.githubRepo}/contents/${path}`, {
-        headers: { 'Authorization': `token ${this.githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      
+      // Get current file SHA (may not exist)
       let sha = null;
-      if (getRes.ok) {
-        const fileInfo = await getRes.json();
-        sha = fileInfo.sha;
+      try {
+        const getRes = await fetch(`${apiBase}/repos/${this.githubOwner}/${this.githubRepo}/contents/${path}?ref=${branch}`, {
+          headers: { 'Authorization': `token ${this.githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (getRes.ok) {
+          const fileInfo = await getRes.json();
+          sha = fileInfo.sha;
+        }
+      } catch (e) {
+        // File doesn't exist yet
       }
       
       // Create/update file
       const body = {
         message: `Auto-backup: ${new Date().toISOString()}`,
         content: btoa(JSON.stringify(this.data, null, 2)),
-        branch: 'master'
+        branch: branch
       };
       if (sha) body.sha = sha;
       
@@ -155,23 +159,28 @@ class HybridStorage {
     
     const path = 'data/mc-data.json';
     const apiBase = 'https://api.github.com';
+    const branch = 'main'; // Your repo uses 'main' not 'master'
     
-    // Get current SHA
-    const getRes = await fetch(`${apiBase}/repos/${this.githubOwner}/${this.githubRepo}/contents/${path}`, {
-      headers: { 'Authorization': `token ${this.githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
-    });
-    
+    // Get current SHA (file may not exist yet)
     let sha = null;
-    if (getRes.ok) {
-      const fileInfo = await getRes.json();
-      sha = fileInfo.sha;
+    try {
+      const getRes = await fetch(`${apiBase}/repos/${this.githubOwner}/${this.githubRepo}/contents/${path}?ref=${branch}`, {
+        headers: { 'Authorization': `token ${this.githubToken}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (getRes.ok) {
+        const fileInfo = await getRes.json();
+        sha = fileInfo.sha;
+      }
+    } catch (e) {
+      // File doesn't exist, that's ok - we'll create it
+      console.log('File does not exist yet, creating new...');
     }
     
     // Create commit
     const body = {
       message: `Snapshot: ${message} - ${new Date().toISOString()}`,
       content: btoa(JSON.stringify(this.data, null, 2)),
-      branch: 'master'
+      branch: branch
     };
     if (sha) body.sha = sha;
     
