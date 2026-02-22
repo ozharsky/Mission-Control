@@ -257,7 +257,7 @@
             <div class="header-time" id="liveClock">--:--</div>
             <div class="header-weather" id="weatherDisplay">🌡️ --°F --</div>
         </div>
-        <div class="status">
+        <div class="status" onclick="openGitHubModal()" style="cursor: pointer;" title="Click to configure GitHub sync">
             <span class="status-dot" id="statusDot"></span>
             <span id="statusText">Connecting...</span>
         </div>
@@ -443,100 +443,100 @@
     
     <div class="toast" id="toast"></div>
     
+    <!-- GitHub Settings Modal -->
+    <div id="githubModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 400px; width: 90%;">
+            <h3 style="margin-bottom: 1rem;">🔗 GitHub Settings</h3>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Connect to GitHub for cloud sync and version control.</p>
+            <input type="text" id="ghOwner" placeholder="GitHub Username" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.75rem;">
+            <input type="text" id="ghRepo" placeholder="Repository Name" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.75rem;">
+            <input type="password" id="ghToken" placeholder="Personal Access Token" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 1rem;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn" onclick="saveGitHubSettings()" style="flex: 1;">Save</button>
+                <button class="btn" onclick="closeGitHubModal()" style="background: transparent; color: var(--text);">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="github-storage.js"></script>
     <script>
         // Data
-        let data = {
-            orders: 125, ordersTarget: 150, revenueGoal: 5400, totalRevenue: 3248.80,
-            revenueHistory: [
-                { month: 'Sep 2025', revenue: 198.48, orders: 12 },
-                { month: 'Oct 2025', revenue: 12.00, orders: 1 },
-                { month: 'Nov 2025', revenue: 107.12, orders: 5 },
-                { month: 'Dec 2025', revenue: 582.69, orders: 25 },
-                { month: 'Jan 2026', revenue: 110.45, orders: 4 },
-                { month: 'Feb 2026', revenue: 398.50, orders: 6 }
-            ],
-            priorities: [
-                { id: 1, text: "Update Etsy SEO", completed: false, tags: ["urgent", "seo"], dueDate: "2026-02-24", board: "etsy" },
-                { id: 2, text: "Follow up on NYC event quote", completed: false, tags: ["urgent", "client"], dueDate: "2026-02-26", board: "photography" },
-                { id: 3, text: "Research magnetic closure cases", completed: false, tags: ["research"], dueDate: "2026-03-05", board: "etsy" },
-                { id: 4, text: "Apply for Artist Trust GAP Grant", completed: false, tags: ["grant", "photo"], dueDate: "2026-03-15", board: "photography" },
-                { id: 5, text: "Create 4 bundle listings", completed: false, tags: ["listing", "urgent"], dueDate: "2026-02-28", board: "etsy" },
-                { id: 6, text: "Build wholesale lead list", completed: false, tags: ["wholesale"], dueDate: "2026-03-01", board: "wholesale" },
-                { id: 7, text: "Deploy website to Vercel", completed: true, tags: ["website"], dueDate: "2026-02-22", board: "marketing" },
-                { id: 8, text: "Build Mission Control dashboard", completed: true, tags: ["operations"], dueDate: "2026-02-22", board: "all" },
-                { id: 9, text: "Create 79-SKU system", completed: true, tags: ["operations"], dueDate: "2026-02-20", board: "etsy" },
-                { id: 10, text: "Optimize 7 Etsy listings", completed: true, tags: ["seo"], dueDate: "2026-02-21", board: "etsy" },
-                { id: 11, text: "Create B2B wholesale strategy", completed: true, tags: ["strategy", "wholesale"], dueDate: "2026-02-18", board: "wholesale" }
-            ],
-            projects: {
-                backlog: [
-                    { id: 101, title: "Create 4 bundle listings", desc: "Multi-color matched pairs", tags: ["listing", "etsy"], board: "etsy" },
-                    { id: 102, title: "Apply for Artist Trust GAP Grant", desc: "$1,500 photography grant", tags: ["grant", "photo"], board: "photography" },
-                    { id: 103, title: "Build Nicotine Pouch Calculator", desc: "Lead generation tool", tags: ["marketing"], board: "marketing" }
-                ],
-                inprogress: [
-                    { id: 201, title: "Update Etsy SEO", desc: "Add Made in USA, new keywords", tags: ["urgent", "seo", "etsy"], board: "etsy" },
-                    { id: 202, title: "Follow up on NYC event quote", desc: "$7,500-9,000 photography job", tags: ["urgent", "client", "photo"], board: "photography" }
-                ],
-                done: [
-                    { id: 301, title: "Optimize 7 Etsy listings", desc: "Removed 3D printed, added Precision-crafted", tags: ["seo", "etsy"], board: "etsy" },
-                    { id: 302, title: "Create NYC event quote", desc: "HTML quote page for client", tags: ["client", "photo"], board: "photography" },
-                    { id: 303, title: "Create SKU system", desc: "79 SKUs (XXX-CC-V format)", tags: ["operations", "etsy"], board: "etsy" }
-                ]
-            },
-            leads: [
-                { id: 1, name: "Soulshine Cannabis", company: "Cannabis Producer", status: "new", value: 2500, notes: "Renton, WA" },
-                { id: 2, name: "Uncle Ike's", company: "Dispensary Chain", status: "new", value: 1500, notes: "Seattle locations" },
-                { id: 3, name: "Phat Panda", company: "Cannabis Brand", status: "new", value: 5000, notes: "WA #1 brand" }
-            ],
-            events: [
-                { id: 1, name: "Emerald Cup Bellevue", date: "2026-04-24", type: "cannabis", location: "Bellevue, WA" },
-                { id: 2, name: "Hall of Flowers Ventura", date: "2026-03-18", type: "cannabis", location: "Ventura, CA" },
-                { id: 3, name: "MJBizCon 2026", date: "2026-12-01", type: "cannabis", location: "Las Vegas, NV" }
-            ],
-            timeline: [
-                { id: 1, title: "Foundation Phase", date: "Jan-Feb 2026", desc: "Core systems", status: "completed", milestones: [{ text: "Launch website", completed: true }, { text: "Create SKU system", completed: true }] },
-                { id: 2, title: "Growth Phase", date: "Mar-Apr 2026", desc: "Scale operations", status: "active", milestones: [{ text: "Reach 15 orders/month", completed: false }, { text: "Launch bundles", completed: false }] },
-                { id: 3, title: "Scale Phase", date: "May 2026+", desc: "Hit targets", status: "pending", milestones: [{ text: "Reach 20 orders/month", completed: false }] }
-            ],
-            documents: [
-                { name: "Etsy Listings FINAL", path: "02-Etsy-Shop/listings/etsy-listings-FINAL.md", category: "Etsy" },
-                { name: "B2B Wholesale Strategy", path: "05-Strategy-Docs/b2b-wholesale/b2b-wholesale-strategy.md", category: "Strategy" },
-                { name: "NYC Event Quote", path: "03-Photography-Business/quotes/quote-nyc-event-v3.html", category: "Photography" }
-            ],
-            printers: [
-                { name: "P2S", status: "operational", temp: 16 },
-                { name: "P1S", status: "operational", temp: 18 },
-                { name: "Centauri Carbon", status: "operational", temp: 19 }
-            ],
-            skus: [
-                { code: "MRC-BK-01", name: "Mini Round Black", stock: 5 },
-                { code: "MRC-WH-01", name: "Mini Round White", stock: 3 },
-                { code: "6TD-BK-01", name: "6-Tin Dispenser", stock: 2 }
-            ],
-            notes: ''
-        };
-        
+        let data = {};
         let currentBoard = 'all';
         let serverOnline = false;
+        let githubStorage = new GitHubStorage();
         
         // Load data
         async function loadData() {
-            const local = localStorage.getItem('mc-data');
-            if (local) try { data = { ...data, ...JSON.parse(local) }; } catch (e) {}
+            // Try GitHub first
+            if (githubStorage.isConfigured()) {
+                try {
+                    data = await githubStorage.loadData();
+                    serverOnline = true;
+                    updateStatus(true, 'github');
+                    renderAll();
+                    showToast('📥 Loaded from GitHub');
+                    return;
+                } catch (e) {
+                    console.log('GitHub load failed:', e);
+                }
+            }
             
+            // Try local server
             try {
                 const res = await fetch('/mc/data');
                 if (res.ok) {
-                    const server = await res.json();
-                    data = { ...data, ...server };
+                    data = await res.json();
                     serverOnline = true;
+                    updateStatus(true, 'local');
+                    renderAll();
+                    return;
                 }
-            } catch (e) { serverOnline = false; }
+            } catch (e) {
+                serverOnline = false;
+            }
             
-            updateStatus(serverOnline);
+            // Fallback to localStorage
+            const local = localStorage.getItem('mc-data');
+            if (local) {
+                try {
+                    data = JSON.parse(local);
+                } catch (e) {
+                    data = getDefaultData();
+                }
+            } else {
+                data = getDefaultData();
+            }
+            
+            updateStatus(false);
             renderAll();
-            fetchWeather();
+        }
+        
+        // Default data
+        function getDefaultData() {
+            return {
+                orders: 125, ordersTarget: 150, goalDate: '2026-05-01', revenueGoal: 5400, totalRevenue: 3248.80,
+                revenueHistory: [
+                    { month: 'Sep 2025', revenue: 198.48, orders: 12 },
+                    { month: 'Oct 2025', revenue: 12.00, orders: 1 },
+                    { month: 'Nov 2025', revenue: 107.12, orders: 5 },
+                    { month: 'Dec 2025', revenue: 582.69, orders: 25 },
+                    { month: 'Jan 2026', revenue: 110.45, orders: 4 },
+                    { month: 'Feb 2026', revenue: 398.50, orders: 6 }
+                ],
+                priorities: [
+                    { id: 1, text: "Update Etsy SEO", completed: false, tags: ["urgent", "seo"], dueDate: "2026-02-24", board: "etsy" },
+                    { id: 2, text: "Follow up on NYC event quote", completed: false, tags: ["urgent", "client"], dueDate: "2026-02-26", board: "photography" }
+                ],
+                projects: { backlog: [], inprogress: [], done: [] },
+                timeline: [],
+                leads: [],
+                events: [],
+                documents: [],
+                printers: [],
+                skus: [],
+                notes: ''
+            };
         }
         
         // Weather for Kent, WA
@@ -786,14 +786,74 @@
         
         function saveData() {
             localStorage.setItem('mc-data', JSON.stringify(data));
+            
+            // Try GitHub first
+            if (githubStorage.isConfigured()) {
+                githubStorage.saveData(data).then(() => {
+                    showToast('☁️ Saved to GitHub');
+                }).catch(e => {
+                    console.log('GitHub save failed:', e);
+                });
+                return;
+            }
+            
+            // Try local server
             if (serverOnline) {
-                fetch('/mc/data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).catch(() => {});
+                fetch('/mc/data', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(data) 
+                }).catch(() => {});
             }
         }
         
-        function updateStatus(online) {
-            document.getElementById('statusDot').className = online ? 'status-dot' : 'status-dot offline';
-            document.getElementById('statusText').textContent = online ? 'Server Online' : 'Offline';
+        function updateStatus(online, source = 'local') {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            
+            if (online) {
+                dot.className = 'status-dot';
+                text.textContent = source === 'github' ? 'GitHub Sync' : 'Server Online';
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Offline (Local)';
+            }
+        }
+        
+        // GitHub Settings
+        function openGitHubModal() {
+            document.getElementById('ghOwner').value = localStorage.getItem('github_owner') || '';
+            document.getElementById('ghRepo').value = localStorage.getItem('github_repo') || '';
+            document.getElementById('githubModal').style.display = 'flex';
+        }
+        
+        function closeGitHubModal() {
+            document.getElementById('githubModal').style.display = 'none';
+        }
+        
+        async function saveGitHubSettings() {
+            const owner = document.getElementById('ghOwner').value.trim();
+            const repo = document.getElementById('ghRepo').value.trim();
+            const token = document.getElementById('ghToken').value.trim();
+            
+            if (!owner || !repo || !token) {
+                showToast('❌ All fields required');
+                return;
+            }
+            
+            githubStorage = new GitHubStorage({ owner, repo, token });
+            githubStorage.saveConfig();
+            
+            closeGitHubModal();
+            showToast('🔗 Testing connection...');
+            
+            try {
+                await githubStorage.loadData();
+                showToast('✅ GitHub connected');
+                loadData();
+            } catch (e) {
+                showToast('❌ Connection failed: ' + e.message);
+            }
         }
         
         function showToast(msg) {

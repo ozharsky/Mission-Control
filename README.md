@@ -1,164 +1,144 @@
-# Mission Control - Quick Start Guide
+# Mission Control
 
-## Download Location
-Save the `00-Mission-Control` folder to your **Downloads**:
+**Central command for OZ3DPrint business operations.**
+
+Live Dashboard: https://ozharsky.github.io/mission-control/
+
+## Overview
+
+Mission Control is a self-contained business operations dashboard with:
+- 📊 Real-time metrics (orders, revenue, goals)
+- 📋 Kanban project management
+- ⭐ Priority tracking with due dates
+- 🗓️ Business timeline with milestones
+- 🎯 Lead management
+- 🖨️ 3D printer status (via SimplyPrint API)
+- 💾 GitHub-powered data persistence
+
+## Architecture
+
 ```
-/Users/YOUR_USERNAME/Downloads/00-Mission-Control/
-```
-
-## Option 1: Just Open the Dashboard (No Server)
-
-Double-click `mission-control.html` or:
-```bash
-open ~/Downloads/00-Mission-Control/mission-control.html
-```
-
-Works offline with localStorage.
-
----
-
-## Option 2: Run With Server (Live Data + Backup)
-
-### Step 1: Update the Path
-
-**Edit the plist file** - replace `YOUR_USERNAME` with your actual Mac username:
-
-```bash
-# Find your username
-whoami  # e.g., "oleg"
-
-# Edit the plist (replace YOUR_USERNAME with the result above)
-open ~/Downloads/00-Mission-Control/com.missioncontrol.server.plist
-```
-
-In the file, replace all instances of `YOUR_USERNAME` with your actual username.
-
-### Step 2: Start the Server
-
-```bash
-cd ~/Downloads/00-Mission-Control
-node server.mjs
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   Browser       │────▶│  GitHub Pages   │────▶│  Static HTML    │
+│   (User)        │     │  (Hosting)      │     │  (Dashboard)    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+         │                                               │
+         │                                               │
+         ▼                                               ▼
+┌─────────────────┐                          ┌─────────────────┐
+│  GitHub API     │◀─────────────────────────│  GitHub Repo    │
+│  (Data Storage) │                          │  (JSON Files)   │
+└─────────────────┘                          └─────────────────┘
 ```
 
-### Step 3: Open Dashboard
+## Data Flow
 
-Go to: **http://localhost:8899**
+1. **Dashboard** loads from GitHub API (or localStorage fallback)
+2. **User actions** update local state immediately
+3. **Auto-save** pushes changes to GitHub API
+4. **Version history** maintained via Git commits
 
----
+## Setup
 
-## Auto-Start on Login (macOS)
-
-### One-time setup:
+### 1. Fork/Clone this repo
 
 ```bash
-# 1. Go to the folder
-cd ~/Downloads/00-Mission-Control
-
-# 2. Create logs folder
-mkdir -p logs
-
-# 3. Get your username
-USERNAME=$(whoami)
-
-# 4. Replace placeholder in plist
-sed "s/YOUR_USERNAME/$USERNAME/g" com.missioncontrol.server.plist > ~/Library/LaunchAgents/com.missioncontrol.server.plist
-
-# 5. Load the LaunchAgent
-launchctl load ~/Library/LaunchAgents/com.missioncontrol.server.plist
-
-echo "✅ Mission Control will auto-start on login"
+git clone https://github.com/ozharsky/mission-control.git
+cd mission-control
 ```
 
-### Check if it's running:
-```bash
-launchctl list | grep missioncontrol
-```
+### 2. Configure GitHub Token
 
-### Stop the server:
-```bash
-launchctl stop com.missioncontrol.server
-```
+1. Go to GitHub → Settings → Developer settings → Personal access tokens
+2. Generate new token with `repo` scope
+3. Open dashboard → Settings → Enter token
 
-### Start it again:
-```bash
-launchctl start com.missioncontrol.server
-```
+### 3. Enable GitHub Pages
 
-### Disable auto-start:
-```bash
-launchctl unload ~/Library/LaunchAgents/com.missioncontrol.server.plist
-```
+1. Repo Settings → Pages
+2. Source: Deploy from a branch
+3. Branch: main / (root)
+4. Save
 
----
-
-## Manual Path Setup (If Auto Doesn't Work)
-
-If the sed command doesn't work, manually edit `com.missioncontrol.server.plist`:
-
-Find and replace:
-- `YOUR_USERNAME` → your actual username (e.g., `oleg`)
-
-So paths look like:
-```
-/Users/oleg/Downloads/00-Mission-Control/server.mjs
-```
-
-Then run:
-```bash
-cp ~/Downloads/00-Mission-Control/com.missioncontrol.server.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.missioncontrol.server.plist
-```
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| "Permission denied" | Run `chmod +x server.mjs` |
-| "Port 8899 in use" | `lsof -i :8899` then `kill -9 <PID>` |
-| "Cannot find module" | Make sure you're in `~/Downloads/00-Mission-Control` |
-| Weather not showing | Check internet connection |
-| Auto-start not working | Verify username in plist file is correct |
-
----
-
-## File Structure (in Downloads)
-
-```
-~/Downloads/00-Mission-Control/
-├── mission-control.html      ← Open this (or go to localhost:8899)
-├── server.mjs                ← Run this: node server.mjs
-├── com.missioncontrol.server.plist  ← Auto-start config
-├── README.md                 ← This file
-├── mc-data.json              ← Auto-created
-├── mc-activity.json          ← Auto-created
-└── logs/                     ← Auto-created
-    ├── server.out.log
-    └── server.err.log
-```
-
----
-
-## Quick Commands Reference
+## Local Development
 
 ```bash
-# Start server manually
-cd ~/Downloads/00-Mission-Control && node server.mjs
+# Start local server
+python3 -m http.server 8000
 
-# View logs
-tail -f ~/Downloads/00-Mission-Control/logs/server.out.log
-
-# Check server status
-curl http://localhost:8899/mc/status
-
-# Stop auto-start server
-launchctl stop com.missioncontrol.server
-
-# Start auto-start server
-launchctl start com.missioncontrol.server
+# Or with Node
+npx serve .
 ```
 
----
+Visit http://localhost:8000
 
-**Questions?** Check `README-SERVER.md` for full API documentation.
+## Data Structure
+
+All data stored in `data/` directory:
+
+- `mc-data.json` - Main dashboard data
+- `mc-activity.json` - Activity log
+
+### Schema
+
+```json
+{
+  "orders": 125,
+  "ordersTarget": 150,
+  "revenueGoal": 5400,
+  "totalRevenue": 3248.80,
+  "revenueHistory": [...],
+  "priorities": [...],
+  "projects": {
+    "backlog": [...],
+    "inprogress": [...],
+    "done": [...]
+  },
+  "timeline": [...],
+  "leads": [...],
+  "events": [...]
+}
+```
+
+## API Endpoints (GitHub)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/repos/{owner}/{repo}/contents/data/mc-data.json` | Load data |
+| PUT | `/repos/{owner}/{repo}/contents/data/mc-data.json` | Save data |
+| GET | `/repos/{owner}/{repo}/contents/data/mc-activity.json` | Load activity |
+| PUT | `/repos/{owner}/{repo}/contents/data/mc-activity.json` | Save activity |
+
+## Features
+
+- ✅ **Zero backend** - Pure client-side + GitHub API
+- ✅ **Version control** - Every change is a commit
+- ✅ **Free hosting** - GitHub Pages
+- ✅ **Offline support** - localStorage fallback
+- ✅ **Cross-device sync** - Access from anywhere
+- ✅ **Private data** - Token-based access control
+
+## File Structure
+
+```
+mission-control/
+├── index.html              # Main dashboard
+├── github-storage.js       # GitHub API adapter
+├── data/
+│   ├── mc-data.json       # Main data file
+│   └── mc-activity.json   # Activity log
+├── server.mjs             # Optional local server
+├── printer-api.py         # SimplyPrint integration
+└── README.md
+```
+
+## Security Notes
+
+- GitHub token stored in browser localStorage
+- Use fine-grained tokens with minimal permissions
+- Repo can be private for data privacy
+- Token never sent to third-party servers
+
+## License
+
+MIT - Free to use and modify.
