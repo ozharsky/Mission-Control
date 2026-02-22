@@ -443,73 +443,66 @@
     
     <div class="toast" id="toast"></div>
     
-    <!-- GitHub Settings Modal -->
+    <!-- Settings Modal -->
     <div id="githubModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 400px; width: 90%;">
-            <h3 style="margin-bottom: 1rem;">🔗 GitHub Settings</h3>
-            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Connect to GitHub for cloud sync and version control.</p>
-            <input type="text" id="ghOwner" placeholder="GitHub Username" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.75rem;">
-            <input type="text" id="ghRepo" placeholder="Repository Name" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.75rem;">
-            <input type="password" id="ghToken" placeholder="Personal Access Token" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 1rem;">
+        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 450px; width: 90%; max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin-bottom: 1rem;">⚙️ Mission Control Settings</h3>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">🔥 Firebase (Real-time)</h4>
+                <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.75rem;">For instant sync between devices. Get secret from Firebase Project Settings.</p>
+                <input type="password" id="fbSecret" placeholder="Firebase Database Secret" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.5rem; font-family: monospace; font-size: 0.75rem;">
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">🔗 GitHub (Backup & History)</h4>
+                <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.75rem;">For version history and backup. Creates a commit every 5 minutes.</p>
+                <input type="text" id="ghOwner" placeholder="GitHub Username" value="olegzharsky" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.5rem;">
+                <input type="text" id="ghRepo" placeholder="Repository Name" value="mission-control" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.5rem;">
+                <input type="password" id="ghToken" placeholder="GitHub Personal Access Token" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); margin-bottom: 0.5rem;">
+            </div>
+            
             <div style="display: flex; gap: 0.5rem;">
-                <button class="btn" onclick="saveGitHubSettings()" style="flex: 1;">Save</button>
+                <button class="btn" onclick="saveSettings()" style="flex: 1;">💾 Save & Connect</button>
                 <button class="btn" onclick="closeGitHubModal()" style="background: transparent; color: var(--text);">Cancel</button>
+            </div>
+            
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <button class="btn" onclick="createSnapshot()" style="width: 100%; background: transparent; border-color: var(--accent); color: var(--accent);">📸 Create GitHub Snapshot Now</button>
             </div>
         </div>
     </div>
     
-    <script src="github-storage.js"></script>
+    <script src="hybrid-storage.js"></script>
     <script>
         // Data
         let data = {};
         let currentBoard = 'all';
         let serverOnline = false;
-        let githubStorage = new GitHubStorage();
+        let storage = new HybridStorage();
         
         // Load data
         async function loadData() {
-            // Try GitHub first
-            if (githubStorage.isConfigured()) {
-                try {
-                    data = await githubStorage.loadData();
-                    serverOnline = true;
-                    updateStatus(true, 'github');
-                    renderAll();
-                    showToast('📥 Loaded from GitHub');
-                    return;
-                } catch (e) {
-                    console.log('GitHub load failed:', e);
-                }
-            }
-            
-            // Try local server
             try {
-                const res = await fetch('/mc/data');
-                if (res.ok) {
-                    data = await res.json();
-                    serverOnline = true;
-                    updateStatus(true, 'local');
+                data = await storage.load();
+                serverOnline = storage.isFirebaseConfigured || storage.isGitHubConfigured;
+                updateStatus(serverOnline, storage.isFirebaseConfigured ? 'firebase' : 'github');
+                renderAll();
+                
+                // Start real-time sync
+                storage.startRealtimeSync((freshData) => {
+                    data = freshData;
                     renderAll();
-                    return;
-                }
+                    console.log('🔄 Real-time update received');
+                });
+                
+                showToast(storage.isFirebaseConfigured ? '🔥 Connected to Firebase' : '🔗 Connected to GitHub');
             } catch (e) {
-                serverOnline = false;
+                console.error('Load failed:', e);
+                data = storage.getDefaultData();
+                updateStatus(false);
+                renderAll();
             }
-            
-            // Fallback to localStorage
-            const local = localStorage.getItem('mc-data');
-            if (local) {
-                try {
-                    data = JSON.parse(local);
-                } catch (e) {
-                    data = getDefaultData();
-                }
-            } else {
-                data = getDefaultData();
-            }
-            
-            updateStatus(false);
-            renderAll();
         }
         
         // Default data
@@ -785,25 +778,20 @@
         }
         
         function saveData() {
-            localStorage.setItem('mc-data', JSON.stringify(data));
-            
-            // Try GitHub first
-            if (githubStorage.isConfigured()) {
-                githubStorage.saveData(data).then(() => {
-                    showToast('☁️ Saved to GitHub');
-                }).catch(e => {
-                    console.log('GitHub save failed:', e);
-                });
-                return;
-            }
-            
-            // Try local server
-            if (serverOnline) {
-                fetch('/mc/data', { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(data) 
-                }).catch(() => {});
+            storage.save(data).then(() => {
+                showToast('💾 Saved');
+            }).catch(e => {
+                console.error('Save failed:', e);
+                showToast('❌ Save failed');
+            });
+        }
+        
+        async function createSnapshot() {
+            try {
+                await storage.createSnapshot('Manual snapshot');
+                showToast('📸 Snapshot saved to GitHub');
+            } catch (e) {
+                showToast('❌ Snapshot failed: ' + e.message);
             }
         }
         
@@ -813,17 +801,24 @@
             
             if (online) {
                 dot.className = 'status-dot';
-                text.textContent = source === 'github' ? 'GitHub Sync' : 'Server Online';
+                if (source === 'firebase') {
+                    text.textContent = '🔥 Firebase Live';
+                } else if (source === 'github') {
+                    text.textContent = '🔗 GitHub Sync';
+                } else {
+                    text.textContent = 'Server Online';
+                }
             } else {
                 dot.className = 'status-dot offline';
                 text.textContent = 'Offline (Local)';
             }
         }
         
-        // GitHub Settings
+        // Settings Modal
         function openGitHubModal() {
-            document.getElementById('ghOwner').value = localStorage.getItem('github_owner') || '';
-            document.getElementById('ghRepo').value = localStorage.getItem('github_repo') || '';
+            document.getElementById('ghOwner').value = localStorage.getItem('github_owner') || 'olegzharsky';
+            document.getElementById('ghRepo').value = localStorage.getItem('github_repo') || 'mission-control';
+            document.getElementById('fbSecret').value = localStorage.getItem('firebase_secret') || '';
             document.getElementById('githubModal').style.display = 'flex';
         }
         
@@ -831,26 +826,26 @@
             document.getElementById('githubModal').style.display = 'none';
         }
         
-        async function saveGitHubSettings() {
+        async function saveSettings() {
             const owner = document.getElementById('ghOwner').value.trim();
             const repo = document.getElementById('ghRepo').value.trim();
             const token = document.getElementById('ghToken').value.trim();
+            const firebaseSecret = document.getElementById('fbSecret').value.trim();
             
-            if (!owner || !repo || !token) {
-                showToast('❌ All fields required');
-                return;
-            }
-            
-            githubStorage = new GitHubStorage({ owner, repo, token });
-            githubStorage.saveConfig();
+            // Update storage config
+            storage = new HybridStorage({
+                githubOwner: owner,
+                githubRepo: repo,
+                githubToken: token,
+                firebaseSecret: firebaseSecret
+            });
+            storage.saveConfig();
             
             closeGitHubModal();
-            showToast('🔗 Testing connection...');
+            showToast('🔄 Testing connection...');
             
             try {
-                await githubStorage.loadData();
-                showToast('✅ GitHub connected');
-                loadData();
+                await loadData();
             } catch (e) {
                 showToast('❌ Connection failed: ' + e.message);
             }
