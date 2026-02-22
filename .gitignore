@@ -1,8 +1,8 @@
 node_modules/
 .DS_Store
 *.log
-mc-data.json
-mc-activity.json
+/mc-data.json
+/mc-activity.json
 .env
 .env.local
 .vscode/

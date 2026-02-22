@@ -1,0 +1,52 @@
+{
+  "orders": 125,
+  "ordersTarget": 150,
+  "goalDate": "2026-05-01",
+  "revenueGoal": 5400,
+  "totalRevenue": 3248.80,
+  "monthlyRevenueGoal": 450,
+  "revenueHistory": [
+    { "month": "Sep 2025", "revenue": 198.48, "orders": 12 },
+    { "month": "Oct 2025", "revenue": 12, "orders": 1 },
+    { "month": "Nov 2025", "revenue": 107.12, "orders": 5 },
+    { "month": "Dec 2025", "revenue": 582.69, "orders": 25 },
+    { "month": "Jan 2026", "revenue": 110.45, "orders": 4 },
+    { "month": "Feb 2026", "revenue": 398.50, "orders": 6 }
+  ],
+  "priorities": [
+    { "id": 1, "text": "Update Etsy SEO", "completed": false, "tags": ["urgent", "seo"], "dueDate": "2026-02-24", "board": "etsy" },
+    { "id": 2, "text": "Follow up on NYC event quote", "completed": false, "tags": ["urgent", "client"], "dueDate": "2026-02-26", "board": "photography" },
+    { "id": 3, "text": "Research magnetic closure cases", "completed": false, "tags": ["research"], "dueDate": "2026-03-05", "board": "etsy" },
+    { "id": 4, "text": "Apply for Artist Trust GAP Grant", "completed": false, "tags": ["grant", "photo"], "dueDate": "2026-03-15", "board": "photography" },
+    { "id": 5, "text": "Create 4 bundle listings", "completed": false, "tags": ["listing", "urgent"], "dueDate": "2026-02-28", "board": "etsy" }
+  ],
+  "projects": {
+    "backlog": [
+      { "id": 101, "title": "Create 4 bundle listings", "desc": "Multi-color matched pairs", "tags": ["listing", "etsy"], "board": "etsy" },
+      { "id": 102, "title": "Apply for Artist Trust GAP Grant", "desc": "$1,500 photography grant", "tags": ["grant", "photo"], "board": "photography" },
+      { "id": 103, "title": "Build Nicotine Pouch Calculator", "desc": "Lead generation tool", "tags": ["marketing"], "board": "marketing" }
+    ],
+    "inprogress": [
+      { "id": 201, "title": "Update Etsy SEO", "desc": "Add Made in USA, new keywords", "tags": ["urgent", "seo", "etsy"], "board": "etsy" },
+      { "id": 202, "title": "Follow up on NYC event quote", "desc": "$7,500-9,000 photography job", "tags": ["urgent", "client", "photo"], "board": "photography" }
+    ],
+    "done": [
+      { "id": 301, "title": "Optimize 7 Etsy listings", "desc": "Removed 3D printed, added Precision-crafted", "tags": ["seo", "etsy"], "board": "etsy" },
+      { "id": 302, "title": "Create NYC event quote", "desc": "HTML quote page for client", "tags": ["client", "photo"], "board": "photography" }
+    ]
+  },
+  "timeline": [
+    { "id": 1, "title": "Foundation Phase", "date": "Jan-Feb 2026", "desc": "Core systems", "status": "completed", "milestones": [{ "text": "Launch website", "completed": true }, { "text": "Create SKU system", "completed": true }] },
+    { "id": 2, "title": "Growth Phase", "date": "Mar-Apr 2026", "desc": "Scale operations", "status": "active", "milestones": [{ "text": "Reach 15 orders/month", "completed": false }, { "text": "Launch bundles", "completed": false }] },
+    { "id": 3, "title": "Scale Phase", "date": "May 2026+", "desc": "Hit targets", "status": "pending", "milestones": [{ "text": "Reach 20 orders/month", "completed": false }] }
+  ],
+  "leads": [
+    { "id": 1, "name": "Soulshine Cannabis", "company": "Cannabis Producer", "status": "new", "value": 2500, "notes": "Renton, WA" },
+    { "id": 2, "name": "Uncle Ike's", "company": "Dispensary Chain", "status": "new", "value": 1500, "notes": "Seattle locations" }
+  ],
+  "events": [
+    { "id": 1, "name": "Emerald Cup Bellevue", "date": "2026-04-24", "type": "cannabis", "location": "Bellevue, WA" },
+    { "id": 2, "name": "Hall of Flowers Ventura", "date": "2026-03-18", "type": "cannabis", "location": "Ventura, CA" }
+  ],
+  "lastUpdated": 1740249600000
+}
