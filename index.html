@@ -2819,12 +2819,38 @@
         // Priority Modal
         function openPriorityModal() {
             document.getElementById('priorityModal').classList.add('show');
-            // Set default due date to 7 days from now
-            const defaultDate = new Date();
-            defaultDate.setDate(defaultDate.getDate() + 7);
-            document.getElementById('priorityDueDate').value = defaultDate.toISOString().split('T')[0];
-            // Set default board to current board
-            document.getElementById('priorityBoard').value = currentBoard;
+            
+            // Try to restore auto-saved data
+            const saved = formAutoSave.load('priorityModal');
+            if (saved && Date.now() - saved.timestamp < 86400000) { // 24 hour expiry
+                document.getElementById('priorityText').value = saved.text || '';
+                document.getElementById('priorityDesc').value = saved.desc || '';
+                document.getElementById('priorityNotes').value = saved.notes || '';
+                document.getElementById('priorityDueDate').value = saved.dueDate || '';
+                document.getElementById('priorityDocPath').value = saved.docPath || '';
+                document.getElementById('priorityTimeEstimate').value = saved.timeEstimate || '';
+                document.getElementById('priorityRecurring').value = saved.recurring || '';
+                if (saved.board) document.getElementById('priorityBoard').value = saved.board;
+                // Restore tags
+                if (saved.tags) {
+                    document.querySelectorAll('.priority-tag').forEach(cb => {
+                        cb.checked = saved.tags.includes(cb.value);
+                    });
+                }
+                // Restore assignee
+                if (saved.assignee) {
+                    document.querySelectorAll('.priority-assignee').forEach(cb => {
+                        cb.checked = cb.value === saved.assignee;
+                    });
+                }
+            } else {
+                // Set default due date to 7 days from now
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 7);
+                document.getElementById('priorityDueDate').value = defaultDate.toISOString().split('T')[0];
+                // Set default board to current board
+                document.getElementById('priorityBoard').value = currentBoard;
+            }
 
             // Populate project selector
             const projectSelect = document.getElementById('priorityProjectId');
@@ -2852,10 +2878,49 @@
                     </label>
                 `).join('');
             }
+            
+            // Setup auto-save listeners
+            setupPriorityAutoSave();
+        }
+        
+        function setupPriorityAutoSave() {
+            const formId = 'priorityModal';
+            const fields = ['priorityText', 'priorityDesc', 'priorityNotes', 'priorityDueDate', 'priorityDocPath', 'priorityTimeEstimate', 'priorityRecurring'];
+            
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', () => collectAndSavePriorityForm(formId));
+                    field.addEventListener('change', () => collectAndSavePriorityForm(formId));
+                }
+            });
+            
+            // Tags and assignees
+            document.querySelectorAll('.priority-tag, .priority-assignee').forEach(cb => {
+                cb.addEventListener('change', () => collectAndSavePriorityForm(formId));
+            });
+        }
+        
+        function collectAndSavePriorityForm(formId) {
+            const formData = {
+                text: document.getElementById('priorityText').value,
+                desc: document.getElementById('priorityDesc').value,
+                notes: document.getElementById('priorityNotes').value,
+                dueDate: document.getElementById('priorityDueDate').value,
+                docPath: document.getElementById('priorityDocPath').value,
+                timeEstimate: document.getElementById('priorityTimeEstimate').value,
+                recurring: document.getElementById('priorityRecurring').value,
+                board: document.getElementById('priorityBoard').value,
+                tags: Array.from(document.querySelectorAll('.priority-tag:checked')).map(cb => cb.value),
+                assignee: Array.from(document.querySelectorAll('.priority-assignee:checked')).map(cb => cb.value)[0] || ''
+            };
+            formAutoSave.debounce(formId, formData, 2000);
         }
 
         function closePriorityModal() {
             document.getElementById('priorityModal').classList.remove('show');
+            // Clear auto-save when explicitly closing
+            formAutoSave.clear('priorityModal');
             // Clear form
             document.getElementById('priorityText').value = '';
             document.getElementById('priorityDesc').value = '';
@@ -3034,6 +3099,8 @@
             saveData();
             renderAll();
             showToast(projectId ? '✅ Priority added and linked to project' : '✅ Priority added');
+            // Clear auto-save on successful save
+            formAutoSave.clear('priorityModal');
             closePriorityModal();
         }
 
@@ -3288,8 +3355,25 @@
         function openProjectModal(status = 'backlog') {
             projectStatusDefault = status;
             document.getElementById('projectModal').classList.add('show');
-            document.getElementById('projectStatus').value = status;
-            document.getElementById('projectBoard').value = currentBoard;
+            
+            // Try to restore auto-saved data
+            const saved = formAutoSave.load('projectModal');
+            if (saved && Date.now() - saved.timestamp < 86400000) { // 24 hour expiry
+                document.getElementById('projectTitle').value = saved.title || '';
+                document.getElementById('projectDesc').value = saved.desc || '';
+                document.getElementById('projectDueDate').value = saved.dueDate || '';
+                document.getElementById('projectStatus').value = saved.status || status;
+                document.getElementById('projectBoard').value = saved.board || currentBoard;
+                // Restore tags
+                if (saved.tags) {
+                    document.querySelectorAll('.project-tag').forEach(cb => {
+                        cb.checked = saved.tags.includes(cb.value);
+                    });
+                }
+            } else {
+                document.getElementById('projectStatus').value = status;
+                document.getElementById('projectBoard').value = currentBoard;
+            }
 
             // Populate priority selector
             const prioritySelect = document.getElementById('projectPrioritySelect');
@@ -3305,10 +3389,45 @@
                     </label>
                 `).join('');
             }
+            
+            // Setup auto-save listeners
+            setupProjectAutoSave();
+        }
+        
+        function setupProjectAutoSave() {
+            const formId = 'projectModal';
+            const fields = ['projectTitle', 'projectDesc', 'projectDueDate', 'projectStatus', 'projectBoard'];
+            
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', () => collectAndSaveProjectForm(formId));
+                    field.addEventListener('change', () => collectAndSaveProjectForm(formId));
+                }
+            });
+            
+            // Tags
+            document.querySelectorAll('.project-tag').forEach(cb => {
+                cb.addEventListener('change', () => collectAndSaveProjectForm(formId));
+            });
+        }
+        
+        function collectAndSaveProjectForm(formId) {
+            const formData = {
+                title: document.getElementById('projectTitle').value,
+                desc: document.getElementById('projectDesc').value,
+                dueDate: document.getElementById('projectDueDate').value,
+                status: document.getElementById('projectStatus').value,
+                board: document.getElementById('projectBoard').value,
+                tags: Array.from(document.querySelectorAll('.project-tag:checked')).map(cb => cb.value)
+            };
+            formAutoSave.debounce(formId, formData, 2000);
         }
 
         function closeProjectModal() {
             document.getElementById('projectModal').classList.remove('show');
+            // Clear auto-save when explicitly closing
+            formAutoSave.clear('projectModal');
             // Clear form
             document.getElementById('projectTitle').value = '';
             document.getElementById('projectDesc').value = '';
@@ -3365,6 +3484,8 @@
             saveData();
             renderAll();
             showToast(`✅ Project added${linkedPriorityIds.length > 0 ? ` with ${linkedPriorityIds.length} linked priorities` : ''}`);
+            // Clear auto-save on successful save
+            formAutoSave.clear('projectModal');
             closeProjectModal();
         }
 
@@ -5649,10 +5770,15 @@
         function togglePriority(id) {
             const p = data.priorities.find(p => p.id === id);
             if (p) {
+                const wasCompleted = p.completed;
                 p.completed = !p.completed;
                 // Update status based on completed state
                 if (p.completed) {
                     p.status = 'done';
+                    // Regenerate recurring task if completing and has recurring setting
+                    if (!wasCompleted && p.recurring) {
+                        regenerateRecurringTask(p);
+                    }
                 } else if (p.status === 'done') {
                     p.status = 'todo';
                 }
