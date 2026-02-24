@@ -333,6 +333,23 @@
             box-shadow: 0 4px 15px rgba(0,212,255,0.3);
         }
 
+        /* Virtual scroll container */
+        .virtual-scroll-container {
+            position: relative;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .virtual-scroll-content {
+            position: relative;
+        }
+
+        .virtual-scroll-item {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+
         /* Drag and drop styles */
         .task.dragging {
             opacity: 0.8;
@@ -2138,7 +2155,8 @@
 
     <!-- Search Modal -->
     <div id="searchModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: flex-start; justify-content: center; padding-top: 10vh; backdrop-filter: blur(10px);">
-        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 600px; max-height: 70vh; overflow: hidden; animation: modalSlideIn 0.2s ease-out;">
+        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 600px; max-height: 70vh; overflow: hidden; animation: modalSlideIn 0.2s ease-out; position: relative;">
+            <button onclick="closeSearchModal()" style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(255,255,255,0.1); border: none; color: var(--text); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; z-index: 10;">&times;</button>
             <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
                 <input type="text" id="searchInput" placeholder="Search priorities, projects, SKUs..."
                     style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1rem;"
@@ -2155,7 +2173,7 @@
                 <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Type to search...</div>
             </div>
             <div style="padding: 0.75rem; border-top: 1px solid var(--border); text-align: center;">
-                <span style="color: var(--text-muted); font-size: 0.75rem;">Press ESC to close • Click result to navigate</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">Press ESC or &times; to close • Click result to navigate</span>
             </div>
         </div>
     </div>
@@ -2743,26 +2761,44 @@
                 if (r.type === 'priority') {
                     const p = r.item;
                     const statusEmoji = p.completed ? '✅' : p.status === 'inprogress' ? '⚡' : p.status === 'todo' ? '📝' : '📥';
+                    
+                    // Find where the match occurred for context
+                    let context = '';
+                    if (p.desc?.toLowerCase().includes(query)) {
+                        context = extractContext(p.desc, query, 60);
+                    } else if (p.notes?.toLowerCase().includes(query)) {
+                        context = extractContext(p.notes, query, 60);
+                    }
+                    
                     return `
-                        <div onclick="openPriorityFromSearch(${p.id})" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; hover: background: rgba(255,255,255,0.06);">
+                        <div onclick="openPriorityFromSearch(${p.id})" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span>${statusEmoji}</span>
                                 <span style="font-weight: 500;">${highlightText(p.text, query)}</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            ${context ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; font-style: italic;">"${highlightText(context, query)}"</div>` : ''}
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">
                                 Priority • ${p.board} • ${p.tags?.join(', ') || 'no tags'}
                             </div>
                         </div>
                     `;
                 } else if (r.type === 'project') {
                     const p = r.item;
+                    
+                    // Find where the match occurred for context
+                    let context = '';
+                    if (p.desc?.toLowerCase().includes(query)) {
+                        context = extractContext(p.desc, query, 60);
+                    }
+                    
                     return `
-                        <div onclick="openProjectFromSearch(${p.id}, '${r.status}')" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;">
+                        <div onclick="openProjectFromSearch(${p.id}, '${r.status}')" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span>📋</span>
                                 <span style="font-weight: 500;">${highlightText(p.title, query)}</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            ${context ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; font-style: italic;">"${highlightText(context, query)}"</div>` : ''}
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">
                                 Project • ${r.status} • ${p.board}
                             </div>
                         </div>
@@ -2776,13 +2812,32 @@
                                 <span style="font-weight: 500;">${highlightText(s.code, query)}</span>
                                 <span style="color: var(--text-muted);">- ${highlightText(s.name, query)}</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem;">
                                 SKU • Stock: ${s.stock}
                             </div>
                         </div>
                     `;
                 }
             }).join('');
+        }
+        
+        // Extract context around search match
+        function extractContext(text, query, maxLength = 60) {
+            if (!text) return '';
+            const lowerText = text.toLowerCase();
+            const lowerQuery = query.toLowerCase();
+            const index = lowerText.indexOf(lowerQuery);
+            
+            if (index === -1) return text.substring(0, maxLength) + (text.length > maxLength ? '...' : '');
+            
+            const start = Math.max(0, index - Math.floor((maxLength - query.length) / 2));
+            const end = Math.min(text.length, start + maxLength);
+            
+            let result = text.substring(start, end);
+            if (start > 0) result = '...' + result;
+            if (end < text.length) result = result + '...';
+            
+            return result;
         }
 
         function highlightText(text, query) {
@@ -4080,6 +4135,18 @@
                     // Don't let one failed render crash the whole dashboard
                 }
             });
+        }
+
+        // Debounced render to prevent excessive re-renders
+        let renderTimeout = null;
+        function debouncedRenderAll(delay = 100) {
+            if (renderTimeout) {
+                clearTimeout(renderTimeout);
+            }
+            renderTimeout = setTimeout(() => {
+                renderAll();
+                renderTimeout = null;
+            }, delay);
         }
 
         // Drag and drop initialization
