@@ -2373,24 +2373,30 @@
                 // This prevents overwriting Firebase with empty localStorage
                 const hasValidData = data &&
                                     data.priorities &&
-                                    Array.isArray(data.priorities) &&
-                                    data.priorities.length > 0;
+                                    Array.isArray(data.priorities);
 
                 if (!hasValidData) {
-                    console.warn('⚠️ No valid data from Firebase, checking localStorage fallback...');
                     const local = localStorage.getItem('mc-data');
                     if (local) {
                         try {
                             const localData = JSON.parse(local);
-                            if (localData.priorities && localData.priorities.length > 0) {
-                                
+                            if (localData.priorities && Array.isArray(localData.priorities)) {
                                 data = localData;
                             }
                         } catch (e) {
-                            console.error('Failed to parse localStorage:', e);
+                            // Failed to parse localStorage
                         }
                     }
                 }
+
+                // Ensure data structure exists
+                if (!data.priorities) data.priorities = [];
+                if (!data.projects) data.projects = { backlog: [], todo: [], inprogress: [], done: [] };
+                if (!data.revenueHistory) data.revenueHistory = [];
+                if (!data.leads) data.leads = [];
+                if (!data.events) data.events = [];
+                if (!data.skus) data.skus = [];
+                if (!data.documents) data.documents = [];
 
                 // Migrate old data - add timestamps and notes field if missing
                 let migrated = false;
@@ -6550,6 +6556,144 @@
             showSkeleton('backlogTasks', 'task', 2);
             showSkeleton('inprogressTasks', 'task', 2);
             showSkeleton('doneTasks', 'task', 2);
+        }
+
+        // Simple Unit Testing Framework
+        const TestRunner = {
+            tests: [],
+            results: { passed: 0, failed: 0, errors: [] },
+
+            test(name, fn) {
+                this.tests.push({ name, fn });
+            },
+
+            async run() {
+                console.log('🧪 Running tests...\n');
+                this.results = { passed: 0, failed: 0, errors: [] };
+
+                for (const test of this.tests) {
+                    try {
+                        await test.fn();
+                        this.results.passed++;
+                        console.log(`✅ ${test.name}`);
+                    } catch (e) {
+                        this.results.failed++;
+                        this.results.errors.push({ test: test.name, error: e.message });
+                        console.error(`❌ ${test.name}: ${e.message}`);
+                    }
+                }
+
+                console.log(`\n📊 Results: ${this.results.passed} passed, ${this.results.failed} failed`);
+                return this.results;
+            },
+
+            assert(condition, message) {
+                if (!condition) {
+                    throw new Error(message || 'Assertion failed');
+                }
+            },
+
+            assertEqual(actual, expected, message) {
+                if (actual !== expected) {
+                    throw new Error(message || `Expected ${expected}, got ${actual}`);
+                }
+            }
+        };
+
+        // Unit Tests
+        function runTests() {
+            // Test escapeHtml
+            TestRunner.test('escapeHtml escapes special characters', () => {
+                const input = '<scr' + 'ipt>alert("xss")</scr' + 'ipt>';
+                const result = escapeHtml(input);
+                TestRunner.assert(!result.includes('<scr' + 'ipt>'), 'Should escape script tags');
+                TestRunner.assert(result.includes('&lt;'), 'Should escape <');
+            });
+
+            // Test validateInput
+            TestRunner.test('validateInput checks required fields', () => {
+                const errors = validateInput('', { required: true });
+                TestRunner.assert(errors.length > 0, 'Should fail for empty required field');
+            });
+
+            TestRunner.test('validateInput checks max length', () => {
+                const errors = validateInput('a'.repeat(201), { max: 200 });
+                TestRunner.assert(errors.length > 0, 'Should fail for exceeding max length');
+            });
+
+            TestRunner.test('validateInput passes valid input', () => {
+                const errors = validateInput('valid text', { required: true, max: 200 });
+                TestRunner.assertEqual(errors.length, 0, 'Should pass for valid input');
+            });
+
+            // Test getPriorityScore
+            TestRunner.test('getPriorityScore returns higher score for urgent', () => {
+                const urgent = { tags: ['urgent'], dueDate: '2026-12-31' };
+                const normal = { tags: [], dueDate: '2026-12-31' };
+                const urgentScore = getPriorityScore(urgent);
+                const normalScore = getPriorityScore(normal);
+                TestRunner.assert(urgentScore > normalScore, 'Urgent should have higher score');
+            });
+
+            TestRunner.test('getPriorityScore returns higher score for overdue', () => {
+                const overdue = { tags: [], dueDate: '2020-01-01' };
+                const future = { tags: [], dueDate: '2026-12-31' };
+                const overdueScore = getPriorityScore(overdue);
+                const futureScore = getPriorityScore(future);
+                TestRunner.assert(overdueScore > futureScore, 'Overdue should have higher score');
+            });
+
+            // Test sortPriorities
+            TestRunner.test('sortPriorities sorts by score descending', () => {
+                const priorities = [
+                    { id: 1, tags: [], dueDate: '2026-12-31' },
+                    { id: 2, tags: ['urgent'], dueDate: '2026-12-31' },
+                    { id: 3, tags: [], dueDate: '2020-01-01' }
+                ];
+                const sorted = sortPriorities(priorities);
+                TestRunner.assert(sorted[0].id === 2, 'Highest score should be first');
+            });
+
+            // Test StateManager
+            TestRunner.test('StateManager.getData returns current data', () => {
+                const result = StateManager.getData();
+                TestRunner.assert(result === data, 'Should return global data object');
+            });
+
+            // Test formAutoSave
+            TestRunner.test('formAutoSave saves and loads data', () => {
+                formAutoSave.save('test', { value: 'hello' });
+                const loaded = formAutoSave.load('test');
+                TestRunner.assertEqual(loaded.value, 'hello', 'Should save and load correctly');
+                formAutoSave.clear('test');
+            });
+
+            // Test date utilities
+            TestRunner.test('setDatePreset sets correct dates', () => {
+                // Create a mock input
+                const mockInput = { value: '', dispatchEvent: () => {} };
+                const originalGetElementById = document.getElementById;
+                document.getElementById = (id) => id === 'testDate' ? mockInput : originalGetElementById(id);
+
+                setDatePreset('testDate', 'tomorrow');
+                TestRunner.assert(mockInput.value !== '', 'Should set date value');
+
+                document.getElementById = originalGetElementById;
+            });
+
+            // Run all tests
+            TestRunner.run().then(results => {
+                if (results.failed === 0) {
+                    console.log('🎉 All tests passed!');
+                } else {
+                    console.warn(`⚠️ ${results.failed} test(s) failed`);
+                }
+            });
+        }
+
+        // Run tests on load (in development)
+        if (location.hostname === 'localhost' || location.search.includes('test')) {
+            setTimeout(runTests, 2000);
         }
 
         // Init
