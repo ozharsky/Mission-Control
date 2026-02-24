@@ -1,0 +1,15 @@
+{
+  "name": "mission-control-server",
+  "version": "1.0.0",
+  "description": "Mission Control Dashboard Server with Firebase Sync",
+  "main": "server-firebase.js",
+  "scripts": {
+    "start": "node server-firebase.js",
+    "dev": "node server-firebase.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "cors": "^2.8.5"
+  }
+}

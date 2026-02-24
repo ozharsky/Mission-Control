@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1740249600000,
+    "timestamp": "2025-02-23T00:00:00.000Z",
+    "icon": "🚀",
+    "text": "Mission Control initialized with GitHub storage",
+    "source": "system"
+  },
+  {
+    "id": 1740249500000,
+    "timestamp": "2025-02-22T23:58:20.000Z",
+    "icon": "📊",
+    "text": "Revenue data updated: $3,248.80 total, 125 orders",
+    "source": "sync"
+  },
+  {
+    "id": 1740249400000,
+    "timestamp": "2025-02-22T23:56:40.000Z",
+    "icon": "✅",
+    "text": "Etsy listing optimization completed",
+    "source": "manual"
+  }
+]

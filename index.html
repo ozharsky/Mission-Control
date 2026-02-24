@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="Mission Control">
     <meta name="description" content="Business operations dashboard for OZ3DPrint">
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.svg">
     <title>Mission Control | OZ3DPrint</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -60,25 +60,32 @@
             .header {
                 padding: 0.5rem 0.75rem;
                 flex-wrap: nowrap;
+                gap: 0.5rem;
             }
             .header-left {
                 gap: 0.5rem;
                 flex: 1;
                 min-width: 0;
+                overflow: hidden;
             }
             .logo {
-                font-size: 1rem;
+                font-size: 0.875rem;
                 white-space: nowrap;
+                flex-shrink: 0;
             }
             .header-time {
                 font-size: 0.7rem;
+                flex-shrink: 0;
             }
             .header-weather {
                 display: none;
             }
             .status {
-                font-size: 0.75rem;
+                font-size: 0.65rem;
                 gap: 0.25rem;
+                padding: 0.25rem 0.5rem;
+                flex-shrink: 0;
+                white-space: nowrap;
             }
             .status-dot {
                 width: 6px;
@@ -87,6 +94,9 @@
             #statusText {
                 display: none;
             }
+            .hamburger {
+                margin-left: 0;
+            }
         }
         
         @keyframes fadeInDown {
@@ -94,12 +104,13 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .header-left { display: flex; align-items: center; gap: 1.5rem; }
+        .header-left { display: flex; align-items: center; gap: 1.5rem; flex: 1; min-width: 0; }
+        .header-right { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; flex-shrink: 0; }
         .logo { font-size: 1.5rem; font-weight: 700; }
         .header-time { font-size: 0.875rem; color: var(--text-muted); font-family: monospace; }
         .header-weather { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-muted); }
         
-        .status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-muted); transition: all 0.3s ease; }
+        .status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-muted); transition: all 0.3s ease; cursor: pointer; }
         .status:hover { color: var(--text); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
         .status-dot.offline { background: var(--red); animation: none; }
@@ -1144,15 +1155,16 @@
 <body>
     <div class="header">
         <div class="header-left">
-            <div class="logo">🚀 Mission Control</div>
+            <div class="logo">🚀 MC</div>
             <div class="header-time" id="liveClock">--:--</div>
             <div class="header-weather" id="weatherDisplay"></div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.75rem; margin-left: auto;">
-            <div class="status" onclick="openGitHubModal()" style="cursor: pointer;" title="Click to configure GitHub sync">
+        <div class="header-right">
+            <div class="status" onclick="openGitHubModal()" title="Click to configure GitHub sync">
                 <span class="status-dot" id="statusDot"></span>
                 <span id="statusText">Connecting...</span>
             </div>
+            <button class="btn btn-secondary" onclick="toggleSearchModal()" title="Search (Cmd+K)" style="margin-right: 0.5rem;">🔍</button>
             <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
                 <span></span>
                 <span></span>
@@ -1179,7 +1191,8 @@
         <button class="nav-btn" onclick="showSection('review', this)">📈 Review</button>
         <button class="nav-btn" onclick="showSection('calendar', this)">🗓️ Calendar</button>
         <button class="nav-btn" onclick="showSection('timeline', this)">🗓️ Timeline</button>
-        <button class="nav-btn" onclick="showSection('inventory', this)">📦 Inventory</button>
+        <button class="nav-btn" onclick="showSection('inventory', this)">🖨️ Printers</button>
+        <button class="nav-btn" onclick="showSection('skus', this)">📦 SKU Stock</button>
         <button class="nav-btn" onclick="showSection('docs', this)">📁 Docs</button>
         <button class="nav-btn" onclick="showSection('notes', this)">📝 Notes</button>
     </div>
@@ -1200,11 +1213,11 @@
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-value" id="dashOrdersThisMonth">--</div>
-                    <div class="metric-label">Orders This Month</div>
+                    <div class="metric-label">Orders (This Month / Total)</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-value" id="dashRevenue">--</div>
-                    <div class="metric-label">Revenue</div>
+                    <div class="metric-label">Total Revenue</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-value" id="dashActiveProjects">--</div>
@@ -1219,7 +1232,10 @@
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <div class="card-title">⚡ Critical Priorities</div>
-                    <button class="add-btn" onclick="openPriorityModal()">+ Add Priority</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" onclick="openSampleDataModal()">📋 Load Sample Tasks</button>
+                        <button class="add-btn" onclick="openPriorityModal()">+ Add Priority</button>
+                    </div>
                 </div>
                 <div id="dashboardPriorities"></div>
             </div>
@@ -1258,12 +1274,12 @@
                     <div class="metric-label">vs Last Month</div>
                 </div>
                 <div class="metric-card" style="border-top-color: var(--green);">
-                    <div class="metric-value" id="revPerItem">--</div>
-                    <div class="metric-label">Revenue/Item</div>
+                    <div class="metric-value" id="revTotalOrders">--</div>
+                    <div class="metric-label">Total Orders</div>
                 </div>
                 <div class="metric-card" style="border-top-color: var(--yellow);">
-                    <div class="metric-value" id="revDaysLeft">--</div>
-                    <div class="metric-label">Days to Goal</div>
+                    <div class="metric-value" id="revOrdersThisMonth">--</div>
+                    <div class="metric-label">Orders This Month</div>
                 </div>
             </div>
             
@@ -1332,13 +1348,34 @@
                 <button class="filter-btn active" onclick="filterPriorities('all', this)">All</button>
                 <button class="filter-btn" onclick="filterPriorities('active', this)">Active</button>
                 <button class="filter-btn" onclick="filterPriorities('completed', this)">Completed</button>
+                <button class="filter-btn" onclick="filterPrioritiesByAssignee('KimiClaw', this)">🤖 KimiClaw</button>
+                <button class="filter-btn" onclick="filterPrioritiesByAssignee('Oleg', this)">👤 Oleg</button>
             </div>
             
             <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
                     <div class="card-title">⭐ Priorities</div>
-                    <button class="add-btn" onclick="openPriorityModal()">+ Add Priority</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" onclick="toggleBulkMode()" id="bulkModeBtn">☑️ Bulk</button>
+                        <button class="add-btn" onclick="openPriorityModal()">+ Add Priority</button>
+                    </div>
                 </div>
+                
+                <!-- Bulk Operations Bar -->
+                <div id="bulkOperationsBar" style="display: none; padding: 0.75rem; background: rgba(0,212,255,0.1); border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <span style="font-size: 0.875rem;"><span id="bulkSelectedCount">0</span> selected</span>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-sm" onclick="bulkMove('backlog')">📥 Backlog</button>
+                            <button class="btn btn-sm" onclick="bulkMove('todo')">📝 To Do</button>
+                            <button class="btn btn-sm" onclick="bulkMove('inprogress')">⚡ In Progress</button>
+                            <button class="btn btn-sm" onclick="bulkMove('done')">✅ Complete</button>
+                            <button class="btn btn-sm" style="background: rgba(239,68,68,0.2); color: var(--red);" onclick="bulkDelete()">🗂️ Delete</button>
+                            <button class="btn btn-sm btn-secondary" onclick="clearBulkSelection()">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div id="prioritiesList"></div>
             </div>
         </div>
@@ -1411,22 +1448,33 @@
             </div>
         </div>
         
-        <!-- Inventory -->
+        <!-- Inventory - Printers -->
         <div class="section" id="inventory">
-            <div class="grid-2">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <div class="card-title">🖨️ Printers</div>
-                        <button class="btn" onclick="updatePrinterStatus()">🔄 Update</button>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="card-title">🖨️ Printers</div>
+                    <button class="btn" onclick="updatePrinterStatus()">🔄 Update</button>
+                </div>
+                <div id="printerStatus"></div>
+                <div id="printerLastUpdate" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; text-align: right;"></div>
+            </div>
+        </div>
+        
+        <!-- SKU Stock Levels -->
+        <div class="section" id="skus">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div class="card-title">📦 SKU Stock Levels</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" onclick="downloadSkuTemplate()">📥 Template</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('skuUpload').click()">📤 Import CSV</button>
+                        <button class="add-btn" onclick="openSkuModal()">+ Add SKU</button>
                     </div>
-                    <div id="printerStatus"></div>
-                    <div id="printerLastUpdate" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; text-align: right;"></div>
                 </div>
-                <div class="card">
-                    <div class="card-title">📦 SKU Stock</div>
-                    <div id="skuAlerts" style="margin-bottom: 1rem;"></div>
-                    <div id="skuList"></div>
-                </div>
+                <input type="file" id="skuUpload" style="display: none;" accept=".csv" onchange="handleSkuUpload(event)">
+                <div id="skuUploadStatus" style="margin-bottom: 1rem;"></div>
+                <div id="skuAlerts" style="margin-bottom: 1rem;"></div>
+                <div id="skuList"></div>
             </div>
         </div>
         
@@ -1462,8 +1510,52 @@
         <div class="modal">
             <h3>+ Add Priority</h3>
             <div class="form-group">
-                <label>Task Text</label>
-                <input type="text" id="priorityText" placeholder="Enter task description...">
+                <label>Task Template (optional)</label>
+                <select id="priorityTemplate" onchange="applyPriorityTemplate(this.value)" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="">-- Select Template --</option>
+                    <option value="etsy-listing">🏪 Etsy Listing Creation</option>
+                    <option value="photo-shoot">📸 Photography Session</option>
+                    <option value="wholesale-lead">🤝 Wholesale Lead Outreach</option>
+                    <option value="inventory-check">📦 Inventory Check</option>
+                    <option value="seo-optimization">🔍 SEO Optimization</option>
+                    <option value="custom">⚙️ Custom Product Design</option>
+                </select>
+                <small style="color: var(--text-muted);">Auto-fills common task fields</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Task Text <small style="color: var(--text-muted);">(max 200 chars)</small></label>
+                <input type="text" id="priorityText" placeholder="Enter task description..." maxlength="200"
+                    oninput="this.value = this.value.substring(0, 200)">
+            </div>
+            <div class="form-group">
+                <label>Description / Instructions (for AI tasks) <small style="color: var(--text-muted);">(max 2000 chars)</small></label>
+                <textarea id="priorityDesc" placeholder="Detailed instructions for task execution..." style="min-height: 100px; resize: vertical;" maxlength="2000"
+                    oninput="this.value = this.value.substring(0, 2000)"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Notes / Comments (ongoing updates) <small style="color: var(--text-muted);">(max 1000 chars)</small></label>
+                <textarea id="priorityNotes" placeholder="Add notes, updates, comments as the task progresses..." style="min-height: 80px; resize: vertical;" maxlength="1000"
+                    oninput="this.value = this.value.substring(0, 1000)"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Assigned To</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item" style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent);">
+                        <input type="radio" name="priorityAssignee" value="KimiClaw" class="priority-assignee">
+                        <span>🤖 KimiClaw (AI)</span>
+                    </label>
+                    <label class="checkbox-item" style="background: rgba(255, 107, 107, 0.1); border: 1px solid var(--red);">
+                        <input type="radio" name="priorityAssignee" value="Oleg" class="priority-assignee">
+                        <span>👤 Oleg (You)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="priorityAssignee" value="" class="priority-assignee" checked>
+                        <span>Unassigned</span>
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <label>Due Date</label>
@@ -1506,14 +1598,57 @@
             </div>
             <div class="form-group">
                 <label>Link to Project (Optional)</label>
-                <select id="priorityProjectId" style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                <select id="priorityProjectId" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
                     <option value="">-- No Project --</option>
                 </select>
             </div>
             <div class="form-group">
+                <label>Blocked By (Dependencies)</label>
+                <div id="priorityBlockedBySelect" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem;">
+                    <div style="color: var(--text-muted); font-size: 0.875rem;">Loading priorities...</div>
+                </div>
+                <small style="color: var(--text-muted);">Select tasks that must be completed before this one</small>
+            </div>
+            
+            <div class="form-group">
                 <label>Document Path (optional)</label>
                 <input type="text" id="priorityDocPath" placeholder="e.g., docs/project.pdf">
             </div>
+            
+            <div class="form-group">
+                <label>Recurring Task</label>
+                <select id="priorityRecurring" style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                    <option value="">One-time task</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+                <small style="color: var(--text-muted);">Auto-regenerates when marked complete</small>
+            </div>
+            
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <label>Time Estimate (hours)</label>
+                    <input type="number" id="priorityTimeEstimate" placeholder="0" min="0" step="0.5" 
+                        onchange="this.value = Math.max(0, parseFloat(this.value) || 0)"
+                        style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                </div>
+                <div style="flex: 1;">
+                    <label>Time Spent (hours)</label>
+                    <input type="number" id="priorityTimeSpent" placeholder="0" min="0" step="0.5"
+                        onchange="this.value = Math.max(0, parseFloat(this.value) || 0)"
+                        style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text);">
+                </div>
+            </div>
+            
+            <!-- Activity Log Section (shown when editing) -->
+            <div id="priorityActivityLogSection" class="form-group" style="display: none;">
+                <label>📋 Activity Log</label>
+                <div id="priorityActivityLog" style="max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 0.5rem; font-size: 0.8rem;">
+                    <div style="color: var(--text-muted);">No activity recorded yet</div>
+                </div>
+            </div>
+            
             <div class="modal-actions">
                 <button class="btn btn-success" onclick="savePriority()">Add Priority</button>
                 <button class="btn btn-secondary" onclick="closePriorityModal()">Cancel</button>
@@ -1593,6 +1728,56 @@
         </div>
     </div>
     
+    <!-- SKU Modal -->
+    <div class="modal-overlay" id="skuModal">
+        <div class="modal">
+            <h3>+ Add SKU</h3>
+            <div class="form-group">
+                <label>SKU Code</label>
+                <input type="text" id="skuCode" placeholder="e.g., ACC-BLK-001">
+            </div>
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="skuName" placeholder="e.g., Black Accessory">
+            </div>
+            <div class="form-group">
+                <label>Stock Quantity</label>
+                <input type="number" id="skuStock" placeholder="0" min="0">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="saveSku()">Add SKU</button>
+                <button class="btn btn-secondary" onclick="closeSkuModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load Sample Data Modal -->
+    <div class="modal-overlay" id="sampleDataModal">
+        <div class="modal" style="max-width: 500px;">
+            <h3>📋 Load Sample Tasks</h3>
+            <div style="background: rgba(245,158,11,0.1); border-left: 3px solid var(--yellow); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                <div style="font-weight: 600; color: var(--yellow); margin-bottom: 0.5rem;">⚠️ Safety Check</div>
+                <div style="font-size: 0.875rem; color: var(--text);">
+                    This will add sample tasks to your existing data. <strong>Nothing will be deleted.</strong>
+                </div>
+            </div>
+            
+            <div id="sampleDataPreview" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                <div style="color: var(--text-muted); text-align: center; padding: 1rem;">Click Preview to see what will be added...</div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <button class="btn btn-secondary" onclick="previewSampleData()" style="flex: 1;">👁️ Preview</button>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="loadSampleDataSafe()" id="loadSampleBtn" disabled>✅ Add Sample Tasks</button>
+                <button class="btn btn-danger" onclick="clearSampleData()" style="background: rgba(239,68,68,0.2); color: var(--red);">🗑️ Clear Sample Data</button>
+                <button class="btn btn-secondary" onclick="closeSampleDataModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Settings Modal -->
     <div id="githubModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
         <form style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 450px; width: 90%; max-height: 90vh; overflow-y: auto; animation: modalSlideIn 0.3s ease-out;" onsubmit="event.preventDefault(); saveSettings();">
@@ -1623,9 +1808,42 @@
             </div>
             
             <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-                <button type="button" class="btn btn-secondary" onclick="createSnapshot()" style="width: 100%;">📸 Create GitHub Snapshot Now</button>
+                <button type="button" class="btn btn-secondary" onclick="createSnapshot()" style="width: 100%; margin-bottom: 0.5rem;">📸 Create GitHub Snapshot Now</button>
+            </div>
+            
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <h4 style="color: var(--accent); font-size: 0.875rem; margin-bottom: 0.5rem;">💾 Data Backup</h4>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="exportFullBackup()" style="flex: 1;">📤 Export</button>
+                    <button type="button" class="btn btn-secondary" onclick="importFullBackup()" style="flex: 1;">📥 Import</button>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.5rem;">Export creates a JSON file with all your data. Import replaces all current data.</p>
             </div>
         </form>
+    </div>
+    
+    <!-- Search Modal -->
+    <div id="searchModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: flex-start; justify-content: center; padding-top: 10vh; backdrop-filter: blur(10px);">
+        <div style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 600px; max-height: 70vh; overflow: hidden; animation: modalSlideIn 0.2s ease-out;">
+            <div style="padding: 1rem; border-bottom: 1px solid var(--border);">
+                <input type="text" id="searchInput" placeholder="Search priorities, projects, SKUs..." 
+                    style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 1rem;"
+                    oninput="performSearch(this.value)"
+                    onkeydown="if(event.key==='Escape') closeSearchModal()">
+                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-sm" onclick="setSearchFilter('all')" id="searchFilterAll" style="background: var(--accent); color: #000;">All</button>
+                    <button class="btn btn-sm" onclick="setSearchFilter('priorities')" id="searchFilterPriorities">Priorities</button>
+                    <button class="btn btn-sm" onclick="setSearchFilter('projects')" id="searchFilterProjects">Projects</button>
+                    <button class="btn btn-sm" onclick="setSearchFilter('skus')" id="searchFilterSkus">SKUs</button>
+                </div>
+            </div>
+            <div id="searchResults" style="padding: 1rem; overflow-y: auto; max-height: 50vh;">
+                <div style="color: var(--text-muted); text-align: center; padding: 2rem;">Type to search...</div>
+            </div>
+            <div style="padding: 0.75rem; border-top: 1px solid var(--border); text-align: center;">
+                <span style="color: var(--text-muted); font-size: 0.75rem;">Press ESC to close • Click result to navigate</span>
+            </div>
+        </div>
     </div>
     
     <script src="hybrid-storage.js"></script>
@@ -1641,11 +1859,132 @@
         let currentCalendarDate = new Date();
         let mobileNavOpen = false;
         let weatherLoaded = false;
+        let currentSearchFilter = 'all';
+        
+        // Utility: Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Utility: Wrap render functions in error boundaries
+        function safeRender(renderFn, fallback = '') {
+            try {
+                return renderFn();
+            } catch (e) {
+                console.error('Render error:', e);
+                return fallback;
+            }
+        }
         
         // Load data
         async function loadData() {
             try {
                 data = await storage.load();
+                
+                // CRITICAL FIX: Only migrate if we have valid data with priorities
+                // This prevents overwriting Firebase with empty localStorage
+                const hasValidData = data && 
+                                    data.priorities && 
+                                    Array.isArray(data.priorities) && 
+                                    data.priorities.length > 0;
+                
+                if (!hasValidData) {
+                    console.warn('⚠️ No valid data from Firebase, checking localStorage fallback...');
+                    const local = localStorage.getItem('mc-data');
+                    if (local) {
+                        try {
+                            const localData = JSON.parse(local);
+                            if (localData.priorities && localData.priorities.length > 0) {
+                                console.log('📦 Restored from localStorage backup');
+                                data = localData;
+                            }
+                        } catch (e) {
+                            console.error('Failed to parse localStorage:', e);
+                        }
+                    }
+                }
+                
+                // Migrate old data - add timestamps and notes field if missing
+                let migrated = false;
+                if (data.priorities) {
+                    data.priorities.forEach(p => {
+                        if (!p.createdAt) {
+                            p.createdAt = new Date().toISOString();
+                            migrated = true;
+                        }
+                        if (!p.updatedAt) {
+                            p.updatedAt = p.createdAt;
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('notes')) {
+                            p.notes = '';
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('blockedBy')) {
+                            p.blockedBy = [];
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('recurring')) {
+                            p.recurring = '';
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('timeEstimate')) {
+                            p.timeEstimate = 0;
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('timeSpent')) {
+                            p.timeSpent = 0;
+                            migrated = true;
+                        }
+                        if (!p.hasOwnProperty('activityLog')) {
+                            p.activityLog = [];
+                            migrated = true;
+                        }
+                        // MIGRATE: Convert old 4-state status to new 3-state
+                        if (p.status && ['backlog', 'todo', 'inprogress'].includes(p.status)) {
+                            const oldStatus = p.status;
+                            p.status = migrateStatus(oldStatus);
+                            if (oldStatus !== p.status) {
+                                console.log(`🔄 Migrated priority "${p.text.substring(0, 30)}..." status: ${oldStatus} → ${p.status}`);
+                                migrated = true;
+                            }
+                        } else if (!p.status) {
+                            p.status = 'later';
+                            migrated = true;
+                        }
+                    });
+                }
+                if (data.projects) {
+                    // Ensure all project arrays exist (support 4-state: backlog/todo/inprogress/done)
+                    if (!data.projects.backlog) data.projects.backlog = [];
+                    if (!data.projects.todo) data.projects.todo = [];
+                    if (!data.projects.inprogress) data.projects.inprogress = [];
+                    if (!data.projects.done) data.projects.done = [];
+                    
+                    // Add timestamps if missing
+                    ['backlog', 'todo', 'inprogress', 'done'].forEach(status => {
+                        if (data.projects[status]) {
+                            data.projects[status].forEach(p => {
+                                if (!p.createdAt) {
+                                    p.createdAt = new Date().toISOString();
+                                    migrated = true;
+                                }
+                                if (!p.updatedAt) {
+                                    p.updatedAt = p.createdAt;
+                                    migrated = true;
+                                }
+                            });
+                        }
+                    });
+                }
+                if (migrated) {
+                    console.log('🔄 Migrated old data - added timestamps, notes, blockedBy, recurring, time tracking, and activity log fields');
+                    await saveData();
+                }
+                
                 serverOnline = storage.isFirebaseConfigured || storage.isGitHubConfigured;
                 updateStatus(serverOnline, storage.isFirebaseConfigured ? 'firebase' : 'github');
                 renderAll();
@@ -1816,12 +2155,318 @@
             }
         }
         
-        // Clock
+        // Clock - track interval for cleanup
+        let clockInterval = null;
         function updateClock() {
-            document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const clockEl = document.getElementById('liveClock');
+            if (clockEl) {
+                clockEl.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            }
         }
-        setInterval(updateClock, 1000);
+        
+        // Start clock, but clear any existing interval first (prevents duplicates)
+        if (clockInterval) clearInterval(clockInterval);
+        clockInterval = setInterval(updateClock, 1000);
         updateClock();
+        
+        // Priority Templates
+        const PRIORITY_TEMPLATES = {
+            'etsy-listing': {
+                text: 'Create new Etsy listing',
+                desc: '1. Take product photos\n2. Write SEO-optimized title\n3. Create description with keywords\n4. Set pricing and shipping\n5. Add to appropriate category',
+                tags: ['listing', 'etsy'],
+                timeEstimate: 2
+            },
+            'photo-shoot': {
+                text: 'Photography session',
+                desc: '1. Prepare equipment\n2. Scout location\n3. Take shots\n4. Review and select best photos\n5. Post-processing',
+                tags: ['photo'],
+                timeEstimate: 4
+            },
+            'wholesale-lead': {
+                text: 'Reach out to wholesale lead',
+                desc: '1. Research company\n2. Prepare pitch\n3. Send initial email\n4. Follow up in 3 days if no response\n5. Track in CRM',
+                tags: ['wholesale', 'client'],
+                timeEstimate: 1
+            },
+            'inventory-check': {
+                text: 'Inventory check and restock',
+                desc: '1. Count current stock\n2. Check low stock alerts\n3. Update SKU quantities\n4. Queue prints for restocking\n5. Update Etsy quantities',
+                tags: ['operations'],
+                timeEstimate: 1.5
+            },
+            'seo-optimization': {
+                text: 'Optimize Etsy SEO',
+                desc: '1. Review current keywords\n2. Research competitor tags\n3. Update titles and descriptions\n4. Refresh tags\n5. Monitor ranking changes',
+                tags: ['seo', 'etsy'],
+                timeEstimate: 2
+            },
+            'custom': {
+                text: 'Custom product design',
+                desc: '1. Review customer requirements\n2. Create design mockup\n3. Get customer approval\n4. Print prototype\n5. Deliver final product',
+                tags: ['product', 'client'],
+                timeEstimate: 3
+            }
+        };
+        
+        function applyPriorityTemplate(templateKey) {
+            if (!templateKey || !PRIORITY_TEMPLATES[templateKey]) return;
+            
+            const template = PRIORITY_TEMPLATES[templateKey];
+            
+            // Fill in the form
+            document.getElementById('priorityText').value = template.text;
+            document.getElementById('priorityDesc').value = template.desc;
+            document.getElementById('priorityTimeEstimate').value = template.timeEstimate;
+            
+            // Set tags
+            document.querySelectorAll('.priority-tag').forEach(cb => {
+                cb.checked = template.tags.includes(cb.value);
+            });
+            
+            showToast(`✅ Template applied: ${template.text}`);
+        }
+        
+        // Bulk Operations
+        let bulkMode = false;
+        let bulkSelected = new Set();
+        
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            const btn = document.getElementById('bulkModeBtn');
+            const bar = document.getElementById('bulkOperationsBar');
+            
+            if (bulkMode) {
+                btn.style.background = 'var(--accent)';
+                btn.style.color = '#000';
+                bar.style.display = 'block';
+                showToast('☑️ Bulk mode enabled - click priorities to select');
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+                bar.style.display = 'none';
+                clearBulkSelection();
+            }
+            renderPriorities();
+        }
+        
+        function toggleBulkSelection(id) {
+            if (!bulkMode) return;
+            
+            if (bulkSelected.has(id)) {
+                bulkSelected.delete(id);
+            } else {
+                bulkSelected.add(id);
+            }
+            
+            document.getElementById('bulkSelectedCount').textContent = bulkSelected.size;
+            renderPriorities();
+        }
+        
+        function clearBulkSelection() {
+            bulkSelected.clear();
+            document.getElementById('bulkSelectedCount').textContent = '0';
+            renderPriorities();
+        }
+        
+        function bulkMove(newStatus) {
+            if (bulkSelected.size === 0) {
+                showToast('❌ No priorities selected');
+                return;
+            }
+            
+            const ids = Array.from(bulkSelected);
+            ids.forEach(id => {
+                const p = data.priorities.find(p => p.id === id);
+                if (p) {
+                    p.status = newStatus;
+                    p.completed = (newStatus === 'done');
+                    p.updatedAt = new Date().toISOString();
+                }
+            });
+            
+            saveData();
+            renderAll();
+            showToast(`✅ Moved ${bulkSelected.size} priorities to ${newStatus}`);
+            clearBulkSelection();
+        }
+        
+        function bulkDelete() {
+            if (bulkSelected.size === 0) {
+                showToast('❌ No priorities selected');
+                return;
+            }
+            
+            if (!confirm(`Delete ${bulkSelected.size} selected priorities?`)) return;
+            
+            const ids = Array.from(bulkSelected);
+            data.priorities = data.priorities.filter(p => !ids.includes(p.id));
+            
+            saveData();
+            renderAll();
+            showToast(`🗑️ Deleted ${ids.length} priorities`);
+            clearBulkSelection();
+        }
+        
+        // Search Functions
+        function toggleSearchModal() {
+            const modal = document.getElementById('searchModal');
+            const isVisible = modal.style.display === 'flex';
+            
+            if (isVisible) {
+                closeSearchModal();
+            } else {
+                modal.style.display = 'flex';
+                document.getElementById('searchInput').focus();
+                document.getElementById('searchInput').value = '';
+                document.getElementById('searchResults').innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Type to search...</div>';
+            }
+        }
+        
+        function closeSearchModal() {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+        
+        function setSearchFilter(filter) {
+            currentSearchFilter = filter;
+            
+            // Update button styles
+            ['all', 'priorities', 'projects', 'skus'].forEach(f => {
+                const btn = document.getElementById('searchFilter' + f.charAt(0).toUpperCase() + f.slice(1));
+                if (f === filter) {
+                    btn.style.background = 'var(--accent)';
+                    btn.style.color = '#000';
+                } else {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }
+            });
+            
+            // Re-run search
+            const query = document.getElementById('searchInput').value;
+            if (query) performSearch(query);
+        }
+        
+        function performSearch(query) {
+            if (!query || query.length < 2) {
+                document.getElementById('searchResults').innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Type at least 2 characters...</div>';
+                return;
+            }
+            
+            const q = query.toLowerCase();
+            const results = [];
+            
+            // Search priorities
+            if (currentSearchFilter === 'all' || currentSearchFilter === 'priorities') {
+                (data.priorities || []).forEach(p => {
+                    if (p.text?.toLowerCase().includes(q) || 
+                        p.desc?.toLowerCase().includes(q) ||
+                        p.notes?.toLowerCase().includes(q) ||
+                        p.tags?.some(t => t.toLowerCase().includes(q))) {
+                        results.push({ type: 'priority', item: p });
+                    }
+                });
+            }
+            
+            // Search projects
+            if (currentSearchFilter === 'all' || currentSearchFilter === 'projects') {
+                ['backlog', 'inprogress', 'done'].forEach(status => {
+                    (data.projects?.[status] || []).forEach(p => {
+                        if (p.title?.toLowerCase().includes(q) || 
+                            p.desc?.toLowerCase().includes(q) ||
+                            p.tags?.some(t => t.toLowerCase().includes(q))) {
+                            results.push({ type: 'project', item: p, status });
+                        }
+                    });
+                });
+            }
+            
+            // Search SKUs
+            if (currentSearchFilter === 'all' || currentSearchFilter === 'skus') {
+                (data.skus || []).forEach(s => {
+                    if (s.code?.toLowerCase().includes(q) || 
+                        s.name?.toLowerCase().includes(q)) {
+                        results.push({ type: 'sku', item: s });
+                    }
+                });
+            }
+            
+            renderSearchResults(results, q);
+        }
+        
+        function renderSearchResults(results, query) {
+            const container = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = `<div style="color: var(--text-muted); text-align: center; padding: 2rem;">
+                    No results for "${query}"
+                </div>`;
+                return;
+            }
+            
+            container.innerHTML = results.map(r => {
+                if (r.type === 'priority') {
+                    const p = r.item;
+                    const statusEmoji = p.completed ? '✅' : p.status === 'inprogress' ? '⚡' : p.status === 'todo' ? '📝' : '📥';
+                    return `
+                        <div onclick="openPriorityFromSearch(${p.id})" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; hover: background: rgba(255,255,255,0.06);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>${statusEmoji}</span>
+                                <span style="font-weight: 500;">${highlightText(p.text, query)}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                Priority • ${p.board} • ${p.tags?.join(', ') || 'no tags'}
+                            </div>
+                        </div>
+                    `;
+                } else if (r.type === 'project') {
+                    const p = r.item;
+                    return `
+                        <div onclick="openProjectFromSearch(${p.id}, '${r.status}')" style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>📋</span>
+                                <span style="font-weight: 500;">${highlightText(p.title, query)}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                Project • ${r.status} • ${p.board}
+                            </div>
+                        </div>
+                    `;
+                } else if (r.type === 'sku') {
+                    const s = r.item;
+                    return `
+                        <div style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>📦</span>
+                                <span style="font-weight: 500;">${highlightText(s.code, query)}</span>
+                                <span style="color: var(--text-muted);">- ${highlightText(s.name, query)}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                SKU • Stock: ${s.stock}
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+        
+        function highlightText(text, query) {
+            if (!text) return '';
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark style="background: var(--accent); color: #000; padding: 0 2px; border-radius: 2px;">$1</mark>');
+        }
+        
+        function openPriorityFromSearch(id) {
+            closeSearchModal();
+            showSection('priorities', document.querySelector('.nav-btn[onclick*="priorities"]'));
+            setTimeout(() => openEditPriorityModal(id), 100);
+        }
+        
+        function openProjectFromSearch(id, status) {
+            closeSearchModal();
+            showSection('projects', document.querySelector('.nav-btn[onclick*="projects"]'));
+            setTimeout(() => openEditProjectModal(id, status), 100);
+        }
         
         // Mobile Navigation
         function toggleMobileNav() {
@@ -1849,32 +2494,149 @@
             // Populate project selector
             const projectSelect = document.getElementById('priorityProjectId');
             const allProjects = [
-                ...(data.projects?.backlog || []),
-                ...(data.projects?.inprogress || []),
+                ...(data.projects?.later || []),
+                ...(data.projects?.now || []),
                 ...(data.projects?.done || [])
             ];
             
             projectSelect.innerHTML = '<option value="">-- No Project --</option>' + 
-                allProjects.map(p => `<option value="${p.id}">${p.title} (${p.status})</option>
+                allProjects.map(p => `<option value="${p.id}">${escapeHtml(p.title)} (${p.status})</option>
                 `).join('');
+            
+            // Populate blockedBy selector with incomplete priorities
+            const blockedBySelect = document.getElementById('priorityBlockedBySelect');
+            const incompletePriorities = (data.priorities || []).filter(p => !p.completed && p.status !== 'done');
+            
+            if (incompletePriorities.length === 0) {
+                blockedBySelect.innerHTML = '<div style="color: var(--text-muted); font-size: 0.875rem;">No available priorities</div>';
+            } else {
+                blockedBySelect.innerHTML = incompletePriorities.map(p => `
+                    <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0;">
+                        <input type="checkbox" value="${p.id}" class="priority-blocked-by">
+                        <span style="font-size: 0.875rem;">${p.text}</span>
+                    </label>
+                `).join('');
+            }
         }
         
         function closePriorityModal() {
             document.getElementById('priorityModal').classList.remove('show');
             // Clear form
             document.getElementById('priorityText').value = '';
+            document.getElementById('priorityDesc').value = '';
+            document.getElementById('priorityNotes').value = '';
             document.getElementById('priorityDueDate').value = '';
             document.getElementById('priorityDocPath').value = '';
             document.getElementById('priorityProjectId').value = '';
+            document.getElementById('priorityRecurring').value = '';
+            document.getElementById('priorityTimeEstimate').value = '';
+            document.getElementById('priorityTimeSpent').value = '';
+            document.getElementById('priorityTemplate').value = '';
             document.querySelectorAll('.priority-tag').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.priority-assignee').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.priority-blocked-by').forEach(cb => cb.checked = false);
+        }
+        
+        // INPUT VALIDATION
+        const VALIDATION = {
+            priority: {
+                text: { max: 200, required: true },
+                desc: { max: 2000 },
+                notes: { max: 1000 },
+                timeEstimate: { min: 0, max: 999 },
+                timeSpent: { min: 0, max: 999 }
+            },
+            project: {
+                title: { max: 200, required: true },
+                desc: { max: 1000 }
+            }
+        };
+        
+        function validateInput(value, rules) {
+            const errors = [];
+            
+            if (rules.required && (!value || value.toString().trim() === '')) {
+                errors.push('This field is required');
+            }
+            
+            if (value && rules.max && value.length > rules.max) {
+                errors.push(`Maximum ${rules.max} characters allowed`);
+            }
+            
+            if (value && rules.min !== undefined && Number(value) < rules.min) {
+                errors.push(`Minimum value is ${rules.min}`);
+            }
+            
+            if (value && rules.max !== undefined && Number(value) > rules.max) {
+                errors.push(`Maximum value is ${rules.max}`);
+            }
+            
+            return errors;
+        }
+        
+        function sanitizeInput(text) {
+            if (!text) return '';
+            // Remove potentially dangerous characters but keep basic formatting
+            return text
+                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+\s*=/gi, '');
         }
         
         function savePriority() {
-            const text = document.getElementById('priorityText').value.trim();
+            const text = sanitizeInput(document.getElementById('priorityText').value.trim());
+            const desc = sanitizeInput(document.getElementById('priorityDesc').value.trim());
+            const notes = sanitizeInput(document.getElementById('priorityNotes').value.trim());
             const dueDate = document.getElementById('priorityDueDate').value;
             const board = document.getElementById('priorityBoard').value;
-            const docPath = document.getElementById('priorityDocPath').value.trim();
+            const docPath = sanitizeInput(document.getElementById('priorityDocPath').value.trim());
             const projectId = document.getElementById('priorityProjectId').value;
+            const recurring = document.getElementById('priorityRecurring').value;
+            const timeEstimate = parseFloat(document.getElementById('priorityTimeEstimate').value) || 0;
+            const timeSpent = parseFloat(document.getElementById('priorityTimeSpent').value) || 0;
+            
+            // Get assignee
+            const assigneeEl = document.querySelector('.priority-assignee:checked');
+            const assignee = assigneeEl ? assigneeEl.value : '';
+            
+            // VALIDATION
+            const textErrors = validateInput(text, VALIDATION.priority.text);
+            if (textErrors.length > 0) {
+                showToast('❌ ' + textErrors[0]);
+                document.getElementById('priorityText').focus();
+                return;
+            }
+            
+            const descErrors = validateInput(desc, VALIDATION.priority.desc);
+            if (descErrors.length > 0) {
+                showToast('❌ Description: ' + descErrors[0]);
+                return;
+            }
+            
+            const notesErrors = validateInput(notes, VALIDATION.priority.notes);
+            if (notesErrors.length > 0) {
+                showToast('❌ Notes: ' + notesErrors[0]);
+                return;
+            }
+            
+            // Validate date format if provided
+            if (dueDate) {
+                const dateObj = new Date(dueDate);
+                if (isNaN(dateObj.getTime())) {
+                    showToast('❌ Invalid due date');
+                    return;
+                }
+            }
+            
+            // Validate time tracking values
+            if (timeEstimate < 0 || timeEstimate > 999) {
+                showToast('❌ Time estimate must be between 0 and 999 hours');
+                return;
+            }
+            if (timeSpent < 0 || timeSpent > 999) {
+                showToast('❌ Time spent must be between 0 and 999 hours');
+                return;
+            }
             
             if (!text) {
                 showToast('❌ Please enter a task description');
@@ -1886,23 +2648,43 @@
                 tags.push(cb.value);
             });
             
+            // Add assignee as tag if set
+            if (assignee) {
+                tags.push(assignee);
+            }
+            
+            // Get blockedBy dependencies
+            const blockedBy = [];
+            document.querySelectorAll('.priority-blocked-by:checked').forEach(cb => {
+                blockedBy.push(parseInt(cb.value));
+            });
+            
             const newPriority = {
                 id: Date.now(),
                 text: text,
+                desc: desc,
+                notes: notes,
                 completed: false,
-                status: 'todo',
+                status: 'later',  // Default to 'later' in 3-state workflow
                 tags: tags,
                 dueDate: dueDate,
                 board: board,
                 docPath: docPath,
-                projectId: projectId ? parseInt(projectId) : null
+                assignee: assignee,
+                projectId: projectId ? parseInt(projectId) : null,
+                blockedBy: blockedBy,
+                recurring: recurring,
+                timeEstimate: timeEstimate,
+                timeSpent: timeSpent,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
             
             // If linked to project, add to project's priorityIds
             if (projectId) {
                 const allProjects = [
-                    ...(data.projects?.backlog || []),
-                    ...(data.projects?.inprogress || []),
+                    ...(data.projects?.later || []),
+                    ...(data.projects?.now || []),
                     ...(data.projects?.done || [])
                 ];
                 const project = allProjects.find(p => p.id === parseInt(projectId));
@@ -1931,6 +2713,8 @@
             
             // Populate form
             document.getElementById('priorityText').value = priority.text;
+            document.getElementById('priorityDesc').value = priority.desc || '';
+            document.getElementById('priorityNotes').value = priority.notes || '';
             document.getElementById('priorityDueDate').value = priority.dueDate || '';
             document.getElementById('priorityBoard').value = priority.board || 'all';
             document.getElementById('priorityDocPath').value = priority.docPath || '';
@@ -1941,16 +2725,74 @@
                 cb.checked = priority.tags?.includes(cb.value) || false;
             });
             
+            // Set assignee radio buttons
+            document.querySelectorAll('.priority-assignee').forEach(radio => {
+                radio.checked = (priority.assignee === radio.value) || 
+                                (!priority.assignee && radio.value === '');
+            });
+            
             // Populate project selector
             const projectSelect = document.getElementById('priorityProjectId');
             const allProjects = [
-                ...(data.projects?.backlog || []),
-                ...(data.projects?.inprogress || []),
+                ...(data.projects?.later || []),
+                ...(data.projects?.now || []),
                 ...(data.projects?.done || [])
             ];
             
+            console.log('🔍 Debug - Projects available for dropdown:', allProjects.map(p => ({ id: p.id, title: p.title })));
+            console.log('🔍 Debug - Current priority projectId:', priority.projectId);
+            
             projectSelect.innerHTML = '<option value="">-- No Project --</option>' + 
-                allProjects.map(p => `<option value="${p.id}" ${p.id === priority.projectId ? 'selected' : ''}>${p.title} (${p.status})</option>`).join('');
+                allProjects.map(p => `<option value="${p.id}" ${p.id === priority.projectId ? 'selected' : ''}>${escapeHtml(p.title)} (${p.status})</option>`).join('');
+            
+            console.log('🔍 Debug - Project dropdown HTML:', projectSelect.innerHTML);
+            
+            // Populate blockedBy selector with other incomplete priorities
+            const blockedBySelect = document.getElementById('priorityBlockedBySelect');
+            const otherIncomplete = (data.priorities || []).filter(p => !p.completed && p.status !== 'done' && p.id !== id);
+            
+            if (otherIncomplete.length === 0) {
+                blockedBySelect.innerHTML = '<div style="color: var(--text-muted); font-size: 0.875rem;">No available priorities</div>';
+            } else {
+                blockedBySelect.innerHTML = otherIncomplete.map(p => `
+                    <label class="checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0;">
+                        <input type="checkbox" value="${p.id}" class="priority-blocked-by" ${priority.blockedBy?.includes(p.id) ? 'checked' : ''}>
+                        <span style="font-size: 0.875rem;">${p.text}</span>
+                    </label>
+                `).join('');
+            }
+            
+            // Set recurring
+            document.getElementById('priorityRecurring').value = priority.recurring || '';
+            
+            // Set time tracking
+            document.getElementById('priorityTimeEstimate').value = priority.timeEstimate || '';
+            document.getElementById('priorityTimeSpent').value = priority.timeSpent || '';
+            
+            // Show and populate activity log
+            const activitySection = document.getElementById('priorityActivityLogSection');
+            const activityLog = document.getElementById('priorityActivityLog');
+            activitySection.style.display = 'block';
+            
+            if (priority.activityLog && priority.activityLog.length > 0) {
+                activityLog.innerHTML = priority.activityLog.slice(-10).reverse().map(entry => `
+                    <div style="padding: 0.5rem; border-bottom: 1px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--accent);">
+                                ${new Date(entry.timestamp).toLocaleString()}
+                            </span>
+                            <span style="color: var(--text-muted);">
+                                ${entry.action}
+                            </span>
+                        </div>
+                        ${entry.details ? `<div style="color: var(--text-muted); margin-top: 0.25rem;">
+                            ${entry.details}
+                        </div>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                activityLog.innerHTML = '<div style="color: var(--text-muted); padding: 0.5rem;">No activity recorded yet</div>';
+            }
             
             // Change modal title and button
             document.querySelector('#priorityModal h3').textContent = '✏️ Edit Priority';
@@ -1962,16 +2804,32 @@
         
         function saveEditedPriority() {
             const priority = data.priorities.find(p => p.id === editingPriorityId);
-            if (!priority) return;
+            if (!priority) {
+                console.error('❌ Priority not found:', editingPriorityId);
+                return;
+            }
             
             const newProjectId = document.getElementById('priorityProjectId').value;
             const oldProjectId = priority.projectId;
             
+            console.log('🔍 Debug - Project reassignment:', {
+                editingPriorityId,
+                newProjectId,
+                oldProjectId,
+                newProjectIdType: typeof newProjectId,
+                oldProjectIdType: typeof oldProjectId,
+                comparison: newProjectId !== String(oldProjectId || ''),
+                newProjectIdParsed: newProjectId ? parseInt(newProjectId) : null
+            });
+            
             // Update fields
             priority.text = document.getElementById('priorityText').value.trim();
+            priority.desc = document.getElementById('priorityDesc').value.trim();
+            priority.notes = document.getElementById('priorityNotes').value.trim();
             priority.dueDate = document.getElementById('priorityDueDate').value;
             priority.board = document.getElementById('priorityBoard').value;
             priority.docPath = document.getElementById('priorityDocPath').value.trim();
+            priority.updatedAt = new Date().toISOString();
             
             // Update tags
             priority.tags = [];
@@ -1979,39 +2837,101 @@
                 priority.tags.push(cb.value);
             });
             
+            // Update blockedBy dependencies
+            priority.blockedBy = [];
+            document.querySelectorAll('.priority-blocked-by:checked').forEach(cb => {
+                priority.blockedBy.push(parseInt(cb.value));
+            });
+            
+            // Update recurring
+            priority.recurring = document.getElementById('priorityRecurring').value;
+            
+            // Update time tracking
+            priority.timeEstimate = parseFloat(document.getElementById('priorityTimeEstimate').value) || 0;
+            priority.timeSpent = parseFloat(document.getElementById('priorityTimeSpent').value) || 0;
+            
+            // UPDATE ASSIGNEE
+            const assigneeEl = document.querySelector('.priority-assignee:checked');
+            const newAssignee = assigneeEl ? assigneeEl.value : '';
+            const oldAssignee = priority.assignee || '';
+            
+            console.log('🔍 Debug - Assignee change:', { oldAssignee, newAssignee, hasChanged: oldAssignee !== newAssignee });
+            
+            if (oldAssignee !== newAssignee) {
+                priority.assignee = newAssignee;
+                // Update tags to reflect assignee change
+                priority.tags = priority.tags.filter(t => t !== 'KimiClaw' && t !== 'Oleg');
+                if (newAssignee) {
+                    priority.tags.push(newAssignee);
+                }
+                console.log('🔄 Assignee updated to:', newAssignee);
+            }
+            
+            // Log activity
+            if (!priority.activityLog) priority.activityLog = [];
+            priority.activityLog.push({
+                timestamp: new Date().toISOString(),
+                action: 'Edited',
+                details: `Updated by ${priority.assignee || 'user'}`
+            });
+            
             // Handle project linking changes
-            if (newProjectId !== String(oldProjectId || '')) {
+            // Normalize values for comparison (handle undefined, null, empty string)
+            const normalizedNewId = newProjectId ? String(newProjectId) : '';
+            const normalizedOldId = oldProjectId ? String(oldProjectId) : '';
+            
+            console.log('🔍 Debug - Normalized comparison:', {
+                normalizedNewId,
+                normalizedOldId,
+                hasChanged: normalizedNewId !== normalizedOldId
+            });
+            
+            if (normalizedNewId !== normalizedOldId) {
+                console.log('🔄 Project change detected:', { from: oldProjectId, to: newProjectId });
+                
                 // Remove from old project
                 if (oldProjectId) {
                     const allProjects = [
-                        ...(data.projects?.backlog || []),
-                        ...(data.projects?.inprogress || []),
+                        ...(data.projects?.later || []),
+                        ...(data.projects?.now || []),
                         ...(data.projects?.done || [])
                     ];
+                    console.log('📋 All projects for removal:', allProjects.map(p => ({ id: p.id, title: p.title })));
                     const oldProject = allProjects.find(p => p.id === oldProjectId);
                     if (oldProject) {
+                        console.log('✅ Found old project, removing priority from:', oldProject.title);
                         oldProject.priorityIds = (oldProject.priorityIds || []).filter(pid => pid !== editingPriorityId);
+                    } else {
+                        console.warn('⚠️ Old project not found:', oldProjectId);
                     }
                 }
                 
                 // Add to new project
                 if (newProjectId) {
                     const allProjects = [
-                        ...(data.projects?.backlog || []),
-                        ...(data.projects?.inprogress || []),
+                        ...(data.projects?.later || []),
+                        ...(data.projects?.now || []),
                         ...(data.projects?.done || [])
                     ];
+                    console.log('📋 All projects for addition:', allProjects.map(p => ({ id: p.id, title: p.title })));
                     const newProject = allProjects.find(p => p.id === parseInt(newProjectId));
                     if (newProject) {
+                        console.log('✅ Found new project, adding priority to:', newProject.title);
                         newProject.priorityIds = newProject.priorityIds || [];
                         newProject.priorityIds.push(editingPriorityId);
+                        priority.projectId = parseInt(newProjectId);
+                    } else {
+                        console.error('❌ New project not found:', newProjectId);
                     }
-                    priority.projectId = parseInt(newProjectId);
                 } else {
+                    console.log('🗑️ Removing project assignment');
                     priority.projectId = null;
                 }
+            } else {
+                console.log('ℹ️ No project change');
             }
             
+            console.log('💾 Saving priority:', priority);
             saveData();
             renderAll();
             showToast('✅ Priority updated');
@@ -2092,7 +3012,9 @@
                 board: board,
                 status: status,
                 priorityIds: linkedPriorityIds,
-                dueDate: dueDate || null
+                dueDate: dueDate || null,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
             
             // Update linked priorities
@@ -2203,6 +3125,7 @@
             });
             
             project.priorityIds = newLinkedIds;
+            project.updatedAt = new Date().toISOString();
             
             // Move to new status if changed
             if (newStatus !== editingProjectStatus) {
@@ -2226,36 +3149,481 @@
             document.querySelector('#projectModal .btn-success').onclick = saveProject;
         }
         
+        // SKU Modal Functions
+        function openSkuModal() {
+            document.getElementById('skuModal').classList.add('show');
+            document.getElementById('skuCode').focus();
+        }
+        
+        function closeSkuModal() {
+            document.getElementById('skuModal').classList.remove('show');
+            document.getElementById('skuCode').value = '';
+            document.getElementById('skuName').value = '';
+            document.getElementById('skuStock').value = '';
+        }
+        
+        function saveSku() {
+            const code = document.getElementById('skuCode').value.trim().toUpperCase();
+            const name = document.getElementById('skuName').value.trim();
+            const stock = parseInt(document.getElementById('skuStock').value) || 0;
+            
+            if (!code) {
+                showToast('❌ Please enter SKU code');
+                return;
+            }
+            if (!name) {
+                showToast('❌ Please enter product name');
+                return;
+            }
+            
+            // Check for duplicate code
+            const existing = data.skus?.find(s => s.code === code);
+            if (existing) {
+                showToast('❌ SKU code already exists');
+                return;
+            }
+            
+            const newSku = {
+                id: Date.now(),
+                code: code,
+                name: name,
+                stock: stock,
+                createdAt: new Date().toISOString()
+            };
+            
+            data.skus = data.skus || [];
+            data.skus.push(newSku);
+            saveData();
+            renderSKUs();
+            showToast(`✅ SKU ${code} added`);
+            closeSkuModal();
+        }
+        
+        function deleteSku(id) {
+            if (confirm('Delete this SKU?')) {
+                data.skus = data.skus.filter(s => s.id !== id);
+                saveData();
+                renderSKUs();
+                showToast('SKU deleted');
+            }
+        }
+        
+        // Clear Sample Data Function
+        function clearSampleData() {
+            const samplePriorityTexts = new Set([
+                "research b2b wholesale pricing strategy",
+                "update etsy product photos with new lighting",
+                "create email template for wholesale inquiries",
+                "review and optimize etsy tags for seo",
+                "set up google analytics for etsy shop",
+                "draft partnership proposal with local vape shop",
+                "create bundle pricing comparison sheet",
+                "schedule product photography session"
+            ]);
+            
+            const sampleProjectTitles = new Set([
+                "wholesale outreach campaign",
+                "etsy shop optimization",
+                "product line expansion"
+            ]);
+            
+            const beforeCount = (data.priorities || []).length + 
+                (data.projects?.backlog?.length || 0) + 
+                (data.projects?.inprogress?.length || 0) + 
+                (data.projects?.done?.length || 0);
+            
+            // Remove sample priorities
+            data.priorities = (data.priorities || []).filter(p => !samplePriorityTexts.has(p.text.toLowerCase()));
+            
+            // Remove sample projects from all columns
+            ['backlog', 'inprogress', 'done'].forEach(status => {
+                if (data.projects?.[status]) {
+                    data.projects[status] = data.projects[status].filter(p => !sampleProjectTitles.has(p.title.toLowerCase()));
+                }
+            });
+            
+            const afterCount = (data.priorities || []).length + 
+                (data.projects?.backlog?.length || 0) + 
+                (data.projects?.inprogress?.length || 0) + 
+                (data.projects?.done?.length || 0);
+            
+            const removed = beforeCount - afterCount;
+            
+            if (removed > 0) {
+                saveData();
+                renderAll();
+                showToast(`✅ Removed ${removed} sample tasks`);
+            } else {
+                showToast('ℹ️ No sample tasks found to remove');
+            }
+        }
+        
+        // Sample Data Functions - SAFE MERGE
+        const SAMPLE_DATA = {
+            priorities: [
+                { text: "Research B2B wholesale pricing strategy", tags: ["wholesale", "research"], dueDate: "2026-02-28", board: "wholesale" },
+                { text: "Update Etsy product photos with new lighting", tags: ["photo", "etsy"], dueDate: "2026-03-02", board: "etsy" },
+                { text: "Create email template for wholesale inquiries", tags: ["wholesale", "template"], dueDate: "2026-03-05", board: "wholesale" },
+                { text: "Review and optimize Etsy tags for SEO", tags: ["seo", "etsy"], dueDate: "2026-03-01", board: "etsy" },
+                { text: "Set up Google Analytics for Etsy shop", tags: ["analytics", "etsy"], dueDate: "2026-03-10", board: "etsy" },
+                { text: "Draft partnership proposal with local vape shop", tags: ["wholesale", "client"], dueDate: "2026-03-03", board: "wholesale" },
+                { text: "Create bundle pricing comparison sheet", tags: ["pricing", "operations"], dueDate: "2026-02-27", board: "all" },
+                { text: "Schedule product photography session", tags: ["photo", "operations"], dueDate: "2026-03-08", board: "photography" }
+            ],
+            projects: [
+                { title: "Wholesale Outreach Campaign", desc: "Contact 20 local smoke shops and vape stores with B2B pricing", tags: ["wholesale", "marketing"], status: "backlog", board: "wholesale" },
+                { title: "Etsy Shop Optimization", desc: "Update all listings with new photos, tags, and descriptions for better SEO", tags: ["etsy", "seo"], status: "inprogress", board: "etsy" },
+                { title: "Product Line Expansion", desc: "Design and prototype 3 new accessory variants based on customer feedback", tags: ["product", "design"], status: "backlog", board: "3dprint" }
+            ]
+        };
+        
+        function openSampleDataModal() {
+            document.getElementById('sampleDataModal').classList.add('show');
+            document.getElementById('loadSampleBtn').disabled = true;
+            document.getElementById('sampleDataPreview').innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 1rem;">Click Preview to see what will be added...</div>';
+        }
+        
+        function closeSampleDataModal() {
+            document.getElementById('sampleDataModal').classList.remove('show');
+        }
+        
+        function previewSampleData() {
+            const previewDiv = document.getElementById('sampleDataPreview');
+            
+            // Count what will be added
+            const existingPriorityTexts = new Set((data.priorities || []).map(p => p.text.toLowerCase()));
+            const existingProjectTitles = new Set([
+                ...(data.projects?.backlog || []).map(p => p.title.toLowerCase()),
+                ...(data.projects?.inprogress || []).map(p => p.title.toLowerCase()),
+                ...(data.projects?.done || []).map(p => p.title.toLowerCase())
+            ]);
+            
+            const newPriorities = SAMPLE_DATA.priorities.filter(p => !existingPriorityTexts.has(p.text.toLowerCase()));
+            const newProjects = SAMPLE_DATA.projects.filter(p => !existingProjectTitles.has(p.title.toLowerCase()));
+            
+            let html = '';
+            
+            if (newPriorities.length === 0 && newProjects.length === 0) {
+                html = '<div style="color: var(--green); text-align: center; padding: 1rem;">✅ All sample tasks already exist in your data!</div>';
+            } else {
+                html = '<div style="font-size: 0.875rem;">';
+                
+                if (newPriorities.length > 0) {
+                    html += `<div style="margin-bottom: 1rem;"><strong style="color: var(--accent);">⭐ Priorities to add (${newPriorities.length}):</strong><ul style="margin: 0.5rem 0; padding-left: 1.5rem;">`;
+                    newPriorities.forEach(p => {
+                        html += `<li style="margin: 0.25rem 0;">${p.text} <span style="color: var(--text-muted);">(${p.tags.join(', ')})</span></li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                
+                if (newProjects.length > 0) {
+                    html += `<div><strong style="color: var(--accent);">📋 Projects to add (${newProjects.length}):</strong><ul style="margin: 0.5rem 0; padding-left: 1.5rem;">`;
+                    newProjects.forEach(p => {
+                        html += `<li style="margin: 0.25rem 0;">${p.title}</li>`;
+                    });
+                    html += '</ul></div>';
+                }
+                
+                html += '</div>';
+            }
+            
+            previewDiv.innerHTML = html;
+            document.getElementById('loadSampleBtn').disabled = (newPriorities.length === 0 && newProjects.length === 0);
+        }
+        
+        function loadSampleDataSafe() {
+            // SAFETY CHECK #1: Confirm with user
+            if (!confirm('Are you sure you want to add these sample tasks?\n\nThis will NOT delete any existing data.')) {
+                return;
+            }
+            
+            // SAFETY CHECK #2: Backup current data to memory
+            const backupData = JSON.parse(JSON.stringify(data));
+            
+            try {
+                let addedPriorities = 0;
+                let addedProjects = 0;
+                let skippedDuplicates = 0;
+                
+                // Get existing texts/titles for duplicate detection
+                const existingPriorityTexts = new Set((data.priorities || []).map(p => p.text.toLowerCase()));
+                const existingProjectTitles = new Set([
+                    ...(data.projects?.backlog || []).map(p => p.title.toLowerCase()),
+                    ...(data.projects?.inprogress || []).map(p => p.title.toLowerCase()),
+                    ...(data.projects?.done || []).map(p => p.title.toLowerCase())
+                ]);
+                
+                // Initialize arrays if needed
+                data.priorities = data.priorities || [];
+                data.projects = data.projects || { backlog: [], inprogress: [], done: [] };
+                
+                // Add priorities (skip duplicates)
+                SAMPLE_DATA.priorities.forEach(p => {
+                    if (existingPriorityTexts.has(p.text.toLowerCase())) {
+                        skippedDuplicates++;
+                        return;
+                    }
+                    
+                    data.priorities.push({
+                        id: Date.now() + Math.random(),
+                        text: p.text,
+                        completed: false,
+                        status: 'todo',
+                        tags: p.tags,
+                        dueDate: p.dueDate,
+                        board: p.board,
+                        projectId: null,
+                        createdAt: new Date().toISOString()
+                    });
+                    addedPriorities++;
+                });
+                
+                // Add projects (skip duplicates)
+                SAMPLE_DATA.projects.forEach(p => {
+                    if (existingProjectTitles.has(p.title.toLowerCase())) {
+                        skippedDuplicates++;
+                        return;
+                    }
+                    
+                    const newProject = {
+                        id: Date.now() + Math.random(),
+                        title: p.title,
+                        desc: p.desc,
+                        tags: p.tags,
+                        board: p.board,
+                        status: p.status,
+                        priorityIds: [],
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    data.projects[p.status].push(newProject);
+                    addedProjects++;
+                });
+                
+                // Save to Firebase
+                saveData();
+                renderAll();
+                
+                closeSampleDataModal();
+                
+                showToast(`✅ Added ${addedPriorities} priorities and ${addedProjects} projects!`);
+                
+                if (skippedDuplicates > 0) {
+                    showToast(`ℹ️ Skipped ${skippedDuplicates} duplicates`);
+                }
+                
+            } catch (error) {
+                // SAFETY CHECK #3: Restore backup on error
+                console.error('Error loading sample data:', error);
+                data = backupData;
+                saveData();
+                renderAll();
+                showToast('❌ Error occurred. Data restored to previous state.');
+            }
+        }
+        
+        function editSkuStock(id) {
+            const sku = data.skus?.find(s => s.id === id);
+            if (!sku) return;
+            
+            const newStock = prompt(`Update stock for ${sku.code} (${sku.name}):`, sku.stock);
+            if (newStock === null) return; // Cancelled
+            
+            const stockNum = parseInt(newStock);
+            if (isNaN(stockNum) || stockNum < 0) {
+                showToast('❌ Please enter a valid number');
+                return;
+            }
+            
+            sku.stock = stockNum;
+            sku.updatedAt = new Date().toISOString();
+            saveData();
+            renderSKUs();
+            showToast(`✅ ${sku.code} stock updated to ${stockNum}`);
+        }
+        
+        // SKU CSV Import/Export
+        function downloadSkuTemplate() {
+            const template = 'SKU Code,Product Name,Stock\nACC-BLK-001,Black Accessory,10\nACC-WHT-002,White Accessory,5\nACC-GRY-003,Grey Accessory,0';
+            const blob = new Blob([template], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sku-template.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📥 SKU template downloaded');
+        }
+        
+        function handleSkuUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.name.endsWith('.csv')) {
+                showToast('❌ Please upload a CSV file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        showToast('❌ CSV is empty or invalid');
+                        return;
+                    }
+                    
+                    // Parse headers
+                    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                    const codeIdx = headers.findIndex(h => h.includes('sku') || h.includes('code'));
+                    const nameIdx = headers.findIndex(h => h.includes('product') || h.includes('name'));
+                    const stockIdx = headers.findIndex(h => h.includes('stock') || h.includes('qty') || h.includes('quantity'));
+                    
+                    if (codeIdx === -1 || nameIdx === -1) {
+                        showToast('❌ CSV must have SKU Code and Product Name columns');
+                        return;
+                    }
+                    
+                    // REPLACE entire inventory with CSV contents
+                    const newSkus = [];
+                    let errors = 0;
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        // Parse CSV line handling quoted fields with commas
+                        const cols = [];
+                        let current = '';
+                        let inQuotes = false;
+                        
+                        for (let j = 0; j < line.length; j++) {
+                            const char = line[j];
+                            if (char === '"') {
+                                inQuotes = !inQuotes;
+                            } else if (char === ',' && !inQuotes) {
+                                cols.push(current.trim());
+                                current = '';
+                            } else {
+                                current += char;
+                            }
+                        }
+                        cols.push(current.trim()); // Add last column
+                        
+                        if (cols.length < 2) continue;
+                        
+                        const code = cols[codeIdx]?.toUpperCase().replace(/^"|"$/g, '');
+                        const name = cols[nameIdx]?.replace(/^"|"$/g, '');
+                        const stockVal = cols[stockIdx]?.trim().replace(/^"|"$/g, '') || '0';
+                        const stock = parseInt(stockVal, 10);
+                        
+                        if (!code || !name) {
+                            errors++;
+                            continue;
+                        }
+                        
+                        newSkus.push({
+                            id: Date.now() + i,
+                            code: code,
+                            name: name,
+                            stock: isNaN(stock) ? 0 : stock,
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                    
+                    // Replace entire SKU array
+                    data.skus = newSkus;
+                    saveData();
+                    renderSKUs();
+                    
+                    const statusDiv = document.getElementById('skuUploadStatus');
+                    statusDiv.innerHTML = `
+                        <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; color: var(--green);">
+                            ✅ Inventory replaced: ${newSkus.length} SKUs loaded${errors > 0 ? ` (${errors} rows skipped)` : ''}
+                        </div>
+                    `;
+                    showToast(`✅ Inventory updated: ${newSkus.length} SKUs`);
+                    
+                    // Clear file input
+                    event.target.value = '';
+                    
+                } catch (err) {
+                    console.error('SKU import error:', err);
+                    showToast('❌ Failed to import CSV');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Event handler references for cleanup
+        let modalClickHandler = null;
+        let modalKeyHandler = null;
+        
         // Close modals on overlay click
-        document.addEventListener('click', function(e) {
+        modalClickHandler = function(e) {
             if (e.target.classList.contains('modal-overlay')) {
                 e.target.classList.remove('show');
             }
-        });
+        };
+        document.addEventListener('click', modalClickHandler);
         
         // Close modals on Escape key
-        document.addEventListener('keydown', function(e) {
+        modalKeyHandler = function(e) {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal-overlay').forEach(modal => {
                     modal.classList.remove('show');
                 });
+                closeSearchModal();
             }
-        });
+            
+            // Cmd+K or Ctrl+K for search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleSearchModal();
+            }
+        };
+        document.addEventListener('keydown', modalKeyHandler);
         
-        // Render all
+        // Cleanup function
+        function cleanupEventListeners() {
+            if (modalClickHandler) document.removeEventListener('click', modalClickHandler);
+            if (modalKeyHandler) document.removeEventListener('keydown', modalKeyHandler);
+            if (clockInterval) clearInterval(clockInterval);
+            if (storage && storage.destroy) storage.destroy();
+        }
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', cleanupEventListeners);
+        
+        // Render all with error boundaries
         function renderAll() {
-            renderDashboard();
-            renderRevenue();
-            renderProjects();
-            renderPriorities();
-            renderLeads();
-            renderEvents();
-            renderCalendar();
-            renderReview();
-            renderTimeline();
-            renderInventory();
-            renderSKUs();
-            renderDocs();
+            const renderTasks = [
+                { fn: renderDashboard, name: 'Dashboard' },
+                { fn: renderRevenue, name: 'Revenue' },
+                { fn: renderProjects, name: 'Projects' },
+                { fn: renderPriorities, name: 'Priorities' },
+                { fn: renderLeads, name: 'Leads' },
+                { fn: renderEvents, name: 'Events' },
+                { fn: renderCalendar, name: 'Calendar' },
+                { fn: renderReview, name: 'Review' },
+                { fn: renderTimeline, name: 'Timeline' },
+                { fn: renderInventory, name: 'Inventory' },
+                { fn: renderSKUs, name: 'SKUs' },
+                { fn: renderDocs, name: 'Docs' }
+            ];
+            
+            renderTasks.forEach(task => {
+                try {
+                    task.fn();
+                } catch (e) {
+                    console.error(`❌ Render error in ${task.name}:`, e);
+                    // Don't let one failed render crash the whole dashboard
+                }
+            });
         }
         
         function renderDashboard() {
@@ -2266,11 +3634,11 @@
             const thisMonthData = history.find(h => h.month === currentMonth);
             const ordersThisMonth = thisMonthData ? thisMonthData.orders : 0;
             
-            // Show orders this month / orders last month for comparison
-            const lastMonthData = history[history.length - 2];
-            const ordersLastMonth = lastMonthData ? lastMonthData.orders : 0;
+            // Total orders
+            const totalOrders = data.orders || history.reduce((sum, m) => sum + (m.orders || 0), 0);
             
-            document.getElementById('dashOrdersThisMonth').textContent = ordersThisMonth;
+            // Show orders this month / total orders
+            document.getElementById('dashOrdersThisMonth').textContent = `${ordersThisMonth} / ${totalOrders}`;
             document.getElementById('dashRevenue').textContent = '$' + Math.round(data.totalRevenue).toLocaleString();
             document.getElementById('dashActiveProjects').textContent = (data.projects?.inprogress?.length || 0);
             
@@ -2325,61 +3693,164 @@
             const history = data.revenueHistory || [];
             const priorities = data.priorities || [];
             const skus = data.skus || [];
+            const projects = data.projects || {};
             
-            // Revenue trend analysis
+            // ===== REVENUE ANALYSIS =====
             if (history.length >= 2) {
                 const lastMonth = history[history.length - 1];
                 const prevMonth = history[history.length - 2];
                 const lastRev = lastMonth?.revenue || 0;
                 const prevRev = prevMonth?.revenue || 0;
+                const change = prevRev > 0 ? ((lastRev - prevRev) / prevRev * 100) : 0;
                 
-                if (lastRev > prevRev * 1.2) {
-                    insights.push({ icon: '📈', text: 'Revenue up 20%+ this month! Consider increasing ad spend.', type: 'positive' });
-                } else if (lastRev < prevRev * 0.8) {
-                    insights.push({ icon: '📉', text: 'Revenue down 20%+ this month. Review Etsy SEO and listings.', type: 'warning' });
+                // Monthly trend with specific percentage
+                if (change > 0) {
+                    insights.push({ 
+                        icon: '📈', 
+                        text: `Revenue up ${change.toFixed(1)}% this month ($${lastRev.toFixed(0)} vs $${prevRev.toFixed(0)}). ${change > 20 ? 'Strong growth - consider scaling ads!' : 'Steady growth.'}`, 
+                        type: 'positive' 
+                    });
+                } else if (change < 0) {
+                    insights.push({ 
+                        icon: '📉', 
+                        text: `Revenue down ${Math.abs(change).toFixed(1)}% this month ($${lastRev.toFixed(0)} vs $${prevRev.toFixed(0)}). Review listings and SEO.`, 
+                        type: 'warning' 
+                    });
+                }
+                
+                // 3-month average trend
+                if (history.length >= 3) {
+                    const last3 = history.slice(-3);
+                    const avg3 = last3.reduce((s, m) => s + (m.revenue || 0), 0) / 3;
+                    const monthlyGoal = data.monthlyRevenueGoal || 450;
+                    const goalProgress = (avg3 / monthlyGoal * 100).toFixed(0);
+                    
+                    if (avg3 < monthlyGoal * 0.7) {
+                        insights.push({ 
+                            icon: '⚡', 
+                            text: `3-month avg: $${avg3.toFixed(0)}/mo (${goalProgress}% of $${monthlyGoal} goal). Need ${monthlyGoal - avg3 < 0 ? 0 : (monthlyGoal - avg3).toFixed(0)} more/mo to hit target.`, 
+                            type: 'warning' 
+                        });
+                    } else if (avg3 >= monthlyGoal) {
+                        insights.push({ 
+                            icon: '🎯', 
+                            text: `3-month avg: $${avg3.toFixed(0)}/mo - Hitting monthly goal!`, 
+                            type: 'positive' 
+                        });
+                    }
                 }
             }
             
-            // Priority overload
+            // Annual goal tracking
+            const totalRev = data.totalRevenue || 0;
+            const goal = data.revenueGoal || 5400;
+            const progress = totalRev / goal;
+            const remaining = goal - totalRev;
+            const goalDate = data.goalDate || '2026-05-01';
+            const daysLeft = Math.max(0, Math.ceil((new Date(goalDate) - new Date()) / (1000 * 60 * 60 * 24)));
+            const dailyNeeded = daysLeft > 0 ? remaining / daysLeft : 0;
+            
+            if (progress >= 0.9) {
+                insights.push({ icon: '🏆', text: `90%+ to annual goal! Only $${remaining.toFixed(0)} left.`, type: 'positive' });
+            } else if (progress < 0.3) {
+                insights.push({ icon: '💰', text: `At ${Math.round(progress * 100)}% of $${goal} goal. Need $${dailyNeeded.toFixed(0)}/day to hit target by ${goalDate}.`, type: 'info' });
+            } else if (progress >= 0.5 && progress < 0.9) {
+                insights.push({ icon: '📊', text: `Halfway to goal! ${Math.round(progress * 100)}% complete. $${dailyNeeded.toFixed(0)}/day needed.`, type: 'info' });
+            }
+            
+            // ===== PRIORITY ANALYSIS =====
             const urgentCount = priorities.filter(p => !p.completed && p.tags?.includes('urgent')).length;
+            const overdueCount = priorities.filter(p => !p.completed && p.dueDate && new Date(p.dueDate) < new Date()).length;
+            const dueSoonCount = priorities.filter(p => {
+                if (p.completed || !p.dueDate) return false;
+                const due = new Date(p.dueDate);
+                const diff = (due - new Date()) / (1000 * 60 * 60 * 24);
+                return diff >= 0 && diff <= 2;
+            }).length;
+            
+            if (overdueCount > 0) {
+                insights.push({ icon: '🔴', text: `${overdueCount} overdue task${overdueCount > 1 ? 's' : ''}! Address immediately.`, type: 'warning' });
+            }
+            if (dueSoonCount > 0) {
+                insights.push({ icon: '⏰', text: `${dueSoonCount} task${dueSoonCount > 1 ? 's' : ''} due within 2 days.`, type: 'warning' });
+            }
             if (urgentCount > 3) {
                 insights.push({ icon: '⚠️', text: `${urgentCount} urgent tasks pending. Consider delegating or rescheduling.`, type: 'warning' });
             }
             
-            // Low stock alert
+            // ===== PROJECT STATUS =====
+            const laterCount = projects.later?.length || 0;
+            const nowCount = projects.now?.length || 0;
+            const doneCount = projects.done?.length || 0;
+            const totalProjects = laterCount + nowCount + doneCount;
+            
+            if (nowCount > 5) {
+                insights.push({ icon: '🔄', text: `${nowCount} projects active now. Focus on completing before starting new ones.`, type: 'info' });
+            }
+            if (laterCount > 10) {
+                insights.push({ icon: '📋', text: `${laterCount} projects in Later. Time to prioritize!`, type: 'info' });
+            }
+            if (totalProjects > 0 && doneCount / totalProjects > 0.7) {
+                insights.push({ icon: '✅', text: `${Math.round(doneCount/totalProjects*100)}% project completion rate. Great execution!`, type: 'positive' });
+            }
+            
+            // ===== INVENTORY ALERTS =====
             const lowStock = skus.filter(s => s.stock <= 3);
-            if (lowStock.length > 0) {
-                insights.push({ icon: '📦', text: `${lowStock.length} SKUs running low. Restock soon to avoid stockouts.`, type: 'warning' });
+            const outOfStock = skus.filter(s => s.stock === 0);
+            
+            if (outOfStock.length > 0) {
+                insights.push({ icon: '🚫', text: `${outOfStock.length} SKU${outOfStock.length > 1 ? 's' : ''} OUT OF STOCK! Restock immediately.`, type: 'warning' });
+            } else if (lowStock.length > 0) {
+                insights.push({ icon: '📦', text: `${lowStock.length} SKU${lowStock.length > 1 ? 's' : ''} running low (≤3). Restock soon.`, type: 'warning' });
             }
             
-            // Goal tracking
-            const totalRev = data.totalRevenue || 0;
-            const goal = data.revenueGoal || 5400;
-            const progress = totalRev / goal;
-            
-            if (progress >= 0.9) {
-                insights.push({ icon: '🎯', text: '90%+ to annual goal! Push for the final stretch.', type: 'positive' });
-            } else if (progress < 0.5) {
-                insights.push({ icon: '💡', text: `At ${Math.round(progress * 100)}% of goal. Consider B2B wholesale to accelerate.`, type: 'info' });
-            }
-            
-            // Printer status
+            // ===== PRINTER STATUS =====
             const printers = data.printers || [];
             const offlinePrinters = printers.filter(p => !p.online);
+            const printingPrinters = printers.filter(p => p.state === 'printing');
+            
             if (offlinePrinters.length > 0) {
-                insights.push({ icon: '🖨️', text: `${offlinePrinters.length} printer(s) offline. Check connectivity.`, type: 'warning' });
+                insights.push({ icon: '🖨️', text: `${offlinePrinters.length} printer${offlinePrinters.length > 1 ? 's' : ''} offline. Check connectivity.`, type: 'warning' });
+            }
+            if (printingPrinters.length > 0) {
+                insights.push({ icon: '🖨️', text: `${printingPrinters.length} printer${printingPrinters.length > 1 ? 's' : ''} actively printing.`, type: 'positive' });
+            }
+            
+            // ===== ACTIONABLE RECOMMENDATIONS =====
+            const allOrders = data.orders || 0;
+            const avgOrder = allOrders > 0 ? totalRev / allOrders : 0;
+            
+            if (avgOrder < 25) {
+                insights.push({ icon: '💡', text: `Avg order $${avgOrder.toFixed(2)}. Consider bundle deals to increase AOV.`, type: 'info' });
+            }
+            
+            // Best performing month insight
+            if (history.length > 0) {
+                const bestMonth = history.reduce((max, m) => (m.revenue || 0) > (max.revenue || 0) ? m : max, history[0]);
+                const bestMonthRev = bestMonth.revenue || 0;
+                const currentMonthRev = history[history.length - 1]?.revenue || 0;
+                
+                if (bestMonthRev > currentMonthRev * 1.5) {
+                    insights.push({ icon: '📅', text: `Best month was ${bestMonth.month} ($${bestMonthRev.toFixed(0)}). What worked then?`, type: 'info' });
+                }
             }
             
             // Render insights
             const container = document.getElementById('aiInsights');
             if (container) {
                 if (insights.length === 0) {
-                    container.innerHTML = '<div class="empty-state">No insights at the moment. All systems look good!</div>';
+                    container.innerHTML = '<div class="empty-state">🎉 All systems green! No urgent actions needed.</div>';
                 } else {
-                    container.innerHTML = insights.map(i => `
+                    // Sort: warnings first, then info, then positive
+                    const sortedInsights = insights.sort((a, b) => {
+                        const priority = { warning: 0, info: 1, positive: 2 };
+                        return priority[a.type] - priority[b.type];
+                    });
+                    
+                    container.innerHTML = sortedInsights.map(i => `
                         <div style="padding: 0.75rem; background: ${i.type === 'positive' ? 'rgba(16, 185, 129, 0.1)' : i.type === 'warning' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(0, 212, 255, 0.1)'}; border-radius: 8px; margin-bottom: 0.5rem; border-left: 3px solid ${i.type === 'positive' ? 'var(--green)' : i.type === 'warning' ? 'var(--yellow)' : 'var(--accent)'};">
                             <span style="margin-right: 0.5rem;">${i.icon}</span>
-                            <span style="color: var(--text);">${i.text}</span>
+                            <span style="color: var(--text); font-size: 0.9rem;">${i.text}</span>
                         </div>
                     `).join('');
                 }
@@ -2430,20 +3901,12 @@
                 document.getElementById('revGrowth').textContent = '--';
             }
             
-            // Revenue per item
-            const totalItems = data.totalItems || history.reduce((sum, m) => sum + (m.items || m.orders || 0), 0);
-            const revPerItem = totalItems > 0 ? totalRev / totalItems : 0;
-            document.getElementById('revPerItem').textContent = '$' + revPerItem.toFixed(2);
+            // Orders metrics
+            const totalOrders = data.orders || history.reduce((sum, m) => sum + (m.orders || 0), 0);
+            const thisMonthOrders = thisMonth ? (thisMonth.orders || 0) : 0;
             
-            // Days to goal
-            const goalDate = data.goalDate ? new Date(data.goalDate) : null;
-            if (goalDate) {
-                const daysLeft = Math.ceil((goalDate - new Date()) / (1000 * 60 * 60 * 24));
-                document.getElementById('revDaysLeft').textContent = daysLeft > 0 ? daysLeft : '0';
-                document.getElementById('revDaysLeft').style.color = daysLeft < 30 ? 'var(--red)' : daysLeft < 60 ? 'var(--yellow)' : 'var(--green)';
-            } else {
-                document.getElementById('revDaysLeft').textContent = '--';
-            }
+            document.getElementById('revTotalOrders').textContent = totalOrders.toLocaleString();
+            document.getElementById('revOrdersThisMonth').textContent = thisMonthOrders.toLocaleString();
             
             // Render Chart
             renderRevenueChart();
@@ -2577,7 +4040,9 @@
             // Also apply board filter from top switcher
             const boardFilter = currentBoard === 'all' ? () => true : t => t.board === currentBoard || t.board === 'all';
             
+            // 4-state workflow: backlog → todo → inprogress → done
             const backlog = (data.projects?.backlog || []).filter(t => filterFn(t) && boardFilter(t));
+            const todo = (data.projects?.todo || []).filter(t => filterFn(t) && boardFilter(t));
             const inprogress = (data.projects?.inprogress || []).filter(t => filterFn(t) && boardFilter(t));
             const done = (data.projects?.done || []).filter(t => filterFn(t) && boardFilter(t));
             
@@ -2586,24 +4051,28 @@
             document.getElementById('doneCount').textContent = done.length;
             
             const columns = [
-                { id: 'backlog', tasks: backlog, label: '📥 Backlog', prev: null, next: 'inprogress' },
-                { id: 'inprogress', tasks: inprogress, label: '⚡ In Progress', prev: 'backlog', next: 'done' },
+                { id: 'backlog', tasks: backlog, label: '📥 Backlog', prev: null, next: 'todo' },
+                { id: 'todo', tasks: todo, label: '📝 To Do', prev: 'backlog', next: 'inprogress' },
+                { id: 'inprogress', tasks: inprogress, label: '⚡ In Progress', prev: 'todo', next: 'done' },
                 { id: 'done', tasks: done, label: '✅ Done', prev: 'inprogress', next: null }
             ];
             
             columns.forEach(col => {
-                document.getElementById(col.id + 'Tasks').innerHTML = col.tasks.map((t, index) => {
+                const container = document.getElementById(col.id + 'Tasks');
+                if (!container) return;
+                
+                container.innerHTML = col.tasks.map((t, index) => {
                     // Get linked priorities
                     const linkedPriorities = (data.priorities || []).filter(p => t.priorityIds?.includes(p.id));
                     const linkedHtml = linkedPriorities.length > 0 ? `
-                        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border);"
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"
+                        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
                             📋 Linked Priorities (${linkedPriorities.length}):
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
                             ${linkedPriorities.map(p => `
-                                <span style="font-size: 0.7rem; padding: 0.125rem 0.375rem; background: ${p.completed ? 'var(--green)' : 'var(--accent)'}20; color: ${p.completed ? 'var(--green)' : 'var(--accent)'}; border-radius: 4px;"
-                                    ${p.completed ? '✓' : '○'} ${p.text.substring(0, 30)}${p.text.length > 30 ? '...' : ''}
+                                <span style="font-size: 0.7rem; padding: 0.125rem 0.375rem; background: ${p.completed ? 'var(--green)' : 'var(--accent)'}20; color: ${p.completed ? 'var(--green)' : 'var(--accent)'}; border-radius: 4px;">
+                                    ${p.completed ? '✓' : '○'} ${escapeHtml(p.text.substring(0, 30))}${p.text.length > 30 ? '...' : ''}
                                 </span>
                             `).join('')}
                         </div>
@@ -2614,9 +4083,9 @@
                     <div class="task" style="animation-delay: ${index * 0.05}s; position: relative; cursor: pointer;" onclick="openEditProjectModal(${t.id}, '${col.id}')">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div style="flex: 1;">
-                                <div class="task-title">${t.title}</div>
-                                <div class="task-desc">${t.desc}</div>
-                                <div>${t.tags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('')}</div>
+                                <div class="task-title">${escapeHtml(t.title)}</div>
+                                <div class="task-desc">${escapeHtml(t.desc)}</div>
+                                <div>${t.tags.map(tag => `<span class="tag tag-${tag}">${escapeHtml(tag)}</span>`).join('')}</div>
                                 ${t.dueDate ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">📅 Due: ${t.dueDate}</div>` : ''}
                                 ${linkedHtml}
                             </div>
@@ -2668,19 +4137,24 @@
                 list = list.filter(p => p.completed);
             }
             
+            // Apply assignee filter
+            if (currentPriorityAssignee) {
+                list = list.filter(p => p.assignee === currentPriorityAssignee || p.tags?.includes(currentPriorityAssignee));
+            }
+            
             // SMART SORT: Sort by priority score before grouping
             list = sortPriorities(list);
             
-            // Group by status
-            const statuses = ['backlog', 'todo', 'inprogress', 'done'];
-            const statusLabels = { backlog: '📥 Backlog', todo: '📝 To Do', inprogress: '⚡ In Progress', done: '✅ Done' };
-            const statusColors = { backlog: '#6b7280', todo: '#3b82f6', inprogress: '#f59e0b', done: '#10b981' };
+            // Group by status (3-state workflow)
+            const statuses = ['later', 'now', 'done'];
+            const statusLabels = { later: '📥 Later', now: '⚡ Now', done: '✅ Done' };
+            const statusColors = { later: '#6b7280', now: '#f59e0b', done: '#10b981' };
             
             let html = '';
             
             statuses.forEach(status => {
-                let statusItems = list.filter(p => (p.status || 'todo') === status);
-                if (statusItems.length === 0 && currentPriorityFilter !== 'all') return;
+                let statusItems = list.filter(p => (p.status || 'later') === status);
+                if (statusItems.length === 0 && currentPriorityFilter !== 'all' && !currentPriorityAssignee) return;
                 
                 // Sort within status by priority score
                 statusItems = sortPriorities(statusItems);
@@ -2712,27 +4186,62 @@
                                     }
                                 }
                                 
+                                // Get assignee badge
+                                let assigneeBadge = '';
+                                if (p.assignee === 'KimiClaw') {
+                                    assigneeBadge = `<span style="font-size: 0.7rem; background: rgba(0, 212, 255, 0.2); color: var(--accent); padding: 0.125rem 0.375rem; border-radius: 4px; margin-left: 0.5rem;">🤖 KimiClaw</span>`;
+                                } else if (p.assignee === 'Oleg') {
+                                    assigneeBadge = `<span style="font-size: 0.7rem; background: rgba(255, 107, 107, 0.2); color: var(--red); padding: 0.125rem 0.375rem; border-radius: 4px; margin-left: 0.5rem;">👤 Oleg</span>`;
+                                }
+                                
                                 // Get visual priority class
                                 const priorityClass = getPriorityBorderClass(p);
                                 const score = getPriorityScore(p);
                                 
+                                // Check if blocked by incomplete dependencies
+                                let blockedHtml = '';
+                                if (p.blockedBy && p.blockedBy.length > 0) {
+                                    const blockedByIncomplete = p.blockedBy.filter(blockerId => {
+                                        const blocker = data.priorities.find(bp => bp.id === blockerId);
+                                        return blocker && !blocker.completed && blocker.status !== 'done';
+                                    });
+                                    if (blockedByIncomplete.length > 0) {
+                                        blockedHtml = `<div style="font-size: 0.75rem; color: var(--red); margin-top: 0.25rem;">🔒 Blocked by ${blockedByIncomplete.length} incomplete task${blockedByIncomplete.length > 1 ? 's' : ''}</div>`;
+                                    }
+                                }
+                                
+                                // Bulk selection checkbox
+                                const isSelected = bulkSelected.has(p.id);
+                                const bulkCheckbox = bulkMode ? `<input type="checkbox" ${isSelected ? 'checked' : ''} 
+                                    onclick="event.stopPropagation(); toggleBulkSelection(${p.id})" 
+                                    style="margin-right: 0.5rem; width: 18px; height: 18px; cursor: pointer;">` : '';
+                                
                                 return `
-                                <div class="priority ${p.completed ? 'completed' : ''} ${priorityClass}" style="animation-delay: ${index * 0.03}s; position: relative; cursor: pointer;" onclick="openEditPriorityModal(${p.id})">
+                                <div class="priority ${p.completed ? 'completed' : ''} ${priorityClass}" 
+                                    style="animation-delay: ${index * 0.03}s; position: relative; cursor: pointer; ${blockedHtml ? 'opacity: 0.7;' : ''} ${isSelected ? 'background: rgba(0,212,255,0.1);' : ''}"
+                                    onclick="${bulkMode ? 'toggleBulkSelection(' + p.id + ')' : 'openEditPriorityModal(' + p.id + ')'}">
+                                    ${bulkCheckbox}
                                     <input type="checkbox" class="priority-checkbox" ${p.completed ? 'checked' : ''} onchange="event.stopPropagation(); togglePriority(${p.id})">
                                     <div class="priority-content" style="flex: 1;">
                                         <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                                            <div class="priority-text">${p.text}</div>
+                                            <div class="priority-text">${escapeHtml(p.text)}</div>
+                                            ${assigneeBadge}
+                                            ${p.recurring ? `<span style="font-size: 0.7rem; background: var(--purple); color: white; padding: 0.125rem 0.375rem; border-radius: 4px;">🔄 ${escapeHtml(p.recurring)}</span>` : ''}
                                             ${score >= 80 ? '<span style="font-size: 0.7rem; background: var(--red); color: white; padding: 0.125rem 0.375rem; border-radius: 4px;">🔥 HIGH</span>' : ''}
                                         </div>
+                                        ${p.desc ? `<div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; font-style: italic;">${escapeHtml(p.desc.substring(0, 100))}${p.desc.length > 100 ? '...' : ''}</div>` : ''}
+                                        ${p.notes ? `<div style="font-size: 0.75rem; color: var(--yellow); margin-top: 0.25rem;">📝 ${escapeHtml(p.notes.substring(0, 80))}${p.notes.length > 80 ? '...' : ''}</div>` : ''}
+                                        ${blockedHtml}
                                         <div class="priority-due ${getDueClass(p.dueDate)}">Due: ${p.dueDate || 'No date'}</div>
                                         ${linkedProjectHtml}
-                                        ${p.docPath ? `<div style="font-size: 0.75rem; color: var(--accent); margin-top: 0.25rem; cursor: pointer;" onclick="event.stopPropagation(); copyPath('${p.docPath}')" title="Click to copy path">
-                                            📄 ${p.docPath}
+                                        ${p.docPath ? `<div style="font-size: 0.75rem; color: var(--accent); margin-top: 0.25rem; cursor: pointer;" onclick="event.stopPropagation(); copyPath('${escapeHtml(p.docPath)}')" title="Click to copy path">
+                                            📄 ${escapeHtml(p.docPath)}
                                         </div>` : ''}
-                                        <div>${p.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join('')}</div>
+                                        ${(p.timeEstimate > 0 || p.timeSpent > 0) ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">⏱️ ${p.timeSpent || 0}h / ${p.timeEstimate || 0}h ${p.timeEstimate > 0 ? '(' + Math.round((p.timeSpent || 0) / p.timeEstimate * 100) + '%)' : ''}</div>` : ''}
+                                        <div>${p.tags.filter(t => t !== 'KimiClaw' && t !== 'Oleg').map(t => `<span class="tag tag-${t}">${escapeHtml(t)}</span>`).join('')}</div>
                                     </div>
                                     <div style="display: flex; gap: 0.25rem; margin-left: 0.5rem;" onclick="event.stopPropagation();">
-                                        ${status !== 'backlog' ? `<button onclick="movePriority(${p.id}, '${getPrevStatus(status)}')" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.1); border: none; border-radius: 4px; color: var(--text); cursor: pointer;" title="Move to ${statusLabels[getPrevStatus(status)]}">←</button>` : ''}
+                                        ${status !== 'later' ? `<button onclick="movePriority(${p.id}, '${getPrevStatus(status)}')" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.1); border: none; border-radius: 4px; color: var(--text); cursor: pointer;" title="Move to ${statusLabels[getPrevStatus(status)]}">←</button>` : ''}
                                         ${status !== 'done' ? `<button onclick="movePriority(${p.id}, '${getNextStatus(status)}')" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; background: rgba(255,255,255,0.1); border: none; border-radius: 4px; color: var(--text); cursor: pointer;" title="Move to ${statusLabels[getNextStatus(status)]}">→</button>` : ''}
                                         <button onclick="deletePriority(${p.id})" style="padding: 0.25rem 0.5rem; font-size: 0.7rem; background: rgba(239,68,68,0.2); border: none; border-radius: 4px; color: var(--red); cursor: pointer;" title="Delete">×</button>
                                     </div>
@@ -2746,26 +4255,108 @@
             document.getElementById('prioritiesList').innerHTML = html || '<div class="empty-state">No priorities</div>';
         }
         
+        // STATUS WORKFLOW: 3 states (simplified from 4)
+        // later = backlog + todo (not started)
+        // now = inprogress (active work)
+        // done = completed
+        
         function getNextStatus(status) {
-            const flow = { backlog: 'todo', todo: 'inprogress', inprogress: 'done' };
-            return flow[status] || status;
+            const flow = { later: 'now', now: 'done', done: 'done' };
+            return flow[status] || 'later';
         }
         
         function getPrevStatus(status) {
-            const flow = { todo: 'backlog', inprogress: 'todo', done: 'inprogress' };
-            return flow[status] || status;
+            const flow = { now: 'later', done: 'now', later: 'later' };
+            return flow[status] || 'later';
+        }
+        
+        // Migration: convert old 4-state to new 3-state
+        function migrateStatus(oldStatus) {
+            const migration = {
+                'backlog': 'later',
+                'todo': 'later',
+                'inprogress': 'now',
+                'done': 'done'
+            };
+            return migration[oldStatus] || 'later';
         }
         
         function movePriority(id, newStatus) {
             const p = data.priorities.find(p => p.id === id);
             if (p) {
+                const oldStatus = p.status;
                 p.status = newStatus;
-                if (newStatus === 'done') p.completed = true;
-                else if (newStatus !== 'done') p.completed = false;
+                if (newStatus === 'done') {
+                    p.completed = true;
+                    // Check if recurring and regenerate
+                    if (p.recurring) {
+                        regenerateRecurringTask(p);
+                    }
+                } else {
+                    p.completed = false;
+                }
+                p.updatedAt = new Date().toISOString();
+                
+                // Log activity
+                if (!p.activityLog) p.activityLog = [];
+                p.activityLog.push({
+                    timestamp: new Date().toISOString(),
+                    action: 'Status Changed',
+                    details: `${oldStatus} → ${newStatus}`
+                });
+                
                 saveData();
                 renderAll();
-                showToast(`Moved to ${newStatus}`);
+                
+                // User-friendly status labels
+                const labels = { later: 'Later', now: 'Now', done: 'Done' };
+                showToast(`Moved to ${labels[newStatus] || newStatus}`);
             }
+        }
+        
+        function regenerateRecurringTask(completedTask) {
+            // Calculate new due date based on recurring type
+            let newDueDate = null;
+            if (completedTask.dueDate) {
+                const currentDue = new Date(completedTask.dueDate);
+                switch(completedTask.recurring) {
+                    case 'daily':
+                        currentDue.setDate(currentDue.getDate() + 1);
+                        break;
+                    case 'weekly':
+                        currentDue.setDate(currentDue.getDate() + 7);
+                        break;
+                    case 'monthly':
+                        currentDue.setMonth(currentDue.getMonth() + 1);
+                        break;
+                }
+                newDueDate = currentDue.toISOString().split('T')[0];
+            }
+            
+            // Create new recurring instance
+            const newTask = {
+                id: Date.now(),
+                text: completedTask.text,
+                desc: completedTask.desc,
+                notes: '',
+                completed: false,
+                status: 'later',  // Default to 'later' in 3-state workflow
+                tags: completedTask.tags || [],
+                dueDate: newDueDate,
+                board: completedTask.board,
+                docPath: completedTask.docPath || '',
+                assignee: completedTask.assignee || '',
+                projectId: completedTask.projectId || null,
+                blockedBy: completedTask.blockedBy || [],
+                recurring: completedTask.recurring,
+                timeEstimate: completedTask.timeEstimate || 0,
+                timeSpent: 0,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            data.priorities.push(newTask);
+            showToast(`🔄 Recurring task regenerated: ${completedTask.recurring}`);
         }
         
         function deletePriority(id) {
@@ -3013,167 +4604,235 @@
                 return;
             }
             
-            document.getElementById('printerStatus').innerHTML = printers.map((p, index) => {
-                // State colors
-                const stateColors = {
-                    'printing': 'var(--green)',
-                    'operational': 'var(--accent)',
-                    'idle': 'var(--accent)',
-                    'ready': 'var(--accent)',
-                    'paused': 'var(--yellow)',
-                    'pausing': 'var(--yellow)',
-                    'offline': 'var(--red)',
-                    'error': 'var(--red)',
-                    'unknown': 'var(--text-muted)'
-                };
-                const stateColor = stateColors[p.state?.toLowerCase()] || 'var(--text-muted)';
-                const isOnline = p.online ? '🟢' : '🔴';
-                
-                // Progress bar for printing
-                let progressHtml = '';
-                if (p.job?.percentage > 0) {
-                    const filled = Math.round(p.job.percentage / 5);
-                    const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
-                    const timeLeft = p.job.timeLeft || p.job.printTimeLeft;
-                    const timeLeftFormatted = timeLeft ? formatDuration(timeLeft) : 'N/A';
-                    progressHtml = `
-                        <div style="margin-top: 0.75rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 6px;">
-                            <div style="font-size: 0.75rem; color: var(--green); margin-bottom: 0.25rem;">${bar} ${p.job.percentage.toFixed(1)}%</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">⏱️ ${timeLeftFormatted} remaining</div>
-                            ${p.job.layer ? `<div style="font-size: 0.75rem; color: var(--text-muted);">📐 Layer: ${p.job.layer}</div>` : ''}
-                        </div>
-                    `;
-                }
-                
-                // Temperature details
-                const currentTemp = p.temps?.current;
-                const targetTemp = p.temps?.target;
-                let tempDetails = '';
-                if (currentTemp) {
-                    const nozzleTemp = currentTemp.tool?.[0] || currentTemp.tool0 || '--';
-                    const bedTemp = currentTemp.bed || '--';
-                    const targetNozzle = targetTemp?.tool?.[0] ? `→${targetTemp.tool[0]}°C` : '';
-                    const targetBed = targetTemp?.bed ? `→${targetTemp.bed}°C` : '';
-                    tempDetails = `
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">🌡️ Nozzle: ${nozzleTemp}°C ${targetNozzle}</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">🛏️ Bed: ${bedTemp}°C ${targetBed}</div>
-                        ${p.temps?.ambient ? `<div style="font-size: 0.75rem; color: var(--text-muted);">🌡️ Ambient: ${p.temps.ambient}°C</div>` : ''}
-                    `;
-                }
-                
-                // Filament / AMS info
-                let filamentHtml = '';
-                if (p.filaments && p.filaments.length > 0) {
-                    if (p.hasAMS && p.filaments.length > 1) {
-                        // AMS style display
-                        filamentHtml = `
+            // Printer model images mapping
+            const printerImages = {
+                'P1S': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/p1s.png',
+                'P2S': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/x1.png',
+                'X1': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/x1.png',
+                'X1C': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/x1.png',
+                'A1': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/a1.png',
+                'A1 Mini': 'https://cdn.simplyprint.io/i/printer_types/bambu_lab/a1_mini.png',
+                'Centauri': 'https://cdn.simplyprint.io/i/printer_types/elegoo/centauri.png',
+                'Centauri Carbon': 'https://cdn.simplyprint.io/i/printer_types/elegoo/centauri.png'
+            };
+            
+            // State colors and icons
+            const stateConfig = {
+                'printing': { color: 'var(--green)', icon: '🟢', bg: 'rgba(16,185,129,0.1)' },
+                'operational': { color: 'var(--accent)', icon: '🔵', bg: 'rgba(0,212,255,0.1)' },
+                'idle': { color: 'var(--accent)', icon: '🔵', bg: 'rgba(0,212,255,0.1)' },
+                'ready': { color: 'var(--accent)', icon: '🔵', bg: 'rgba(0,212,255,0.1)' },
+                'paused': { color: 'var(--yellow)', icon: '🟡', bg: 'rgba(245,158,11,0.1)' },
+                'pausing': { color: 'var(--yellow)', icon: '🟡', bg: 'rgba(245,158,11,0.1)' },
+                'offline': { color: 'var(--red)', icon: '🔴', bg: 'rgba(239,68,68,0.1)' },
+                'error': { color: 'var(--red)', icon: '🔴', bg: 'rgba(239,68,68,0.1)' },
+                'unknown': { color: 'var(--text-muted)', icon: '⚪', bg: 'rgba(255,255,255,0.05)' }
+            };
+            
+            const html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    ${printers.map((p, index) => {
+                        const state = p.state?.toLowerCase() || 'unknown';
+                        const config = stateConfig[state] || stateConfig.unknown;
+                        
+                        // Get printer image
+                        let printerImage = null;
+                        if (p.model?.name) {
+                            for (const [key, url] of Object.entries(printerImages)) {
+                                if (p.model.name.includes(key) || p.name.includes(key)) {
+                                    printerImage = url;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Format time remaining - check multiple fields
+                        let timeRemaining = 'N/A';
+                        if (p.job) {
+                            const timeLeft = p.job.timeLeft ?? p.job.printTimeLeft ?? p.job.time_left;
+                            if (timeLeft && timeLeft > 0) {
+                                timeRemaining = formatDuration(timeLeft);
+                            } else if (p.job.estimatedTime && p.job.percentage) {
+                                const remaining = p.job.estimatedTime * (1 - p.job.percentage / 100);
+                                if (remaining > 0) timeRemaining = formatDuration(remaining);
+                            }
+                        }
+                        
+                        // Progress bar
+                        const progress = p.job?.percentage || 0;
+                        const progressBar = progress > 0 ? `
                             <div style="margin-top: 0.75rem;">
-                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">🎨 AMS Filaments:</div>
-                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem;">
-                                    ${p.filaments.map(f => `
-                                        <div style="font-size: 0.7rem; padding: 0.25rem; background: rgba(255,255,255,0.03); border-radius: 4px;">
-                                            <span style="display: inline-block; width: 8px; height: 8px; background: ${f.colorHex || '#808080'}; border-radius: 50%; margin-right: 4px;"></span>
-                                            ${f.colorName} ${f.leftPercent !== undefined ? `(${f.leftPercent}%)` : ''}
-                                        </div>
-                                    `).join('')}
+                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--green);">${progress.toFixed(0)}%</span>
+                                    <span style="color: var(--text-muted);">${timeRemaining} left</span>
+                                </div>
+                                <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                                    <div style="width: ${progress}%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
                                 </div>
                             </div>
-                        `;
-                    } else {
-                        // Single filament
-                        const f = p.filaments[0];
-                        filamentHtml = `
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem;">
-                                🧵 ${f.colorName || 'Unknown'} ${f.type || ''} ${f.leftPercent !== undefined ? `(${f.leftPercent}% left)` : ''}
+                        ` : '';
+                        
+                        // Temps
+                        const nozzleTemp = p.temps?.current?.tool?.[0] || p.temps?.current?.tool0 || '--';
+                        const bedTemp = p.temps?.current?.bed || '--';
+                        const targetNozzle = p.temps?.target?.tool?.[0] ? `→${p.temps.target.tool[0]}°` : '';
+                        const targetBed = p.temps?.target?.bed ? `→${p.temps.target.bed}°` : '';
+                        
+                        // System stats
+                        const systemStats = [];
+                        if (p.health?.usage !== undefined) systemStats.push(`💻 ${p.health.usage}%`);
+                        if (p.health?.temp !== undefined) systemStats.push(`🌡️ ${p.health.temp}°C`);
+                        if (p.health?.memory !== undefined) systemStats.push(`🧠 ${p.health.memory}%`);
+                        
+                        // Status badges
+                        const badges = [];
+                        if (p.hasPSU !== undefined) badges.push(p.psuOn ? '🔌 PSU' : '⭕ PSU Off');
+                        if (p.hasFilSensor) badges.push(p.filSensor ? '📡 Filament OK' : '⚠️ No Filament');
+                        if (p.model?.bedSize) badges.push(`🛏️ ${p.model.bedSize[0]}×${p.model.bedSize[1]}mm`);
+                        if (p.firmware) badges.push(`⚙️ ${p.firmware}`);
+                        
+                        // Filament info
+                        let filamentInfo = '';
+                        if (p.filaments?.length > 0) {
+                            if (p.hasAMS && p.filaments.length > 1) {
+                                filamentInfo = `
+                                    <div style="margin-top: 0.5rem; display: flex; gap: 0.25rem; flex-wrap: wrap;">
+                                        ${p.filaments.map(f => `
+                                            <span style="font-size: 0.65rem; padding: 0.125rem 0.375rem; background: ${f.colorHex || '#666'}30; border-radius: 4px; color: ${f.colorHex || '#fff'};">
+                                                ${f.colorName}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                `;
+                            } else {
+                                const f = p.filaments[0];
+                                filamentInfo = `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">🧵 ${f.colorName || 'Unknown'} ${f.type || ''}</div>`;
+                            }
+                        }
+                        
+                        return `
+                            <div style="background: ${config.bg}; border: 1px solid ${config.color}30; border-radius: 12px; padding: 1rem; transition: all 0.2s; animation: fadeIn 0.3s ease-out ${index * 0.1}s both;">
+                                <!-- Header -->
+                                <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    ${printerImage ? `
+                                        <img src="${printerImage}" alt="${p.model?.name || 'Printer'}" 
+                                             style="width: 60px; height: 60px; object-fit: contain; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0.25rem;"
+                                             onerror="this.style.display='none'">
+                                    ` : ''}
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-weight: 600; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            ${config.icon} ${p.name}
+                                        </div>
+                                        <div style="font-size: 0.8125rem; color: ${config.color}; text-transform: uppercase; letter-spacing: 0.5px;">
+                                            ${p.state || 'Unknown'}
+                                        </div>
+                                        ${p.model?.name ? `<div style="font-size: 0.7rem; color: var(--text-muted);">${p.model.brand || ''} ${p.model.name}</div>` : ''}
+                                    </div>
+                                </div>
+                                
+                                <!-- Temps -->
+                                <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="flex: 1; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                        <div style="font-size: 0.7rem; color: var(--text-muted);">Nozzle</div>
+                                        <div style="font-size: 1rem; font-weight: 600;">${nozzleTemp}° ${targetNozzle}</div>
+                                    </div>
+                                    <div style="flex: 1; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 6px; text-align: center;">
+                                        <div style="font-size: 0.7rem; color: var(--text-muted);">Bed</div>
+                                        <div style="font-size: 1rem; font-weight: 600;">${bedTemp}° ${targetBed}</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progress -->
+                                ${progressBar}
+                                
+                                <!-- Current File -->
+                                ${p.job?.file ? `
+                                    <div style="margin-top: 0.75rem; padding: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                        <div style="font-size: 0.7rem; color: var(--text-muted);">Printing</div>
+                                        <div style="font-size: 0.8125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.job.file}</div>
+                                    </div>
+                                ` : ''}
+                                
+                                <!-- Filament -->
+                                ${filamentInfo}
+                                
+                                <!-- Badges -->
+                                ${badges.length > 0 ? `
+                                    <div style="margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.375rem;">
+                                        ${badges.map(b => `<span style="font-size: 0.65rem; padding: 0.125rem 0.375rem; background: rgba(255,255,255,0.1); border-radius: 4px; color: var(--text-muted);">${b}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                                
+                                <!-- System Stats -->
+                                ${systemStats.length > 0 ? `
+                                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+                                        ${systemStats.join(' ')}
+                                    </div>
+                                ` : ''}
                             </div>
                         `;
-                    }
-                }
-                
-                // Model info
-                let modelHtml = '';
-                if (p.model) {
-                    modelHtml = `
-                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
-                            🖨️ ${p.model.brand || ''} ${p.model.name || ''}
-                            ${p.model.bedSize ? `(${p.model.bedSize[0]}×${p.model.bedSize[1]}mm)` : ''}
-                        </div>
-                    `;
-                }
-                
-                // Health info
-                let healthHtml = '';
-                if (p.health) {
-                    healthHtml = `
-                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">
-                            💻 CPU: ${p.health.usage}% | 🌡️ ${p.health.temp}°C | 🧠 ${p.health.memory}%
-                        </div>
-                    `;
-                }
-                
-                // Queue info
-                let queueHtml = '';
-                if (p.hasQueue) {
-                    queueHtml = `
-                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">
-                            📋 Queue: ${p.hasQueue.items} items ${p.hasQueue.fits ? '✓' : '⚠'}
-                        </div>
-                    `;
-                }
-                
-                // Status indicators
-                let statusIndicators = '';
-                if (p.hasPSU !== undefined) {
-                    statusIndicators += `<span style="font-size: 0.7rem; margin-right: 0.5rem;">${p.psuOn ? '🔌 PSU On' : '🔌 PSU Off'}</span>`;
-                }
-                if (p.hasFilSensor) {
-                    statusIndicators += `<span style="font-size: 0.7rem; margin-right: 0.5rem;">${p.filSensor ? '📡 Filament OK' : '⚠️ No Filament'}</span>`;
-                }
-                if (p.hasCam) {
-                    statusIndicators += `<span style="font-size: 0.7rem;">📷 Cam</span>`;
-                }
-                
-                // Job file info
-                let jobHtml = '';
-                if (p.job?.file) {
-                    jobHtml = `
-                        <div style="font-size: 0.8125rem; color: var(--text); margin-top: 0.75rem; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            📄 ${p.job.file}
-                        </div>
-                    `;
-                }
-                
-                return `
-                <div style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid ${stateColor}; transition: all 0.2s ease; animation: fadeIn 0.3s ease-out ${index * 0.1}s both;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                                ${isOnline} ${p.name}
-                            </div>
-                            <div style="font-size: 0.8125rem; color: ${stateColor}; margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                                ${p.state || 'Unknown'}
-                            </div>
-                            ${statusIndicators ? `<div style="margin-top: 0.25rem;">${statusIndicators}</div>` : ''}
-                        </div>
-                        <div style="text-align: right; min-width: 120px;">
-                            ${tempDetails}
-                        </div>
-                    </div>
-                    
-                    ${jobHtml}
-                    ${progressHtml}
-                    ${filamentHtml}
-                    ${modelHtml}
-                    ${healthHtml}
-                    ${queueHtml}
-                    
-                    ${p.firmware ? `<div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; opacity: 0.7;">Firmware: ${p.firmware} | SP: ${p.spVersion || 'N/A'}</div>` : ''}
+                    }).join('')}
                 </div>
-            `}).join('');
+            `;
+            
+            document.getElementById('printerStatus').innerHTML = html;
             
             // Show last update time
             const lastUpdate = data.printerLastUpdate ? new Date(data.printerLastUpdate).toLocaleString() : 'Never';
             document.getElementById('printerLastUpdate').textContent = `Last updated: ${lastUpdate}`;
+        }
+        
+        function renderSKUStock() {
+            const skus = data.skus || [];
+            
+            if (skus.length === 0) {
+                return '<div class="empty-state">No SKU data available</div>';
+            }
+            
+            // Show low stock alerts
+            const lowStock = skus.filter(s => s.stock <= 3 && s.stock > 0);
+            const outOfStock = skus.filter(s => s.stock === 0);
+            
+            let alertsHtml = '';
+            if (outOfStock.length > 0) {
+                alertsHtml += `
+                    <div style="padding: 0.75rem; background: rgba(239, 68, 68, 0.15); border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid var(--red);">
+                        <div style="font-weight: 600; color: var(--red); margin-bottom: 0.25rem;">🚨 OUT OF STOCK</div>
+                        <div style="font-size: 0.875rem;">${outOfStock.map(s => s.code).join(', ')}</div>
+                    </div>
+                `;
+            }
+            if (lowStock.length > 0) {
+                alertsHtml += `
+                    <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid var(--yellow);">
+                        <div style="font-weight: 600; color: var(--yellow); margin-bottom: 0.25rem;">⚠️ LOW STOCK</div>
+                        <div style="font-size: 0.875rem;">${lowStock.map(s => `${s.code} (${s.stock})`).join(', ')}</div>
+                    </div>
+                `;
+            }
+            
+            const gridHtml = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem;">
+                    ${skus.map((s, index) => {
+                        const statusColor = s.stock === 0 ? 'var(--red)' : s.stock <= 3 ? 'var(--yellow)' : 'var(--green)';
+                        const statusBg = s.stock === 0 ? 'rgba(239,68,68,0.1)' : s.stock <= 3 ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)';
+                        
+                        return `
+                            <div style="padding: 0.75rem; background: ${statusBg}; border-radius: 8px; text-align: center; border: 1px solid ${statusColor}30; transition: all 0.2s;" 
+                                 onmouseover="this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.transform='translateY(0)'">
+                                <div style="font-weight: 600; font-family: monospace; font-size: 0.875rem;">${s.code}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin: 0.25rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.name}</div>
+                                <div style="font-size: 0.875rem; color: ${statusColor}; font-weight: 600;">
+                                    ${s.stock === 0 ? '❌ OUT' : s.stock <= 3 ? `⚠️ ${s.stock}` : s.stock}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            
+            return alertsHtml + gridHtml;
         }
         
         function formatDuration(seconds) {
@@ -3197,6 +4856,56 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast('📥 Etsy template downloaded');
+        }
+        
+        function renderSKUs() {
+            const skus = data.skus || [];
+            
+            // Show low stock alerts
+            const lowStock = skus.filter(s => s.stock <= 3 && s.stock > 0);
+            const outOfStock = skus.filter(s => s.stock === 0);
+            
+            let alertsHtml = '';
+            if (outOfStock.length > 0) {
+                alertsHtml += `
+                    <div style="padding: 0.75rem; background: rgba(239, 68, 68, 0.15); border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid var(--red);">
+                        <div style="font-weight: 600; color: var(--red); margin-bottom: 0.25rem;">🚨 OUT OF STOCK</div>
+                        <div style="font-size: 0.875rem;">${outOfStock.map(s => s.code).join(', ')}</div>
+                    </div>
+                `;
+            }
+            if (lowStock.length > 0) {
+                alertsHtml += `
+                    <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid var(--yellow);">
+                        <div style="font-weight: 600; color: var(--yellow); margin-bottom: 0.25rem;">⚠️ LOW STOCK</div>
+                        <div style="font-size: 0.875rem;">${lowStock.map(s => `${s.code} (${s.stock})`).join(', ')}</div>
+                    </div>
+                `;
+            }
+            
+            const gridHtml = skus.length > 0 ? `
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem;">
+                    ${skus.map((s, index) => {
+                        const statusColor = s.stock === 0 ? 'var(--red)' : s.stock <= 3 ? 'var(--yellow)' : 'var(--green)';
+                        const statusBg = s.stock === 0 ? 'rgba(239,68,68,0.1)' : s.stock <= 3 ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)';
+                        
+                        return `
+                            <div style="padding: 0.75rem; background: ${statusBg}; border-radius: 8px; text-align: center; border: 1px solid ${statusColor}30; transition: all 0.2s;" 
+                                 onmouseover="this.style.transform='translateY(-2px)'" 
+                                 onmouseout="this.style.transform='translateY(0)'">
+                                <div style="font-weight: 600; font-family: monospace; font-size: 0.875rem;">${s.code}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin: 0.25rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.name}</div>
+                                <div style="font-size: 0.875rem; color: ${statusColor}; font-weight: 600;">
+                                    ${s.stock === 0 ? '❌ OUT' : s.stock <= 3 ? `⚠️ ${s.stock}` : s.stock}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            ` : '<div class="empty-state">No SKU data available</div>';
+            
+            document.getElementById('skuAlerts').innerHTML = alertsHtml;
+            document.getElementById('skuList').innerHTML = gridHtml;
         }
         
         function parseEtsyDate(dateStr) {
@@ -3241,12 +4950,20 @@
                     const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, ''));
                     
                     // Find column indices - handle various Etsy CSV formats
+                    // PRIORITY: Order Net > Order Total > Order Value (Order Net is actual revenue after fees)
                     const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('saledate'));
-                    const revenueIdx = headers.findIndex(h => h.includes('total') || h.includes('value') || h.includes('revenue') || h.includes('ordertotal'));
+                    const orderNetIdx = headers.findIndex(h => h.includes('ordernet') || h.includes('netorder'));
+                    const orderTotalIdx = headers.findIndex(h => h.includes('ordertotal'));
+                    const orderValueIdx = headers.findIndex(h => h.includes('ordervalue') || h.includes('value'));
                     const itemsIdx = headers.findIndex(h => h.includes('items') || h.includes('numberofitems') || h.includes('quantity'));
                     
+                    // Use Order Net if available, otherwise fall back to Order Total, then Order Value
+                    let revenueIdx = orderNetIdx;
+                    if (revenueIdx === -1) revenueIdx = orderTotalIdx;
+                    if (revenueIdx === -1) revenueIdx = orderValueIdx;
+                    
                     if (dateIdx === -1 || revenueIdx === -1) {
-                        showToast('❌ CSV must have Date and Order Total columns');
+                        showToast('❌ CSV must have Date and Order Total/Value columns');
                         return;
                     }
                     
@@ -3398,47 +5115,6 @@
             }
         }
         
-        function renderSKUs() {
-            const skus = data.skus || [];
-            
-            // Show low stock alerts
-            const lowStock = skus.filter(s => s.stock <= 3);
-            const outOfStock = skus.filter(s => s.stock === 0);
-            
-            let alertsHtml = '';
-            if (outOfStock.length > 0) {
-                alertsHtml += `
-                    <div style="padding: 0.75rem; background: rgba(239, 68, 68, 0.15); border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid var(--red);">
-                        <div style="font-weight: 600; color: var(--red); margin-bottom: 0.25rem;">🚨 OUT OF STOCK</div>
-                        <div style="font-size: 0.875rem; color: var(--text);">${outOfStock.map(s => s.code).join(', ')}</div>
-                    </div>
-                `;
-            }
-            if (lowStock.length > 0) {
-                alertsHtml += `
-                    <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.15); border-radius: 8px; margin-bottom: 0.75rem; border-left: 3px solid var(--yellow);">
-                        <div style="font-weight: 600; color: var(--yellow); margin-bottom: 0.25rem;">⚠️ LOW STOCK</div>
-                        <div style="font-size: 0.875rem; color: var(--text);">${lowStock.map(s => `${s.code} (${s.stock})`).join(', ')}</div>
-                    </div>
-                `;
-            }
-            
-            const alertsContainer = document.getElementById('skuAlerts');
-            if (alertsContainer) {
-                alertsContainer.innerHTML = alertsHtml || '<div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; color: var(--green);">✅ All SKUs well stocked</div>';
-            }
-            
-            document.getElementById('skuList').innerHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem;">' + skus.map((s, index) => `
-                <div style="padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 6px; text-align: center; transition: all 0.2s ease; animation: fadeIn 0.3s ease-out ${index * 0.03}s both; ${s.stock === 0 ? 'border: 1px solid var(--red);' : s.stock <= 3 ? 'border: 1px solid var(--yellow);' : ''}" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div style="font-weight: 600; font-family: monospace;">${s.code}</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">${s.name}</div>
-                    <div style="font-size: 0.75rem; color: ${s.stock === 0 ? 'var(--red)' : s.stock <= 3 ? 'var(--yellow)' : 'var(--green)'}; font-weight: ${s.stock <= 3 ? '600' : 'normal'};">
-                        ${s.stock === 0 ? '❌ OUT' : s.stock <= 3 ? '⚠️ ' + s.stock + ' left' : 'Stock: ' + s.stock}
-                    </div>
-                </div>
-            `).join('') + '</div>';
-        }
-        
         function renderDocs() {
             document.getElementById('documentsList').innerHTML = (data.documents || []).map((d, index) => `
                 <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.2s ease; animation: fadeIn 0.3s ease-out ${index * 0.05}s both;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
@@ -3569,6 +5245,17 @@
         
         function filterPriorities(filter, btn) {
             currentPriorityFilter = filter;
+            currentPriorityAssignee = null; // Clear assignee filter
+            document.querySelectorAll('#priorities .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPriorities();
+        }
+        
+        let currentPriorityAssignee = null;
+        
+        function filterPrioritiesByAssignee(assignee, btn) {
+            currentPriorityAssignee = assignee;
+            currentPriorityFilter = 'all'; // Clear status filter
             document.querySelectorAll('#priorities .filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderPriorities();
@@ -3613,13 +5300,16 @@
         function validateData(data) {
             const errors = [];
             
-            // Check projects structure
+            // Check projects structure (support both 4-state and 3-state)
             if (data.projects) {
-                ['backlog', 'inprogress', 'done'].forEach(col => {
-                    if (!Array.isArray(data.projects[col])) {
-                        errors.push(`projects.${col} must be an array`);
-                    }
-                });
+                // Support legacy 4-state: backlog/todo/inprogress/done
+                // AND new 3-state: later/now/done
+                const validKeys = ['backlog', 'todo', 'inprogress', 'done', 'later', 'now'];
+                const hasValidStructure = validKeys.some(key => Array.isArray(data.projects[key]));
+                
+                if (!hasValidStructure) {
+                    errors.push('projects must have at least one valid status array (backlog, todo, inprogress, done, later, or now)');
+                }
             }
             
             // Check priorities
@@ -3716,6 +5406,65 @@
             } catch (e) {
                 showToast('❌ Connection failed: ' + e.message);
             }
+        }
+        
+        // Export/Import Full Data Backup
+        function exportFullBackup() {
+            const backup = {
+                ...data,
+                exportedAt: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mission-control-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('✅ Full backup exported');
+        }
+        
+        function importFullBackup() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                try {
+                    const text = await file.text();
+                    const imported = JSON.parse(text);
+                    
+                    // Validate structure
+                    if (!imported.priorities || !imported.projects) {
+                        throw new Error('Invalid backup file - missing required fields');
+                    }
+                    
+                    if (!confirm(`Import backup from ${imported.exportedAt || 'unknown date'}? This will REPLACE all current data.`)) {
+                        return;
+                    }
+                    
+                    // Merge with care - preserve IDs
+                    data = {
+                        ...data,
+                        ...imported,
+                        lastUpdated: Date.now()
+                    };
+                    
+                    await saveData();
+                    renderAll();
+                    showToast('✅ Backup imported successfully');
+                } catch (err) {
+                    showToast('❌ Import failed: ' + err.message);
+                }
+            };
+            input.click();
         }
         
         function showToast(msg) {

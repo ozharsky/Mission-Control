@@ -1,0 +1,41 @@
+{
+  "orders": 125,
+  "ordersTarget": 150,
+  "goalDate": "2026-05-01",
+  "revenueGoal": 5400,
+  "totalRevenue": 3248.8,
+  "monthlyRevenueGoal": 450,
+  "revenueHistory": [
+    {
+      "month": "Sep 2025",
+      "revenue": 198.48,
+      "orders": 12
+    },
+    {
+      "month": "Oct 2025",
+      "revenue": 12,
+      "orders": 1
+    },
+    {
+      "month": "Nov 2025",
+      "revenue": 107.12,
+      "orders": 5
+    },
+    {
+      "month": "Dec 2025",
+      "revenue": 582.69,
+      "orders": 25
+    },
+    {
+      "month": "Jan 2026",
+      "revenue": 110.45,
+      "orders": 4
+    },
+    {
+      "month": "Feb 2026",
+      "revenue": 398.5,
+      "orders": 6
+    }
+  ],
+  "lastUpdated": 1771747766817
+}
