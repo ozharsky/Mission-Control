@@ -2282,6 +2282,75 @@
             return div.innerHTML;
         }
 
+        // State Manager - Centralized state updates
+        const StateManager = {
+            getData() {
+                return data;
+            },
+
+            setData(newData) {
+                data = newData;
+                return this.save();
+            },
+
+            // Priority operations
+            addPriority(priority) {
+                data.priorities = data.priorities || [];
+                data.priorities.push(priority);
+                return this.saveAndRender();
+            },
+
+            updatePriority(id, updates) {
+                const p = data.priorities?.find(p => p.id === id);
+                if (p) {
+                    Object.assign(p, updates, { updatedAt: new Date().toISOString() });
+                    return this.saveAndRender();
+                }
+                return Promise.resolve();
+            },
+
+            deletePriority(id) {
+                data.priorities = data.priorities?.filter(p => p.id !== id) || [];
+                return this.saveAndRender();
+            },
+
+            // Project operations
+            addProject(project, status) {
+                data.projects = data.projects || { backlog: [], inprogress: [], done: [] };
+                data.projects[status].push(project);
+                return this.saveAndRender();
+            },
+
+            moveProject(projectId, fromStatus, toStatus) {
+                const project = data.projects[fromStatus]?.find(p => p.id === projectId);
+                if (project) {
+                    data.projects[fromStatus] = data.projects[fromStatus].filter(p => p.id !== projectId);
+                    data.projects[toStatus].push(project);
+                    return this.saveAndRender();
+                }
+                return Promise.resolve();
+            },
+
+            // Generic save and render
+            async save() {
+                try {
+                    await storage.save(data);
+                    return true;
+                } catch (e) {
+                    console.error('Save failed:', e);
+                    return false;
+                }
+            },
+
+            async saveAndRender() {
+                const saved = await this.save();
+                if (saved) {
+                    debouncedRenderAll();
+                }
+                return saved;
+            }
+        };
+
         // Utility: Wrap render functions in error boundaries
         function safeRender(renderFn, fallback = '') {
             try {
