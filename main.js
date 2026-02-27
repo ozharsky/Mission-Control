@@ -1,5 +1,5 @@
 // Cache-busting version - increment when deploying updates
-const APP_VERSION = 'v29''
+const APP_VERSION = 'v29'
 
 // Initialize namespace first (replaces global window pollution)
 import './js/namespace.js'
