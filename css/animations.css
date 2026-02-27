@@ -1,0 +1,167 @@
+/* Animation Timing Variables */
+/* Centralized animation speeds for consistency */
+
+:root {
+  /* Animation durations */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 400ms;
+  --duration-slower: 500ms;
+  
+  /* Easing functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Standard transitions */
+  --transition-fast: all var(--duration-fast) var(--ease-out);
+  --transition-normal: all var(--duration-normal) var(--ease-out);
+  --transition-slow: all var(--duration-slow) var(--ease-out);
+  
+  /* Component-specific transitions */
+  --transition-modal: transform var(--duration-slow) var(--ease-spring),
+                      opacity var(--duration-normal) var(--ease-out);
+  --transition-toast: transform var(--duration-slow) var(--ease-bounce),
+                      opacity var(--duration-normal) var(--ease-out);
+  --transition-dropdown: transform var(--duration-fast) var(--ease-out),
+                         opacity var(--duration-fast) var(--ease-out);
+  --transition-card: transform var(--duration-normal) var(--ease-out),
+                     box-shadow var(--duration-normal) var(--ease-out);
+  --transition-button: background var(--duration-fast) var(--ease-out),
+                       transform var(--duration-fast) var(--ease-out),
+                       box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Apply slower animations */
+.btn,
+.card,
+.modal,
+.toast,
+.dropdown,
+.priority-card,
+.project-card,
+.event-card,
+.lead-card,
+.sku-row,
+.note-card,
+.doc-card {
+  transition: var(--transition-normal);
+}
+
+/* Hover states */
+.btn:hover,
+.card:hover,
+.priority-card:hover,
+.project-card:hover,
+.event-card:hover,
+.lead-card:hover,
+.note-card:hover,
+.doc-card:hover {
+  transition: var(--transition-slow);
+}
+
+/* Modal animations */
+.modal-overlay {
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.modal {
+  transition: var(--transition-modal);
+}
+
+/* Toast animations */
+.toast {
+  transition: var(--transition-toast);
+}
+
+/* Dropdown animations */
+.dropdown-menu {
+  transition: var(--transition-dropdown);
+}
+
+/* Page transitions */
+.page-transition-enter {
+  animation: pageEnter var(--duration-slow) var(--ease-out);
+}
+
+.page-transition-exit {
+  animation: pageExit var(--duration-normal) var(--ease-in);
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Stagger animations for lists */
+.stagger-children > * {
+  animation: staggerIn var(--duration-slow) var(--ease-out) backwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 350ms; }
+
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Highlight pulse animation for search results */
+@keyframes highlightPulse {
+  0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+}
+
+.highlight-pulse {
+  animation: highlightPulse 2s ease-out;
+}
+
+/* Pull to refresh spinner animation */
+@keyframes pull-spin {
+  to { transform: rotate(360deg); }
+}

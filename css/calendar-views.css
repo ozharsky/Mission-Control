@@ -1,0 +1,454 @@
+/* Calendar View Styles - Clean & Consistent */
+
+/* View Toggle - Fixed height to prevent shifting */
+.view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-tertiary);
+  padding: 0.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.view-toggle .btn {
+  min-width: 60px;
+  height: 32px;
+  padding: 0 0.75rem;
+  font-size: 0.8125rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.view-toggle .btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.view-toggle .btn.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* Calendar Card - Consistent container */
+.calendar-card {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Common weekday header */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.calendar-weekday {
+  background: var(--bg-secondary);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calendar-weekday.today {
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+/* Month View */
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+  flex: 1;
+}
+
+.calendar-day {
+  background: var(--bg-secondary);
+  min-height: 100px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.calendar-day:hover {
+  background: var(--bg-tertiary);
+}
+
+.calendar-day.other-month {
+  background: var(--bg-primary);
+  opacity: 0.6;
+}
+
+.calendar-day.today {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.calendar-day.today .day-number {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.calendar-day.selected {
+  box-shadow: inset 0 0 0 2px var(--accent-primary);
+}
+
+.calendar-day.has-overdue {
+  border-top: 3px solid var(--accent-danger);
+}
+
+.calendar-day.has-urgent {
+  border-top: 3px solid var(--accent-warning);
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.day-number {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.day-count {
+  font-size: 0.625rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 10px;
+  background: var(--accent-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.day-count.overdue {
+  background: var(--accent-danger);
+}
+
+.day-count.urgent {
+  background: var(--accent-warning);
+}
+
+.day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.day-item {
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.day-item.priority {
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--accent-primary);
+}
+
+.day-item.priority.completed {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.day-item.priority.overdue {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--accent-danger);
+}
+
+.day-item.priority.soon {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--accent-warning);
+}
+
+.day-item.event {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--accent-success);
+}
+
+.day-item .item-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.day-more {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 0.125rem;
+}
+
+/* Week View */
+.calendar-week-view {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+  flex: 1;
+}
+
+.week-day {
+  background: var(--bg-secondary);
+  min-height: 200px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.week-day:hover {
+  background: var(--bg-tertiary);
+}
+
+.week-day.today {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.week-day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.week-item {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 3px solid transparent;
+}
+
+.week-item.priority {
+  border-left-color: var(--accent-primary);
+}
+
+.week-item.event {
+  border-left-color: var(--accent-success);
+}
+
+.week-item.completed {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.week-day .no-items {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.875rem;
+}
+
+.week-day .more-items {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 0.25rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+/* Day View */
+.day-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.day-timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.day-hour {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  min-height: 70px;
+}
+
+.day-hour:last-child {
+  border-bottom: none;
+}
+
+.hour-label {
+  width: 80px;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-right: 1px solid var(--border);
+  text-align: right;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.hour-content {
+  flex: 1;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.day-item-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.day-item-detail:hover {
+  background: var(--bg-hover);
+}
+
+.day-item-detail.priority {
+  border-left-color: var(--accent-primary);
+}
+
+.day-item-detail.event {
+  border-left-color: var(--accent-success);
+}
+
+.day-item-detail .item-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.day-item-detail .item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .view-toggle .btn {
+    min-width: 50px;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .calendar-weekdays {
+    padding: 0;
+  }
+  
+  .calendar-weekday {
+    padding: 0.375rem 0.125rem;
+    font-size: 0.625rem;
+    letter-spacing: 0;
+  }
+  
+  .calendar-days {
+    gap: 0;
+  }
+  
+  .calendar-day {
+    min-height: 50px;
+    padding: 0.25rem;
+  }
+  
+  .day-number {
+    font-size: 0.6875rem;
+  }
+  
+  .day-count {
+    font-size: 0.5rem;
+    padding: 0.0625rem 0.25rem;
+    min-width: auto;
+  }
+  
+  .day-item {
+    font-size: 0.5rem;
+    padding: 0.0625rem 0.125rem;
+    margin-bottom: 0.0625rem;
+  }
+  
+  .day-item .item-dot {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .day-more {
+    font-size: 0.5rem;
+  }
+  
+  /* Week view mobile */
+  .calendar-week-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .week-day {
+    min-height: auto;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .week-day:last-child {
+    border-bottom: none;
+  }
+  
+  .week-item {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Day view mobile */
+  .day-hour {
+    min-height: 60px;
+  }
+  
+  .hour-label {
+    width: 50px;
+    padding: 0.375rem;
+    font-size: 0.625rem;
+  }
+  
+  .day-item-detail {
+    font-size: 0.8125rem;
+    padding: 0.5rem;
+  }
+  
+  /* Calendar card mobile */
+  .calendar-card {
+    min-height: auto;
+  }
+  
+  /* Upcoming card mobile */
+  .upcoming-card .card-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}

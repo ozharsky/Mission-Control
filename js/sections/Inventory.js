@@ -1,0 +1,290 @@
+import { store } from '../state/store.js'
+import { printerAPI } from '../api/printers.js'
+import { toast } from '../components/Toast.js'
+
+let pollInterval = null
+
+// Printer images - PNG files
+const PRINTER_IMAGES = {
+  'P2S': './images/p2s.png',
+  'P1S': './images/p1s.png',
+  'Centauri Carbon': './images/centauri-carbon.png'
+}
+
+// SVG placeholder as data URI - fallback
+const PRINTER_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxYTFhMjUiLz48cGF0aCBkPSJNNTAgMTUwTDEwMCA1MEwxNTAgMTUwSDUwWiIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48cmVjdCB4PSI3NSIgeT0iMTAwIiB3aWR0aD0iNTAiIGhlaWdodD0iNjAiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjE4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY0NzQ4YiIgZm9udC1zaXplPSIxNCI+UHJpbnRlcjwvdGV4dD48L3N2Zz4='
+
+const STATUS_CONFIG = {
+  operational: { label: 'Online', icon: '🟢', color: 'var(--accent-success)' },
+  printing: { label: 'Printing', icon: '⚡', color: 'var(--accent-primary)' },
+  paused: { label: 'Paused', icon: '⏸️', color: 'var(--accent-warning)' },
+  error: { label: 'Error', icon: '🔴', color: 'var(--accent-danger)' },
+  offline: { label: 'Offline', icon: '⚫', color: 'var(--text-muted)' },
+  idle: { label: 'Idle', icon: '💤', color: 'var(--text-secondary)' }
+}
+
+export function createInventorySection(containerId) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+  
+  function render() {
+    const printers = store.getState().printers || []
+    const lastUpdate = store.getState().lastPrinterUpdate
+    
+    const onlineCount = printers.filter(p => p.status === 'operational' || p.status === 'printing' || p.status === 'idle').length
+    const printingCount = printers.filter(p => p.status === 'printing').length
+    const errorCount = printers.filter(p => p.status === 'error' || p.status === 'offline').length
+    
+    // Calculate total progress for printing printers
+    const activePrinters = printers.filter(p => p.status === 'printing' && p.progress > 0)
+    const avgProgress = activePrinters.length > 0 
+      ? Math.round(activePrinters.reduce((sum, p) => sum + p.progress, 0) / activePrinters.length)
+      : 0
+    
+    container.innerHTML = `
+      <!-- Welcome Header -->
+      <div class="welcome-bar">
+        <div class="welcome-content">
+          <div class="welcome-greeting">🖨️ Printers</div>
+          <div class="welcome-status">
+            ${errorCount > 0 ? `
+              <span class="status-badge" style="background: rgba(239, 68, 68, 0.15); color: var(--accent-danger);"
+              >🔴 ${errorCount} issue${errorCount > 1 ? 's' : ''}</span>
+            ` : printingCount > 0 ? `
+              <span class="status-badge" style="background: rgba(99, 102, 241, 0.15); color: var(--accent-primary);"
+              >⚡ ${printingCount} printing</span>
+            ` : `
+              <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success);"
+              >🟢 All online</span>
+            `}
+            <span class="status-badge">${onlineCount}/${printers.length} online</span>
+          </div>
+        </div>
+        <div class="welcome-actions">
+          ${lastUpdate ? `
+            <span class="last-update hide-mobile">Updated ${formatTimeAgo(lastUpdate)}</span>
+          ` : ''}
+          <button class="btn btn-sm btn-secondary" onclick="refreshPrinters()" id="refreshPrintersBtn">
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+      
+      <!-- Metrics Grid -->
+      <div class="metrics-grid printer-metrics">
+        <div class="metric-card">
+          <div class="metric-value" style="color: ${onlineCount === printers.length ? 'var(--accent-success)' : 'var(--text-primary)'};"
+          >${onlineCount}</div>
+          <div class="metric-label">Online</div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-value" style="color: ${printingCount > 0 ? 'var(--accent-primary)' : 'var(--text-muted)'};"
+          >${printingCount}</div>
+          <div class="metric-label">Printing</div>
+          ${printingCount > 0 ? `
+            <div class="metric-sub">${avgProgress}% avg</div>
+          ` : ''}
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-value">${printers.length}</div>
+          <div class="metric-label">Total</div>
+        </div>
+        
+        <div class="metric-card">
+          <div class="metric-value" style="color: ${errorCount > 0 ? 'var(--accent-danger)' : 'var(--text-muted)'};"
+          >${errorCount}</div>
+          <div class="metric-label">Issues</div>
+        </div>
+      </div>
+      
+      <!-- Printers Grid -->
+      ${printers.length === 0 ? `
+        <div class="empty-state">
+          <div class="empty-state-icon">🖨️</div>
+          <div class="empty-state-title">No printers configured</div>
+          <div class="empty-state-text">Add your 3D printers to monitor their status.</div>
+        </div>
+      ` : `
+        <div class="printers-grid">
+          ${printers.map(printer => renderPrinterCard(printer)).join('')}
+        </div>
+      `}
+    `
+  }
+  
+  function renderPrinterCard(printer) {
+    const statusConfig = STATUS_CONFIG[printer.status] || STATUS_CONFIG.idle
+    const imageUrl = PRINTER_IMAGES[printer.name] || PRINTER_PLACEHOLDER
+    
+    // Format temperatures
+    const toolTemp = printer.temp || printer.temps?.tool?.actual || 0
+    const bedTemp = printer.bedTemp || printer.temps?.bed?.actual || 0
+    const targetTool = printer.targetTemp || printer.temps?.tool?.target || 0
+    const targetBed = printer.targetBedTemp || printer.temps?.bed?.target || 0
+    
+    // Format time remaining
+    const timeLeft = printer.timeLeft 
+      ? formatDuration(printer.timeLeft)
+      : printer.job?.timeLeft 
+        ? formatDuration(printer.job.timeLeft)
+        : null
+    
+    return `
+      <div class="printer-card ${printer.status}"
+           onclick="showPrinterDetails(${printer.id})">
+        <div class="printer-image">
+          <img src="${imageUrl}" alt="${printer.name}" loading="lazy"
+               onerror="this.src='${PRINTER_PLACEHOLDER}'">
+          <div class="printer-status-indicator" style="background: ${statusConfig.color};"
+               title="${statusConfig.label}"></div>
+        </div>
+        
+        <div class="printer-info">
+          <div class="printer-header">
+            <h4 class="printer-name">${printer.name}</h4>
+            <span class="printer-status-badge" style="background: ${statusConfig.color}20; color: ${statusConfig.color};"
+            >${statusConfig.icon} ${statusConfig.label}</span>
+          </div>
+          
+          <div class="printer-temps">
+            <div class="temp-item">
+              <span class="temp-icon">🔥</span>
+              <span class="temp-value">${toolTemp}°C</span>
+              ${targetTool > 0 ? `<span class="temp-target">→ ${targetTool}°C</span>` : ''}
+            </div>
+            <div class="temp-item">
+              <span class="temp-icon">🛏️</span>
+              <span class="temp-value">${bedTemp}°C</span>
+              ${targetBed > 0 ? `<span class="temp-target">→ ${targetBed}°C</span>` : ''}
+            </div>
+          </div>
+          
+          ${printer.model ? `
+            <div class="printer-model" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              📐 ${printer.model}
+            </div>
+          ` : ''}
+          
+          ${printer.progress > 0 ? `
+            <div class="printer-progress">
+              <div class="progress-header">
+                <span class="progress-filename">${truncateFilename(printer.job?.file || 'Printing...', 25)}</span>
+                ${timeLeft ? `<span class="progress-time">⏱️ ${timeLeft}</span>` : ''}
+              </div>
+              <div class="progress-bar printer">
+                <div class="progress-fill" style="width: ${printer.progress}%;"
+                ></div>
+              </div>
+              <div class="progress-footer">
+                <span>${printer.progress}% complete</span>
+              </div>
+            </div>
+          ` : `
+            <div class="printer-idle">
+              <span>💤 Idle - Ready to print</span>
+            </div>
+          `}
+          
+          ${printer.hasAMS ? `
+            <div class="printer-ams">
+              <span class="ams-label">AMS:</span>
+              <div class="ams-slots">
+                ${(printer.filaments || []).map(f => `
+                  <span class="ams-filament" 
+                    style="background: ${f.color || '#ccc'};"
+                    title="${f.type || 'Unknown'} - ${f.leftPercent || 0}%"
+                  ></span>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `
+  }
+  
+  // Global functions
+  window.refreshPrinters = async () => {
+    const btn = document.getElementById('refreshPrintersBtn')
+    if (btn) {
+      btn.disabled = true
+      btn.innerHTML = '🔄 ...'
+    }
+    
+    try {
+      const printers = await printerAPI.getPrinters()
+      if (printers) {
+        store.set('printers', printers)
+        store.set('lastPrinterUpdate', Date.now())
+        toast.success('Printers refreshed')
+      } else {
+        toast.error('Failed to fetch printers')
+      }
+    } catch (err) {
+      toast.error('Refresh failed', err.message)
+    } finally {
+      if (btn) {
+        btn.disabled = false
+        btn.innerHTML = '🔄 Refresh'
+      }
+    }
+  }
+  
+  window.showPrinterDetails = (id) => {
+    const printer = store.get('printers').find(p => p.id === id)
+    if (printer) {
+      toast.info(printer.name, `${printer.status} - ${printer.temp}°C`)
+    }
+  }
+  
+  // Polling
+  function startPolling() {
+    if (pollInterval) return
+    pollInterval = printerAPI.startPolling((printers) => {
+      store.set('printers', printers)
+      store.set('lastPrinterUpdate', Date.now())
+    })
+  }
+  
+  function stopPolling() {
+    if (pollInterval) {
+      clearInterval(pollInterval)
+      pollInterval = null
+    }
+  }
+  
+  store.subscribe((state, path) => {
+    if (!path || path.includes('printers') || path.includes('lastPrinterUpdate')) render()
+  })
+  
+  render()
+  startPolling()
+  
+  return { render, startPolling, stopPolling }
+}
+
+function formatTimeAgo(timestamp) {
+  const seconds = Math.floor((Date.now() - timestamp) / 1000)
+  if (seconds < 60) return 'just now'
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  return `${Math.floor(hours / 24)}d ago`
+}
+
+function formatDuration(seconds) {
+  if (!seconds) return ''
+  const hours = Math.floor(seconds / 3600)
+  const mins = Math.floor((seconds % 3600) / 60)
+  if (hours > 0) return `${hours}h ${mins}m`
+  return `${mins}m`
+}
+
+function truncateFilename(filename, maxLength) {
+  if (!filename) return ''
+  if (filename.length <= maxLength) return filename
+  return filename.substring(0, maxLength - 3) + '...'
+}

@@ -1,0 +1,189 @@
+/* CSS Scoping Utilities */
+/* Prevents style conflicts between components */
+
+/* Component prefix mixin pattern */
+.mc-component {
+  /* Base component wrapper */
+  isolation: isolate;
+}
+
+/* Dashboard Section */
+.mc-dashboard {
+  /* All dashboard styles scoped */
+}
+
+.mc-dashboard .welcome-bar { }
+.mc-dashboard .metrics-grid { }
+.mc-dashboard .ai-insights { }
+
+/* Projects Section */
+.mc-projects {
+  /* All projects styles scoped */
+}
+
+.mc-projects .kanban-board { }
+.mc-projects .project-card { }
+.mc-projects .project-filters { }
+
+/* Priorities Section */
+.mc-priorities {
+  /* All priorities styles scoped */
+}
+
+.mc-priorities .priority-card { }
+.mc-priorities .priority-list { }
+.mc-priorities .view-toggle { }
+
+/* Revenue Section */
+.mc-revenue {
+  /* All revenue styles scoped */
+}
+
+.mc-revenue .chart-container { }
+.mc-revenue .metric-card { }
+.mc-revenue .progress-bar { }
+
+/* Calendar Section */
+.mc-calendar {
+  /* All calendar styles scoped */
+}
+
+.mc-calendar .calendar-grid { }
+.mc-calendar .calendar-day { }
+.mc-calendar .event-item { }
+
+/* Leads Section */
+.mc-leads {
+  /* All leads styles scoped */
+}
+
+.mc-leads .lead-card { }
+.mc-leads .pipeline-stats { }
+.mc-leads .status-filters { }
+
+/* Events Section */
+.mc-events {
+  /* All events styles scoped */
+}
+
+.mc-events .event-card { }
+.mc-events .event-timeline { }
+
+/* SKUs Section */
+.mc-skus {
+  /* All SKUs styles scoped */
+}
+
+.mc-skus .sku-row { }
+.mc-skus .stock-indicator { }
+
+/* Docs Section */
+.mc-docs {
+  /* All docs styles scoped */
+}
+
+.mc-docs .doc-card { }
+.mc-docs .doc-grid { }
+
+/* Notes Section */
+.mc-notes {
+  /* All notes styles scoped */
+}
+
+.mc-notes .note-card { }
+.mc-notes .note-grid { }
+
+/* Settings Section */
+.mc-settings {
+  /* All settings styles scoped */
+}
+
+.mc-settings .settings-group { }
+.mc-settings .setting-item { }
+
+/* Modal Components */
+.mc-modal {
+  isolation: isolate;
+  z-index: 1000;
+}
+
+.mc-modal-overlay { }
+.mc-modal-content { }
+.mc-modal-header { }
+.mc-modal-body { }
+.mc-modal-footer { }
+
+/* Toast Components */
+.mc-toast {
+  isolation: isolate;
+  z-index: 2000;
+}
+
+/* Utility Components */
+.mc-button { }
+.mc-input { }
+.mc-select { }
+.mc-card { }
+
+/* Scoped animations */
+@keyframes mc-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mc-slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes mc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Scoped transitions */
+.mc-transition {
+  transition: all 0.3s ease;
+}
+
+.mc-transition-fast {
+  transition: all 0.15s ease;
+}
+
+.mc-transition-slow {
+  transition: all 0.5s ease;
+}
+
+/* CSS Custom Properties per component */
+.mc-dashboard {
+  --dashboard-gap: 1rem;
+  --dashboard-padding: 1.5rem;
+}
+
+.mc-projects {
+  --project-card-width: 280px;
+  --kanban-gap: 1rem;
+}
+
+.mc-priorities {
+  --priority-card-height: auto;
+  --list-gap: 0.75rem;
+}
+
+/* Containment for performance */
+.mc-contain-layout {
+  contain: layout;
+}
+
+.mc-contain-paint {
+  contain: paint;
+}
+
+.mc-contain-strict {
+  contain: strict;
+}
+
+/* Prevent style leakage */
+.mc-reset {
+  all: initial;
+  font-family: inherit;
+}

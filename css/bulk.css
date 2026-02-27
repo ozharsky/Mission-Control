@@ -1,0 +1,138 @@
+.bulk-bar {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  animation: bulk-in 0.3s ease;
+}
+
+@keyframes bulk-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.bulk-count {
+  font-weight: 600;
+  color: var(--accent-primary);
+}
+
+.bulk-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bulk-btn {
+  padding: 0.5rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.bulk-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.bulk-btn.danger {
+  color: var(--accent-danger);
+  border-color: var(--accent-danger);
+}
+
+.bulk-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.bulk-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.bulk-checkbox:hover {
+  border-color: var(--accent-primary);
+}
+
+.bulk-checkbox.checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.bulk-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.task-bulk-mode {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.task-bulk-mode .bulk-checkbox {
+  margin-right: 0.5rem;
+}
+
+.bulk-mode-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 1rem;
+  width: 48px;
+  height: 48px;
+  background: var(--accent-primary);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.bulk-mode-btn:hover {
+  transform: scale(1.1);
+}
+
+.bulk-mode-btn.active {
+  background: var(--accent-danger);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+}
