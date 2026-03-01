@@ -36,13 +36,13 @@ export default async function handler(req, res) {
     
     switch (action) {
       case 'get_printers':
-        simplyPrintUrl = `https://api.simplyprint.io/v1/printers?company_id=${companyId}`;
+        simplyPrintUrl = `https://api.simplyprint.io/public/printers?company_id=${companyId}`;
         break;
       case 'get_status':
         if (!printer_id) {
           return res.status(400).json({ error: 'printer_id required' });
         }
-        simplyPrintUrl = `https://api.simplyprint.io/v1/printers/${printer_id}/status?company_id=${companyId}`;
+        simplyPrintUrl = `https://api.simplyprint.io/public/printers/${printer_id}/status?company_id=${companyId}`;
         break;
       default:
         return res.status(400).json({ error: 'Invalid action' });
