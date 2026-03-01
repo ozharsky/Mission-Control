@@ -2,15 +2,15 @@ import { store } from '../state/store.js';
 
 // Navigation items configuration
 const navItems = [
-  { id: 'dashboard', label: 'Home', icon: '🏠' },
-  { id: 'projects', label: 'Projects', icon: '📋' },
-  { id: 'priorities', label: 'Tasks', icon: '⭐' },
-  { id: 'revenue', label: 'Revenue', icon: '💰' },
-  { id: 'notes', label: 'Notes', icon: '📝' },
-  { id: 'calendar', label: 'Calendar', icon: '📅' },
-  { id: 'inventory', label: 'Printers', icon: '🖨️' },
-  { id: 'docs', label: 'Docs', icon: '📁' },
-  { id: 'settings', label: 'Settings', icon: '⚙️' }
+  { id: 'dashboard', label: 'Home', icon: 'home' },
+  { id: 'projects', label: 'Projects', icon: 'folder-kanban' },
+  { id: 'priorities', label: 'Tasks', icon: 'star' },
+  { id: 'revenue', label: 'Revenue', icon: 'dollar-sign' },
+  { id: 'notes', label: 'Notes', icon: 'file-text' },
+  { id: 'calendar', label: 'Calendar', icon: 'calendar' },
+  { id: 'inventory', label: 'Printers', icon: 'printer' },
+  { id: 'docs', label: 'Docs', icon: 'folder' },
+  { id: 'settings', label: 'Settings', icon: 'settings' }
 ];
 
 // Primary items for bottom tab bar (first 5)
@@ -33,11 +33,11 @@ export function createMobileNav() {
       <!-- Top Header -->
       <header class="mobile-header">
         <div class="mobile-header-logo">
-          <div class="mobile-logo-icon">🚀</div>
+          <div class="mobile-logo-icon"><i data-lucide="rocket"></i></div>
           <span class="mobile-logo-text">Mission Control</span>
         </div>
         <button class="mobile-menu-toggle m-touch" aria-label="Toggle menu">
-          ${isMenuOpen ? '✕' : '☰'}
+          <i data-lucide="${isMenuOpen ? 'x' : 'menu'}"></i>
         </button>
       </header>
       
@@ -51,7 +51,7 @@ export function createMobileNav() {
                 class="mobile-grid-item m-touch ${currentView === item.id ? 'active' : ''}"
                 data-view="${item.id}"
               >
-                <span class="mobile-grid-icon">${item.icon}</span>
+                <span class="mobile-grid-icon"><i data-lucide="${item.icon}"></i></span>
                 <span class="mobile-grid-label">${item.label}</span>
               </button>
             `).join('')}
@@ -66,18 +66,23 @@ export function createMobileNav() {
             class="mobile-tab-item m-touch ${currentView === item.id ? 'active' : ''}"
             data-view="${item.id}"
           >
-            <span class="mobile-tab-icon">${item.icon}</span>
+            <span class="mobile-tab-icon"><i data-lucide="${item.icon}"></i></span>
             <span class="mobile-tab-label">${item.label}</span>
           </button>
         `).join('')}
         <button class="mobile-tab-item m-touch" id="mobileMoreBtn">
-          <span class="mobile-tab-icon">☰</span>
+          <span class="mobile-tab-icon"><i data-lucide="menu"></i></span>
           <span class="mobile-tab-label">More</span>
         </button>
       </nav>
     `;
     
     attachListeners();
+    
+    // Initialize Lucide icons
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
   
   function attachListeners() {
