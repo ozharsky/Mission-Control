@@ -37,7 +37,13 @@ export const printerAPI = {
         return getMockPrinters()
       }
       
-      return data.printers || getMockPrinters()
+      // Check if printers array is empty
+      if (!data.printers || data.printers.length === 0) {
+        console.warn('[Printers] API returned empty printers array, using mock data')
+        return getMockPrinters()
+      }
+      
+      return data.printers
     } catch (e) {
       console.warn('[Printers] API unavailable (CORS/network error):', e.message)
       return getMockPrinters()
