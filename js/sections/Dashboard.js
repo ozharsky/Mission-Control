@@ -7,6 +7,7 @@ import { dashboardWidgets } from '../components/DashboardWidgets.js'
 import { dashboardCache } from '../utils/cache.js'
 import { addTouchFeedback } from '../utils/mobileInteractions.js'
 import { createMetricCard, initMetricCardIcons } from '../components/ui/MetricCard.js'
+import { icons } from '../utils/icons.js'
 
 // Use centralized cache from cache.js
 function getCachedInsights(key, computeFn) {
@@ -139,11 +140,10 @@ export function createDashboardSection(containerId) {
     }
     
     return `
-      <div class="section-card activity-feed">
+      <div class="m-card activity-feed">
         <div class="activity-feed-header">
           <div class="activity-feed-title">
-            <i data-lucide="activity" class="lucide-icon"></i>
-            Activity Feed
+            ${icons.clipboard()} Activity Feed
           </div>
         </div>
         <div class="activity-feed-list">
@@ -174,7 +174,7 @@ export function createDashboardSection(containerId) {
     return `
       <div class="section-card">
         <div class="section-card-header">
-          <div class="section-card-title">Quick Actions</div>
+          <div class="section-card-title">${icons.zap()} Quick Actions</div>
         </div>
         <div class="section-card-content">
           <div class="quick-actions-grid">

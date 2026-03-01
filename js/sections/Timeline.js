@@ -1,12 +1,13 @@
 import { store } from '../state/store.js'
 import { toast } from '../components/Toast.js'
+import { icons } from '../utils/icons.js'
 
 let expandedPhases = new Set()
 
 const STATUS_CONFIG = {
-  completed: { label: 'Completed', icon: '✅', color: 'var(--accent-success)', bg: 'rgba(16, 185, 129, 0.1)' },
-  active: { label: 'In Progress', icon: '⚡', color: 'var(--accent-primary)', bg: 'rgba(99, 102, 241, 0.1)' },
-  pending: { label: 'Upcoming', icon: '⏳', color: 'var(--text-muted)', bg: 'rgba(156, 163, 175, 0.1)' }
+  completed: { label: 'Completed', icon: 'check', color: 'var(--accent-success)', bg: 'rgba(16, 185, 129, 0.1)' },
+  active: { label: 'In Progress', icon: 'zap', color: 'var(--accent-primary)', bg: 'rgba(99, 102, 241, 0.1)' },
+  pending: { label: 'Upcoming', icon: 'hourglass', color: 'var(--text-muted)', bg: 'rgba(156, 163, 175, 0.1)' }
 }
 
 export function createTimelineSection(containerId) {
@@ -30,24 +31,22 @@ export function createTimelineSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">📍 Timeline</div>
+          <div class="welcome-greeting m-title">${icons.mapPin()} Timeline</div>
           <div class="welcome-status">
-            <span class="status-badge" style="background: ${STATUS_CONFIG.completed.bg}; color: ${STATUS_CONFIG.completed.color};"
-            >✅ ${completedMilestones}/${totalMilestones} milestones</span>
+            <span class="m-badge-success">${icons.check()} ${completedMilestones}/${totalMilestones} milestones</span>
             ${currentPhase ? `
-              <span class="status-badge" style="background: ${STATUS_CONFIG.active.bg}; color: ${STATUS_CONFIG.active.color};"
-              >⚡ ${currentPhase.title}</span>
+              <span class="m-badge-primary">${icons.zap()} ${currentPhase.title}</span>
             ` : ''}
           </div>
         </div>
       </div>
       
       <!-- Progress Overview -->
-      <div class="card timeline-progress-card">
+      <div class="m-card timeline-progress-card">
         <div class="timeline-progress-header">
           <div class="progress-info">
-            <div class="progress-percentage">${progress}%</div>
-            <div class="progress-label">Overall Progress</div>
+            <div class="progress-percentage m-title">${progress}%</div>
+            <div class="progress-label m-caption">Overall Progress</div>
           </div>          
           <div class="progress-bar timeline">
             <div class="progress-fill" style="width: ${progress}%;"></div>
@@ -56,17 +55,16 @@ export function createTimelineSection(containerId) {
         
         <div class="timeline-stats">
           <div class="timeline-stat">
-            <div class="stat-value" style="color: ${STATUS_CONFIG.completed.color};">${completedMilestones}</div>
-            <div class="stat-label">Completed</div>
+            <div class="stat-value m-title" style="color: var(--accent-success);">${completedMilestones}</div>
+            <div class="stat-label m-caption">Completed</div>
           </div>
           <div class="timeline-stat">
-            <div class="stat-value" style="color: ${STATUS_CONFIG.active.color};"
-            >${totalMilestones - completedMilestones}</div>
-            <div class="stat-label">Remaining</div>
+            <div class="stat-value m-title" style="color: var(--accent-primary);">${totalMilestones - completedMilestones}</div>
+            <div class="stat-label m-caption">Remaining</div>
           </div>
           <div class="timeline-stat">
-            <div class="stat-value">${timeline.length}</div>
-            <div class="stat-label">Phases</div>
+            <div class="stat-value m-title">${timeline.length}</div>
+            <div class="stat-label m-caption">Phases</div>
           </div>
         </div>
       </div>
@@ -74,9 +72,9 @@ export function createTimelineSection(containerId) {
       <!-- Timeline Phases -->
       ${timeline.length === 0 ? `
         <div class="empty-state">
-          <div class="empty-state-icon">📍</div>
-          <div class="empty-state-title">No timeline yet</div>
-          <div class="empty-state-text">Add project phases and milestones to track progress.</div>
+          <div class="empty-state-icon">${icons.mapPin()}</div>
+          <div class="empty-state-title m-title">No timeline yet</div>
+          <div class="empty-state-text m-body">Add project phases and milestones to track progress.</div>
         </div>
       ` : `
         <div class="timeline-phases">
@@ -100,17 +98,16 @@ export function createTimelineSection(containerId) {
           <div class="phase-connector">
             <div class="connector-line ${index === 0 ? 'first' : ''} ${index === total - 1 ? 'last' : ''}"
             ></div>
-            <div class="phase-dot" style="background: ${statusConfig.color};"
-            >${statusConfig.icon}</div>
+            <div class="phase-dot" style="background: ${statusConfig.color};">${icons[statusConfig.icon]()}</div>
           </div>
           
           <div class="phase-content">
             <div class="phase-title-row">
-              <h4 class="phase-title">${phase.title}</h4>
-              <span class="phase-status-badge" style="background: ${statusConfig.bg}; color: ${statusConfig.color};"
+              <h4 class="phase-title m-title">${phase.title}</h4>
+              <span class="m-badge" style="background: ${statusConfig.bg}; color: ${statusConfig.color};"
               >${statusConfig.label}</span>
             </div>            
-            <div class="phase-meta">
+            <div class="phase-meta m-caption">
               <span class="phase-date">${phase.date}</span>
               <span class="phase-desc">${phase.desc}</span>
             </div>            
@@ -119,11 +116,11 @@ export function createTimelineSection(containerId) {
                 <div class="progress-fill" style="width: ${milestoneProgress}%; background: ${statusConfig.color};"
                 ></div>
               </div>
-              <span class="progress-text">${phase.milestones?.filter(m => m.completed).length || 0}/${phase.milestones?.length || 0} milestones</span>
+              <span class="progress-text m-caption">${phase.milestones?.filter(m => m.completed).length || 0}/${phase.milestones?.length || 0} milestones</span>
             </div>          
           </div>          
           <div class="phase-toggle">
-            <span class="toggle-icon">${isExpanded ? '▼' : '▶'}</span>
+            <span class="toggle-icon">${isExpanded ? icons.chevronDown() : icons.chevronRight()}</span>
           </div>
         </div>        
         
@@ -142,13 +139,13 @@ export function createTimelineSection(containerId) {
            style="${index === total - 1 ? 'border-bottom: none;' : ''}">
         <div class="milestone-checkbox ${milestone.completed ? 'checked' : ''}"
              onclick="toggleMilestone(${milestone.id})">
-          ${milestone.completed ? '✓' : ''}
+          ${milestone.completed ? icons.check() : ''}
         </div>        
         <div class="milestone-content">
-          <div class="milestone-text ${milestone.completed ? 'completed' : ''}"
+          <div class="milestone-text ${milestone.completed ? 'completed' : ''} m-body"
           >${milestone.text}</div>          
           ${milestone.completed && milestone.completedAt ? `
-            <div class="milestone-completed-date">
+            <div class="milestone-completed-date m-caption">
               Completed ${formatDate(milestone.completedAt)}
             </div>
           ` : ''}

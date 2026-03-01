@@ -4,6 +4,7 @@ import { store } from '../state/store.js'
 import { parseEtsyCSV, readFile } from '../utils/csv.js'
 import { toast } from '../components/Toast.js'
 import { addTouchFeedback } from '../utils/mobileInteractions.js'
+import { icons } from '../utils/icons.js'
 
 let revenueChart = null
 let isLoading = false
@@ -234,21 +235,21 @@ export function createRevenueSection(containerId) {
     container.innerHTML = `
       <div class="welcome-bar m-card">
         <div class="welcome-content">
-          <div class="welcome-greeting m-title">💰 Revenue</div>
+          <div class="welcome-greeting m-title">${icons.dollar()} Revenue</div>
           <div class="welcome-status">
             ${trend.direction !== 'flat' ? `
-              <span class="status-badge" style="background: ${trend.direction === 'up' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'}; color: ${trend.direction === 'up' ? 'var(--accent-success)' : 'var(--accent-danger)'};">
-                ${trend.direction === 'up' ? '📈' : '📉'} ${trend.percent.toFixed(0)}% vs last quarter
+              <span class="m-badge m-badge-${trend.direction === 'up' ? 'success' : 'danger'}">
+                ${trend.direction === 'up' ? icons.trendUp() : icons.trendDown()} ${trend.percent.toFixed(0)}% vs last quarter
               </span>
             ` : ''}
             ${onTrack && current.value > 0 ? `
-              <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success);">✅ On track</span>
+              <span class="m-badge m-badge-success">${icons.check()} On track</span>
             ` : current.value > 0 ? `
-              <span class="status-badge" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-warning);">⚠️ Behind pace</span>
+              <span class="m-badge m-badge-warning">${icons.alert()} Behind pace</span>
             ` : ''}
           </div>
         </div>
-        <button class="btn btn-sm btn-secondary m-touch" onclick="document.getElementById('revenueFileInput').click()">📁 Import</button>
+        <button class="m-btn m-btn-secondary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import</button>
       </div>
       
       <input type="file" id="revenueFileInput" accept=".csv" style="display: none;" onchange="handleRevenueFileSelect(this)">
@@ -283,7 +284,7 @@ export function createRevenueSection(containerId) {
       <!-- Monthly Goals (SMART goals based on history) -->
       <div class="card m-card">
         <div class="card-header">
-          <div class="card-title m-title">🎯 This Month's Goals</div>
+          <div class="card-title m-title">${icons.target()} This Month's Goals</div>
           <span class="goal-subtitle m-caption">Based on your ${history.length > 3 ? '3-month average + 20%' : 'starter goals'}</span>
         </div>
         
@@ -296,12 +297,12 @@ export function createRevenueSection(containerId) {
             <div class="progress-fill revenue ${revenueProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(revenueProgress, 100)}%"></div>
           </div>
           <div class="progress-footer">
-            ${revenueProgress >= 100 ? '🎉 Goal achieved!' : 
+            ${revenueProgress >= 100 ? '${icons.party()} Goal achieved!' : 
               `$${revenueRemaining.toLocaleString()} more needed • ${daysRemaining} days left • Projected: $${projectedRevenue.toFixed(0)}`}
           </div>
         </div>
         
-        <div class="progress-section" style="margin-top: 1rem;">
+        <div class="progress-section m-mt-md">
           <div class="progress-header">
             <span class="progress-label">Orders Goal: ${monthlyOrdersGoal}</span>
             <span class="progress-value ${ordersProgress >= 100 ? 'success' : ''}">${ordersProgress.toFixed(0)}%</span>
@@ -310,7 +311,7 @@ export function createRevenueSection(containerId) {
             <div class="progress-fill orders ${ordersProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(ordersProgress, 100)}%"></div>
           </div>
           <div class="progress-footer">
-            ${ordersProgress >= 100 ? '🎉 Target achieved!' : `${ordersRemaining} more orders needed`}
+            ${ordersProgress >= 100 ? '${icons.party()} Target achieved!' : `${ordersRemaining} more orders needed`}
           </div>
         </div>
       </div>
@@ -319,9 +320,9 @@ export function createRevenueSection(containerId) {
         <!-- Revenue Chart -->
         <div class="card m-card">
           <div class="card-header">
-            <div class="card-title m-title">📈 Revenue & Orders Trend</div>
+            <div class="card-title m-title">${icons.chart()} Revenue & Orders Trend</div>
           </div>
-          <div class="chart-container" style="max-width: 100%; overflow-x: auto;">
+          <div class="chart-container m-scroll-x">
             <canvas id="revenueChart" style="max-width: 100%;"></canvas>
           </div>
         </div>
@@ -329,7 +330,7 @@ export function createRevenueSection(containerId) {
         <!-- Monthly History Table -->
         <div class="card m-card">
           <div class="card-header">
-            <div class="card-title m-title">📋 Monthly History</div>
+            <div class="card-title m-title">${icons.clipboard()} Monthly History</div>
             <span class="history-count m-caption">${history.length} months tracked</span>
           </div>
           <div class="table-container">
@@ -351,8 +352,8 @@ export function createRevenueSection(containerId) {
                   return `<tr class="${isBest ? 'best-month' : ''} ${isCurrent ? 'current-month' : ''}">
                     <td>
                       ${formatMonthLabel(h.month)}
-                      ${isBest ? '<span class="best-badge">★ Best</span>' : ''}
-                      ${isCurrent ? '<span class="current-badge">Current</span>' : ''}
+                      ${isBest ? '<span class="m-badge m-badge-star">' + icons.star() + ' Best</span>' : ''}
+                      ${isCurrent ? '<span class="m-badge m-badge-primary">Current</span>' : ''}
                     </td>
                     <td class="numeric">${h.orders || 0}</td>
                     <td class="numeric">${h.items || 0}</td>
@@ -375,19 +376,24 @@ export function createRevenueSection(containerId) {
         </div>
       ` : `
         <div class="empty-state m-card">
-          <div class="empty-state-icon">📊</div>
+          <div class="empty-state-icon">${icons.chart()}</div>
           <div class="empty-state-title m-title">No revenue data yet</div>
           <div class="empty-state-text m-body">
             Import your Etsy Orders CSV to see revenue trends and insights.<br>
             <strong>Go to:</strong> Etsy Shop Manager → Orders & Shipping → Download CSV
           </div>
-          <button class="btn btn-primary m-touch-lg" onclick="document.getElementById('revenueFileInput').click()">📁 Import Orders CSV</button>
+          <button class="m-btn m-btn-primary m-touch-lg" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
         </div>
       `}
     `
     
     // Apply touch feedback to all interactive elements
     container.querySelectorAll('.m-touch, .m-touch-lg').forEach(addTouchFeedback)
+    
+    // Initialize Lucide icons
+    if (typeof window.lucide !== 'undefined') {
+      window.lucide.createIcons({ container })
+    }
     
     if (history.length > 0) {
       setTimeout(() => renderRevenueChart(history), 100)
