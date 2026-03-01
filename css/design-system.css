@@ -217,7 +217,7 @@
 }
 
 /* ============================================
-   QUICK ACTIONS
+   QUICK ACTIONS - DEPRECATED: Use .m-btn-grid classes instead
    ============================================ */
 
 .quick-actions-grid {
@@ -232,42 +232,7 @@
   }
 }
 
-.quick-action-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: var(--bg-secondary, #1a1a24);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  color: var(--text-primary, #fff);
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 80px;
-}
-
-.quick-action-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-}
-
-.quick-action-btn:active {
-  transform: translateY(0);
-}
-
-.quick-action-btn.primary {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-  border-color: transparent;
-}
-
-.quick-action-btn.primary:hover {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-}
+/* Note: .quick-action-btn styles removed - use .m-btn-grid classes from mobile-components.css */
 
 .quick-action-icon {
   width: 24px;
@@ -300,20 +265,7 @@
   color: var(--text-primary, #fff);
 }
 
-.section-card-action {
-  font-size: 0.875rem;
-  color: #8b5cf6;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  transition: background 0.15s ease;
-}
-
-.section-card-action:hover {
-  background: rgba(139, 92, 246, 0.1);
-}
+/* Note: .section-card-action styles removed - use .m-btn-secondary instead */
 
 .section-card-content {
   padding: 1rem;
