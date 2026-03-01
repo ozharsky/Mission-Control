@@ -78,5 +78,9 @@ export const icons = {
   alarm: () => icon('alarm-clock'),
   hourglass: () => icon('hourglass'),
   arrowRight: () => icon('arrow-right'),
-  eye: () => icon('eye')
+  eye: () => icon('eye'),
+  home: () => icon('home'),
+  folderKanban: () => icon('folder-kanban'),
+  calendarDays: () => icon('calendar-days'),
+  clipboardCheck: () => icon('clipboard-check')
 };

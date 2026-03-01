@@ -1,46 +1,47 @@
 import { createBackupModal } from './BackupModal.js'
 import { createStatusIndicator } from './StatusIndicator.js'
 import { store } from '../state/store.js'
+import { icons, icon } from '../utils/icons.js'
 
 // Navigation groups configuration
 const groups = [
   {
     title: 'Overview',
     items: [
-      { id: 'dashboard', label: 'Dashboard', icon: '🏠', badge: null },
-      { id: 'projects', label: 'Projects', icon: '📋', badge: 'projectCount' },
-      { id: 'priorities', label: 'Priorities', icon: '⭐', badge: 'priorityCount' }
+      { id: 'dashboard', label: 'Dashboard', icon: 'home', badge: null },
+      { id: 'projects', label: 'Projects', icon: 'folderKanban', badge: 'projectCount' },
+      { id: 'priorities', label: 'Priorities', icon: 'star', badge: 'priorityCount' }
     ]
   },
   {
     title: 'Business',
     items: [
-      { id: 'revenue', label: 'Revenue', icon: '💰', badge: null },
-      { id: 'leads', label: 'Leads', icon: '🎯', badge: 'leadCount' },
-      { id: 'events', label: 'Events', icon: '📅', badge: 'eventCount' }
+      { id: 'revenue', label: 'Revenue', icon: 'dollar', badge: null },
+      { id: 'leads', label: 'Leads', icon: 'target', badge: 'leadCount' },
+      { id: 'events', label: 'Events', icon: 'calendarDays', badge: 'eventCount' }
     ]
   },
   {
     title: 'Operations',
     items: [
-      { id: 'inventory', label: 'Printers', icon: '🖨️', badge: null },
-      { id: 'skus', label: 'SKU Stock', icon: '📦', badge: 'lowStockCount' },
-      { id: 'calendar', label: 'Calendar', icon: '🗓️', badge: null }
+      { id: 'inventory', label: 'Printers', icon: 'printer', badge: null },
+      { id: 'skus', label: 'SKU Stock', icon: 'package', badge: 'lowStockCount' },
+      { id: 'calendar', label: 'Calendar', icon: 'calendar', badge: null }
     ]
   },
   {
     title: 'Planning',
     items: [
-      { id: 'timeline', label: 'Timeline', icon: '📍', badge: null },
-      { id: 'review', label: 'Review', icon: '📈', badge: null },
-      { id: 'docs', label: 'Docs', icon: '📁', badge: 'docCount' },
-      { id: 'notes', label: 'Notes', icon: '📝', badge: 'noteCount' }
+      { id: 'timeline', label: 'Timeline', icon: 'clock', badge: null },
+      { id: 'review', label: 'Review', icon: 'clipboardCheck', badge: null },
+      { id: 'docs', label: 'Docs', icon: 'folder', badge: 'docCount' },
+      { id: 'notes', label: 'Notes', icon: 'file', badge: 'noteCount' }
     ]
   },
   {
     title: 'System',
     items: [
-      { id: 'settings', label: 'Settings', icon: '⚙️', badge: null }
+      { id: 'settings', label: 'Settings', icon: 'settings', badge: null }
     ]
   }
 ]
@@ -92,7 +93,7 @@ function renderDesktopNav() {
   container.innerHTML = `
     <div class="nav-header">
       <div class="nav-logo">
-        <div class="nav-logo-icon">🚀</div>
+        <div class="nav-logo-icon">${icons.zap()}</div>
         <div class="nav-logo-text">
           <span class="nav-logo-title">Mission Control</span>
           <span class="nav-logo-version">v4</span>
@@ -122,7 +123,7 @@ function renderDesktopNav() {
                   data-nav-id="${item.id}"
                   aria-current="${activeSection === item.id ? 'page' : 'false'}"
                 >
-                  <span class="nav-item-icon">${item.icon}</span>
+                  <span class="nav-item-icon">${icons[item.icon] ? icons[item.icon]() : icon(item.icon)}</span>
                   <span class="nav-item-label">${item.label}</span>
                   ${badge ? `<span class="nav-item-badge">${badge}</span>` : ''}
                 </button>
@@ -135,11 +136,11 @@ function renderDesktopNav() {
     
     <div class="nav-footer">
       <button class="nav-footer-btn backup-btn">
-        <span>💾</span>
+        <span>${icons.download()}</span>
         <span>Backup</span>
       </button>
       <button class="nav-footer-btn settings-btn">
-        <span>⚙️</span>
+        <span>${icons.settings()}</span>
         <span>Settings</span>
       </button>
     </div>
@@ -244,10 +245,10 @@ function getBadgeValue(badgeType) {
 function getBoardLabel(boardId) {
   const labels = {
     'all': 'All Boards',
-    'etsy': '🛒 Etsy Shop',
-    'photography': '📸 Photography',
-    '3dprint': '🖨️ 3D Printing',
-    'wholesale': '🏢 Wholesale'
+    'etsy': 'Etsy Shop',
+    'photography': 'Photography',
+    '3dprint': '3D Printing',
+    'wholesale': 'Wholesale'
   }
   return labels[boardId] || boardId
 }
