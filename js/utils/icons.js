@@ -76,5 +76,5 @@ export const icons = {
   mapPin: () => icon('map-pin'),
   alarm: () => icon('alarm-clock'),
   hourglass: () => icon('hourglass'),
-  square: () => icon('square')
-};
+  arrowRight: () => icon('arrow-right'),
+  eye: () => icon('eye'),

@@ -297,7 +297,7 @@ export function createRevenueSection(containerId) {
             <div class="progress-fill revenue ${revenueProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(revenueProgress, 100)}%"></div>
           </div>
           <div class="progress-footer m-caption">
-            ${revenueProgress >= 100 ? '${icons.party()} Goal achieved!' : 
+            ${revenueProgress >= 100 ? `${icons.party()} Goal achieved!` : 
               `$${revenueRemaining.toLocaleString()} more needed • ${daysRemaining} days left • Projected: $${projectedRevenue.toFixed(0)}`}
           </div>
         </div>
@@ -311,7 +311,7 @@ export function createRevenueSection(containerId) {
             <div class="progress-fill orders ${ordersProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(ordersProgress, 100)}%"></div>
           </div>
           <div class="progress-footer m-caption">
-            ${ordersProgress >= 100 ? '${icons.party()} Target achieved!' : `${ordersRemaining} more orders needed`}
+            ${ordersProgress >= 100 ? `${icons.party()} Target achieved!` : `${ordersRemaining} more orders needed`}
           </div>
         </div>
       </div>
