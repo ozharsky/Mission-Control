@@ -119,12 +119,16 @@ export default async function handler(req, res) {
           bedTemp: p.temps?.current?.bed || 0,
           targetBedTemp: p.temps?.target?.bed || 0,
           progress: job.percentage || 0,
+          layer: job.layer || null,
           job: job.state ? {
             name: job.file || 'Unknown',
-            timeLeft: job.time ? Math.max(0, job.time - (job.time * (job.percentage || 0) / 100)) : 0
+            timeLeft: job.time ? Math.max(0, job.time - (job.time * (job.percentage || 0) / 100)) : 0,
+            totalTime: job.time || 0
           } : null,
-          hasAMS: false,
-          filaments: []
+          error: p.state === 'error' ? 'Printer error' : null,
+          hasAMS: p.model?.extruders > 1 || false,
+          model: p.model?.name || null,
+          hasCam: p.hasCam || false
         };
       });
     }

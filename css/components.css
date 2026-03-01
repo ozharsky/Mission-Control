@@ -2659,6 +2659,30 @@
   text-align: center;
   font-size: 0.875rem;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Error State */
+.printer-error {
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--accent-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Progress Meta */
+.progress-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* AMS Section */

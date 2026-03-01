@@ -186,19 +186,28 @@ export function createInventorySection(containerId) {
             <div class="printer-progress">
               <div class="progress-header">
                 <span class="progress-filename">${truncateFilename(printer.job.name, 25)}</span>
-                ${timeLeft ? `
-                  <span class="progress-time">
-                    <i data-lucide="clock" class="lucide-icon"></i>
-                    ${timeLeft}
-                  </span>
-                ` : ''}
+                <span class="progress-meta">
+                  ${printer.layer ? `<span class="m-caption">Layer ${printer.layer}</span>` : ''}
+                  ${timeLeft ? `
+                    <span class="progress-time">
+                      <i data-lucide="clock" class="lucide-icon"></i>
+                      ${timeLeft}
+                    </span>
+                  ` : ''}
+                </span>
               </div>
               <div class="progress-bar printer">
                 <div class="progress-fill ${printer.status}" style="width: ${printer.progress}%"></div>
               </div>
               <div class="progress-footer">
                 <span>${printer.progress}% complete</span>
+                ${printer.job.totalTime ? `<span class="m-caption">Total: ${formatDuration(printer.job.totalTime)}</span>` : ''}
               </div>
+            </div>
+          ` : printer.error ? `
+            <div class="printer-error">
+              <i data-lucide="alert-circle" class="lucide-icon"></i>
+              <span>${printer.error}</span>
             </div>
           ` : `
             <div class="printer-idle">
@@ -206,10 +215,6 @@ export function createInventorySection(containerId) {
               <span>Idle - Ready to print</span>
             </div>
           `}
-        </div>
-      </div>
-    `
-  }
         </div>
       </div>
     `
