@@ -238,7 +238,7 @@ export function createRevenueSection(containerId) {
           <div class="welcome-greeting m-title">${icons.dollar()} Revenue</div>
           <div class="welcome-status">
             ${trend.direction !== 'flat' ? `
-              <span class="m-badge m-badge-${trend.direction === 'up' ? 'success' : 'danger'}">
+              <span class="m-badge ${trend.direction === 'up' ? 'm-badge-success' : 'm-badge-danger'}">
                 ${trend.direction === 'up' ? icons.trendUp() : icons.trendDown()} ${trend.percent.toFixed(0)}% vs last quarter
               </span>
             ` : ''}
@@ -249,7 +249,7 @@ export function createRevenueSection(containerId) {
             ` : ''}
           </div>
         </div>
-        <button class="m-btn m-btn-secondary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import</button>
+        <button class="m-btn-secondary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import</button>
       </div>
       
       <input type="file" id="revenueFileInput" accept=".csv" style="display: none;" onchange="handleRevenueFileSelect(this)">
@@ -258,31 +258,31 @@ export function createRevenueSection(containerId) {
       <div class="metrics-grid revenue-metrics m-grid-2">
         <div class="metric-card m-card">
           <div class="metric-value">$${totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-          <div class="metric-label">Total Revenue</div>
-          <div class="metric-sub">Lifetime earnings</div>
+          <div class="metric-label m-body">Total Revenue</div>
+          <div class="metric-sub m-caption">Lifetime earnings</div>
         </div>
         
         <div class="metric-card m-card">
           <div class="metric-value">${totalOrders.toLocaleString()}</div>
-          <div class="metric-label">Total Orders</div>
-          <div class="metric-sub">${avgOrderValue > 0 ? `$${avgOrderValue.toFixed(2)} avg order` : 'Import data'}</div>
+          <div class="metric-label m-body">Total Orders</div>
+          <div class="metric-sub m-caption">${avgOrderValue > 0 ? `$${avgOrderValue.toFixed(2)} avg order` : 'Import data'}</div>
         </div>
         
         <div class="metric-card m-card">
           <div class="metric-value">$${avgMonthlyRevenue.toFixed(0)}</div>
-          <div class="metric-label">Avg/Month</div>
-          <div class="metric-sub">Based on ${history.length} months</div>
+          <div class="metric-label m-body">Avg/Month</div>
+          <div class="metric-sub m-caption">Based on ${history.length} months</div>
         </div>
         
         <div class="metric-card m-card">
           <div class="metric-value">${bestMonth ? formatMonthLabel(bestMonth.month) : '-'}</div>
-          <div class="metric-label">Best Month</div>
-          <div class="metric-sub">${bestMonth ? `$${bestMonth.value.toFixed(0)} revenue` : 'No data'}</div>
+          <div class="metric-label m-body">Best Month</div>
+          <div class="metric-sub m-caption">${bestMonth ? `$${bestMonth.value.toFixed(0)} revenue` : 'No data'}</div>
         </div>
       </div>
       
       <!-- Monthly Goals (SMART goals based on history) -->
-      <div class="card m-card">
+      <div class="m-card">
         <div class="card-header">
           <div class="card-title m-title">${icons.target()} This Month's Goals</div>
           <span class="goal-subtitle m-caption">Based on your ${history.length > 3 ? '3-month average + 20%' : 'starter goals'}</span>
@@ -290,27 +290,27 @@ export function createRevenueSection(containerId) {
         
         <div class="progress-section">
           <div class="progress-header">
-            <span class="progress-label">Revenue Goal: $${monthlyRevenueGoal.toLocaleString()}</span>
-            <span class="progress-value ${revenueProgress >= 100 ? 'success' : ''}">${revenueProgress.toFixed(0)}%</span>
+            <span class="progress-label m-body">Revenue Goal: $${monthlyRevenueGoal.toLocaleString()}</span>
+            <span class="progress-value ${revenueProgress >= 100 ? 'success' : ''} m-body">${revenueProgress.toFixed(0)}%</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill revenue ${revenueProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(revenueProgress, 100)}%"></div>
           </div>
-          <div class="progress-footer">
+          <div class="progress-footer m-caption">
             ${revenueProgress >= 100 ? '${icons.party()} Goal achieved!' : 
               `$${revenueRemaining.toLocaleString()} more needed • ${daysRemaining} days left • Projected: $${projectedRevenue.toFixed(0)}`}
           </div>
         </div>
         
-        <div class="progress-section m-mt-md">
+        <div class="progress-section" style="margin-top: 1rem;">
           <div class="progress-header">
-            <span class="progress-label">Orders Goal: ${monthlyOrdersGoal}</span>
-            <span class="progress-value ${ordersProgress >= 100 ? 'success' : ''}">${ordersProgress.toFixed(0)}%</span>
+            <span class="progress-label m-body">Orders Goal: ${monthlyOrdersGoal}</span>
+            <span class="progress-value ${ordersProgress >= 100 ? 'success' : ''} m-body">${ordersProgress.toFixed(0)}%</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill orders ${ordersProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(ordersProgress, 100)}%"></div>
           </div>
-          <div class="progress-footer">
+          <div class="progress-footer m-caption">
             ${ordersProgress >= 100 ? '${icons.party()} Target achieved!' : `${ordersRemaining} more orders needed`}
           </div>
         </div>
@@ -318,17 +318,17 @@ export function createRevenueSection(containerId) {
       
       ${history.length > 0 ? `
         <!-- Revenue Chart -->
-        <div class="card m-card">
+        <div class="m-card">
           <div class="card-header">
             <div class="card-title m-title">${icons.chart()} Revenue & Orders Trend</div>
           </div>
-          <div class="chart-container m-scroll-x">
+          <div class="chart-container" style="max-width: 100%; overflow-x: auto;">
             <canvas id="revenueChart" style="max-width: 100%;"></canvas>
           </div>
         </div>
         
         <!-- Monthly History Table -->
-        <div class="card m-card">
+        <div class="m-card">
           <div class="card-header">
             <div class="card-title m-title">${icons.clipboard()} Monthly History</div>
             <span class="history-count m-caption">${history.length} months tracked</span>
@@ -352,8 +352,8 @@ export function createRevenueSection(containerId) {
                   return `<tr class="${isBest ? 'best-month' : ''} ${isCurrent ? 'current-month' : ''}">
                     <td>
                       ${formatMonthLabel(h.month)}
-                      ${isBest ? '<span class="m-badge m-badge-star">' + icons.star() + ' Best</span>' : ''}
-                      ${isCurrent ? '<span class="m-badge m-badge-primary">Current</span>' : ''}
+                      ${isBest ? '<span class="m-badge m-badge-success">' + icons.star() + ' Best</span>' : ''}
+                      ${isCurrent ? '<span class="m-badge">Current</span>' : ''}
                     </td>
                     <td class="numeric">${h.orders || 0}</td>
                     <td class="numeric">${h.items || 0}</td>
@@ -382,18 +382,13 @@ export function createRevenueSection(containerId) {
             Import your Etsy Orders CSV to see revenue trends and insights.<br>
             <strong>Go to:</strong> Etsy Shop Manager → Orders & Shipping → Download CSV
           </div>
-          <button class="m-btn m-btn-primary m-touch-lg" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
+          <button class="m-btn-primary m-touch-lg" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
         </div>
       `}
     `
     
     // Apply touch feedback to all interactive elements
     container.querySelectorAll('.m-touch, .m-touch-lg').forEach(addTouchFeedback)
-    
-    // Initialize Lucide icons
-    if (typeof window.lucide !== 'undefined') {
-      window.lucide.createIcons({ container })
-    }
     
     if (history.length > 0) {
       setTimeout(() => renderRevenueChart(history), 100)

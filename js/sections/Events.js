@@ -3,24 +3,25 @@ import { toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { openEventModal } from '../components/EventModal.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'upcoming'
 let searchQuery = ''
 
 const EVENT_TYPES = {
-  cannabis: { label: 'Cannabis', icon: '🌿', colorClass: 'badge-event-cannabis' },
-  trade: { label: 'Trade Show', icon: '🏢', colorClass: 'badge-event-trade' },
-  photo: { label: 'Photography', icon: '📸', colorClass: 'badge-event-photo' },
-  etsy: { label: 'Etsy', icon: '🛒', colorClass: 'badge-event-etsy' },
-  other: { label: 'Other', icon: '📅', colorClass: 'badge-event-other' }
+  cannabis: { label: 'Cannabis', icon: icons.leaf(), colorClass: 'm-badge-warning' },
+  trade: { label: 'Trade Show', icon: icons.building(), colorClass: 'm-badge-primary' },
+  photo: { label: 'Photography', icon: icons.camera(), colorClass: 'm-badge-info' },
+  etsy: { label: 'Etsy', icon: icons.cart(), colorClass: 'm-badge-success' },
+  other: { label: 'Other', icon: icons.calendar(), colorClass: 'm-badge-secondary' }
 }
 
 const STATUS_CONFIG = {
-  upcoming: { label: 'Upcoming', icon: '📅', colorClass: 'badge-status-pending' },
-  confirmed: { label: 'Confirmed', icon: '✅', colorClass: 'badge-status-active' },
-  tentative: { label: 'Tentative', icon: '❓', colorClass: 'badge-status-blocked' },
-  completed: { label: 'Completed', icon: '✓', colorClass: 'text-muted' },
-  cancelled: { label: 'Cancelled', icon: '✕', colorClass: 'text-danger' }
+  upcoming: { label: 'Upcoming', icon: icons.calendar(), colorClass: 'm-badge-warning' },
+  confirmed: { label: 'Confirmed', icon: icons.check(), colorClass: 'm-badge-success' },
+  tentative: { label: 'Tentative', icon: icons.help(), colorClass: 'm-badge-secondary' },
+  completed: { label: 'Completed', icon: icons.check(), colorClass: 'm-badge-muted' },
+  cancelled: { label: 'Cancelled', icon: icons.x(), colorClass: 'm-badge-danger' }
 }
 
 export function createEventsSection(containerId) {
@@ -87,17 +88,17 @@ export function createEventsSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">📅 Events</div>
+          <div class="welcome-greeting m-title">${icons.calendar()} Events</div>
           <div class="welcome-status">
             ${thisWeekCount > 0 ? `
-              <span class="status-badge" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-warning);"
-              >⚡ ${thisWeekCount} this week</span>
+              <span class="m-badge-warning"
+              >${icons.zap()} ${thisWeekCount} this week</span>
             ` : ''}
-            <span class="status-badge">${upcomingCount} upcoming</span>
+            <span class="m-badge-secondary">${upcomingCount} upcoming</span>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="openEventModal()">
-          <span>➕</span>
+        <button class="m-btn-primary m-touch" onclick="openEventModal()">
+          <span>${icons.plus()}</span>
           <span class="hide-mobile">Add Event</span>
         </button>
       </div>
@@ -106,30 +107,30 @@ export function createEventsSection(containerId) {
       <div class="events-toolbar">
         <div class="events-search">
           <input type="text" 
-            class="search-input" 
-            placeholder="🔍 Search events..."
+            class="search-input m-input" 
+            placeholder="${icons.search()} Search events..."
             value="${searchQuery}"
             oninput="setEventSearch(this.value)"
           >
         </div>
         <div class="filter-bar event-filters">
-          <button class="filter-btn ${currentFilter === 'upcoming' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'upcoming' ? 'active' : ''} m-touch" 
             onclick="setEventFilter('upcoming')">
-            <span>📅 Upcoming</span>
+            <span>${icons.calendar()} Upcoming</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'confirmed' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'confirmed' ? 'active' : ''} m-touch" 
             onclick="setEventFilter('confirmed')">
-            <span>✅ Confirmed</span>
+            <span>${icons.check()} Confirmed</span>
           </button>
-        <button class="filter-btn ${currentFilter === 'tentative' ? 'active' : ''}" 
+        <button class="filter-btn ${currentFilter === 'tentative' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('tentative')">
-          <span>❓ Tentative</span>
+          <span>${icons.help()} Tentative</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}" 
+        <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('completed')">
-          <span>✓ Past</span>
+          <span>${icons.check()} Past</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" 
+        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('all')">
           <span>All</span>
         </button>
@@ -138,17 +139,17 @@ export function createEventsSection(containerId) {
       <!-- Board Filter Notice -->
       ${store.get('currentBoard') !== 'all' ? `
         <div class="board-filter-notice">
-          <span>📍 Showing events for: ${getCurrentBoardLabel()}</span>
-          <button class="btn btn-sm btn-text" onclick="clearBoardFilter()">Show All</button>
+          <span>${icons.mapPin()} Showing events for: ${getCurrentBoardLabel()}</span>
+          <button class="m-btn-secondary m-touch" onclick="clearBoardFilter()">Show All</button>
         </div>
       ` : ''}
       
       <!-- Events Timeline -->
       ${events.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">📅</div>
-          <div class="empty-state-title">${allEvents.length === 0 ? 'No events scheduled' : 'No events match filter'}</div>
-          <div class="empty-state-text">
+        <div class="empty-state m-card">
+          <div class="empty-state-icon">${icons.calendar()}</div>
+          <div class="empty-state-title m-title">${allEvents.length === 0 ? 'No events scheduled' : 'No events match filter'}</div>
+          <div class="empty-state-text m-body">
             ${allEvents.length === 0 
               ? 'Add your first event to start tracking shows, deadlines, and opportunities.'
               : store.get('currentBoard') !== 'all' 
@@ -156,9 +157,9 @@ export function createEventsSection(containerId) {
                 : 'Try changing your filter to see more events.'}
           </div>
           ${store.get('currentBoard') !== 'all' && allEvents.length > 0 ? `
-            <button class="btn btn-secondary" onclick="clearBoardFilter()" style="margin-bottom: 0.5rem;">📍 Show All Boards</button>
+            <button class="m-btn-secondary m-touch" onclick="clearBoardFilter()" style="margin-bottom: 0.5rem;">${icons.mapPin()} Show All Boards</button>
           ` : ''}
-          <button class="btn btn-primary" onclick="openEventModal()">➕ Add Event</button>
+          <button class="m-btn-primary m-touch" onclick="openEventModal()">${icons.plus()} Add Event</button>
         </div>
       ` : `
         <div class="events-timeline">
@@ -181,62 +182,62 @@ export function createEventsSection(containerId) {
     const year = eventDate.getFullYear()
     
     return `
-      <div class="event-card ${urgency.class} ${event.status}"
+      <div class="m-card event-card ${urgency.class} ${event.status}"
            onclick="openEditEventModal(${event.id})">
         <div class="event-date-block">
-          <div class="event-month">${month}</div>
-          <div class="event-day">${day}</div>
-          <div class="event-weekday">${weekday}</div>
+          <div class="event-month m-caption">${month}</div>
+          <div class="event-day m-title">${day}</div>
+          <div class="event-weekday m-caption">${weekday}</div>
         </div>
         
         <div class="event-content">
           <div class="event-header">
             <div class="event-title-row">
-              <h4 class="event-name">${escapeHtml(event.name)}</h4>
-              <span class="event-urgency ${urgency.class}">${urgency.label}</span>
+              <h4 class="event-name m-title">${escapeHtml(event.name)}</h4>
+              <span class="event-urgency ${urgency.class} m-badge-${urgency.class === 'urgent' ? 'danger' : urgency.class === 'soon' ? 'warning' : 'secondary'}">${urgency.label}</span>
             </div>
             
             <div class="event-meta-row">
               <span class="event-type-badge ${typeConfig.colorClass}"
               >${typeConfig.icon} ${typeConfig.label}</span>
               
-              <span class="event-status-badge ${statusConfig.colorClass}"
+              <span class="${statusConfig.colorClass}"
               >${statusConfig.icon} ${statusConfig.label}</span>
               
               ${event.board && event.board !== 'all' ? `
-                <span class="event-board">${getBoardEmoji(event.board)} ${event.board}</span>
+                <span class="event-board m-caption">${getBoardEmoji(event.board)} ${event.board}</span>
               ` : ''}
             </div>
           </div>
           
           <div class="event-details">
             <div class="event-location">
-              <span class="location-icon">📍</span>
-              <span>${escapeHtml(event.location || 'TBD')}</span>
+              <span class="location-icon">${icons.mapPin()}</span>
+              <span class="m-body">${escapeHtml(event.location || 'TBD')}</span>
             </div>
             
             ${event.notes ? `
-              <div class="event-notes">${escapeHtml(event.notes)}</div>
+              <div class="event-notes m-body">${escapeHtml(event.notes)}</div>
             ` : ''}
           </div>
           
           <div class="event-actions">
-            <button class="event-action-btn" 
+            <button class="m-btn-secondary m-touch" 
               onclick="event.stopPropagation(); openEditEventModal(${event.id})"
-            >✏️ Edit</button>
+            >${icons.edit()} Edit</button>
             ${event.status !== 'confirmed' && event.status !== 'completed' && event.status !== 'cancelled' ? `
-              <button class="event-action-btn success" 
+              <button class="m-btn-primary m-touch" 
                 onclick="event.stopPropagation(); updateEventStatus(${event.id}, 'confirmed')"
-              >✅ Confirm</button>
+              >${icons.check()} Confirm</button>
             ` : ''}
             ${event.status !== 'completed' && event.status !== 'cancelled' ? `
-              <button class="event-action-btn"
+              <button class="m-btn-secondary m-touch"
                 onclick="event.stopPropagation(); updateEventStatus(${event.id}, 'completed')"
-              >✓ Complete</button>
+              >${icons.check()} Complete</button>
             ` : ''}
-            <button class="event-action-btn danger"
+            <button class="m-btn-secondary m-touch danger"
               onclick="event.stopPropagation(); deleteEvent(${event.id})"
-            >🗑️ Delete</button>
+            >${icons.delete()} Delete</button>
           </div>
         </div>
       </div>
@@ -295,13 +296,13 @@ export function createEventsSection(containerId) {
 
 function getBoardEmoji(board) {
   const emojis = {
-    'etsy': '🛒',
-    'photography': '📸',
-    'wholesale': '🏪',
-    '3dprint': '🖨️',
-    'all': '🏢'
+    'etsy': icons.cart(),
+    'photography': icons.camera(),
+    'wholesale': icons.store(),
+    '3dprint': icons.printer(),
+    'all': icons.building()
   }
-  return emojis[board] || '📋'
+  return emojis[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {

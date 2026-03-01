@@ -2,6 +2,7 @@ import { store } from '../state/store.js'
 import { toast } from '../components/Toast.js'
 import { storageManager } from '../utils/storageManager.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let searchQuery = ''
@@ -11,29 +12,29 @@ let selectedCategory = 'Other'
 let selectedPriorityId = ''
 
 const FILE_ICONS = {
-  markdown: '📝',
-  md: '📝',
-  html: '🌐',
-  pdf: '📄',
-  doc: '📘',
-  docx: '📘',
-  xls: '📊',
-  xlsx: '📊',
-  csv: '📊',
-  json: '⚙️',
-  js: '⚙️',
-  css: '🎨',
-  default: '📄'
+  markdown: 'file',
+  md: 'file',
+  html: 'globe',
+  pdf: 'file',
+  doc: 'book',
+  docx: 'book',
+  xls: 'chart',
+  xlsx: 'chart',
+  csv: 'chart',
+  json: 'settings',
+  js: 'settings',
+  css: 'palette',
+  default: 'file'
 }
 
 const CATEGORIES = {
-  'Etsy': { icon: '🛒', colorClass: 'badge-category-etsy', cssVar: '--color-category-etsy' },
-  'Photography': { icon: '📸', colorClass: 'badge-category-photography', cssVar: '--color-category-photography' },
-  'Strategy': { icon: '🏢', colorClass: 'badge-category-strategy', cssVar: '--color-category-strategy' },
-  'Research': { icon: '📊', colorClass: 'badge-category-research', cssVar: '--color-category-research' },
-  'Marketing': { icon: '📢', colorClass: 'badge-category-marketing', cssVar: '--color-category-marketing' },
-  'Operations': { icon: '⚙️', colorClass: 'badge-category-operations', cssVar: '--color-category-operations' },
-  'Other': { icon: '📁', colorClass: 'badge-category-other', cssVar: '--color-category-other' }
+  'Etsy': { icon: 'cart', colorClass: 'badge-category-etsy', cssVar: '--color-category-etsy' },
+  'Photography': { icon: 'camera', colorClass: 'badge-category-photography', cssVar: '--color-category-photography' },
+  'Strategy': { icon: 'building', colorClass: 'badge-category-strategy', cssVar: '--color-category-strategy' },
+  'Research': { icon: 'chart', colorClass: 'badge-category-research', cssVar: '--color-category-research' },
+  'Marketing': { icon: 'bell', colorClass: 'badge-category-marketing', cssVar: '--color-category-marketing' },
+  'Operations': { icon: 'settings', colorClass: 'badge-category-operations', cssVar: '--color-category-operations' },
+  'Other': { icon: 'folder', colorClass: 'badge-category-other', cssVar: '--color-category-other' }
 }
 
 export function createDocsSection(containerId) {
@@ -63,7 +64,8 @@ export function createDocsSection(containerId) {
   }
 
   function getFileIcon(type) {
-    return FILE_ICONS[type?.toLowerCase()] || FILE_ICONS.default
+    const iconName = FILE_ICONS[type?.toLowerCase()] || FILE_ICONS.default
+    return icons[iconName] ? icons[iconName]() : icons.file()
   }
 
   function getCategoryConfig(category) {
@@ -104,14 +106,14 @@ export function createDocsSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">📁 Docs</div>
+          <div class="welcome-greeting m-title">${icons.folder()} Docs</div>
           <div class="welcome-status">
-            <span class="status-badge">${allDocs.length} documents</span>
-            <span class="status-badge">${Object.keys(categoryCounts).length} categories</span>
+            <span class="m-badge">${allDocs.length} documents</span>
+            <span class="m-badge">${Object.keys(categoryCounts).length} categories</span>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="toggleUploadModal()">
-          <span>📤</span>
+        <button class="m-btn-primary m-touch" onclick="toggleUploadModal()">
+          <span>${icons.upload()}</span>
           <span class="hide-mobile">Upload</span>
         </button>
       </div>
@@ -120,8 +122,8 @@ export function createDocsSection(containerId) {
       <div class="docs-toolbar">
         <div class="docs-search">
           <input type="text"
-            class="search-input"
-            placeholder="🔍 Search documents..."
+            class="m-input search-input"
+            placeholder="Search documents..."
             value="${searchQuery}"
             oninput="setDocSearch(this.value)"
           >
@@ -138,7 +140,7 @@ export function createDocsSection(containerId) {
               <button class="filter-btn ${currentFilter === cat ? 'active' : ''}"
                 onclick="setDocFilter('${cat}')"
               >
-                <span>${config.icon} ${cat}</span>
+                <span>${icons[config.icon]()} ${cat}</span>
                 <span class="filter-count">${categoryCounts[cat] || 0}</span>
               </button>
             ` : ''
@@ -147,9 +149,9 @@ export function createDocsSection(containerId) {
       </div>
       <!-- Recent Docs (only when no filter/search) -->
       ${!searchQuery && currentFilter === 'all' && recentDocs.length > 0 ? `
-        <div class="card recent-docs-card">
+        <div class="m-card recent-docs-card">
           <div class="card-header">
-            <div class="card-title">🕐 Recently Updated</div>
+            <div class="card-title m-title">${icons.clock()} Recently Updated</div>
           </div>
           <div class="recent-docs-list">
             ${recentDocs.map(doc => renderRecentDoc(doc)).join('')}
@@ -160,14 +162,14 @@ export function createDocsSection(containerId) {
       <!-- Documents Grid -->
       ${docs.length === 0 ? `
         <div class="empty-state">
-          <div class="empty-state-icon">📁</div>
-          <div class="empty-state-title">${allDocs.length === 0 ? 'No documents yet' : 'No documents match'}</div>
-          <div class="empty-state-text">
+          <div class="empty-state-icon">${icons.folder()}</div>
+          <div class="empty-state-title m-title">${allDocs.length === 0 ? 'No documents yet' : 'No documents match'}</div>
+          <div class="empty-state-text m-body">
             ${allDocs.length === 0
               ? 'Add your first document to start organizing your files.'
               : 'Try adjusting your search or filter.'}
           </div>
-          <button class="btn btn-primary" onclick="toggleUploadModal()">📤 Upload Document</button>
+          <button class="m-btn-primary m-touch" onclick="toggleUploadModal()">${icons.upload()} Upload Document</button>
         </div>
       ` : `
         <div class="docs-grid">
@@ -176,35 +178,35 @@ export function createDocsSection(containerId) {
       `}
 
       <!-- Quick Links Section -->
-      <div class="card quick-links-card">
-        <div class="card-title">🔗 Quick Links</div>
+      <div class="m-card quick-links-card">
+        <div class="card-title m-title">${icons.link()} Quick Links</div>
         <div class="quick-links-grid">
           <a href="https://oz3dprint.etsy.com" target="_blank" class="quick-link">
-            <span class="quick-link-icon">🛒</span>
+            <span class="quick-link-icon">${icons.cart()}</span>
             <div class="quick-link-content">
-              <div class="quick-link-title">Etsy Shop</div>
-              <div class="quick-link-url">oz3dprint.etsy.com</div>
+              <div class="quick-link-title m-body">Etsy Shop</div>
+              <div class="quick-link-url m-caption">oz3dprint.etsy.com</div>
             </div>
           </a>
           <a href="https://oz3dprint.vercel.app" target="_blank" class="quick-link">
-            <span class="quick-link-icon">🌐</span>
+            <span class="quick-link-icon">${icons.globe()}</span>
             <div class="quick-link-content">
-              <div class="quick-link-title">Website</div>
-              <div class="quick-link-url">oz3dprint.vercel.app</div>
+              <div class="quick-link-title m-body">Website</div>
+              <div class="quick-link-url m-caption">oz3dprint.vercel.app</div>
             </div>
           </a>
           <a href="https://simplyprint.io" target="_blank" class="quick-link">
-            <span class="quick-link-icon">🖨️</span>
+            <span class="quick-link-icon">${icons.printer()}</span>
             <div class="quick-link-content">
-              <div class="quick-link-title">SimplyPrint</div>
-              <div class="quick-link-url">Printer management</div>
+              <div class="quick-link-title m-body">SimplyPrint</div>
+              <div class="quick-link-url m-caption">Printer management</div>
             </div>
           </a>
           <a href="https://instagram.com/oleg.photos" target="_blank" class="quick-link">
-            <span class="quick-link-icon">📸</span>
+            <span class="quick-link-icon">${icons.camera()}</span>
             <div class="quick-link-content">
-              <div class="quick-link-title">Instagram</div>
-              <div class="quick-link-url">@oleg.photos</div>
+              <div class="quick-link-title m-body">Instagram</div>
+              <div class="quick-link-url m-caption">@oleg.photos</div>
             </div>
           </a>
         </div>
@@ -259,30 +261,30 @@ export function createDocsSection(containerId) {
       <div class="modal-overlay active upload-modal-overlay" id="uploadModal" onclick="closeUploadModal(event)">
         <div class="modal upload-modal" onclick="event.stopPropagation()">
           <div class="modal-header">
-            <div class="modal-title">📤 Upload Documents</div>
-            <button class="modal-close" onclick="closeUploadModal()">✕</button>
+            <div class="modal-title m-title">${icons.upload()} Upload Documents</div>
+            <button class="modal-close m-touch" onclick="closeUploadModal()">${icons.x()}</button>
           </div>
           <div class="modal-body upload-modal-body">
             <!-- Category Selector -->
             <div class="form-group upload-form-group">
-              <label class="form-label">Category/Board</label>
+              <label class="form-label m-body">Category/Board</label>
               <div class="select-wrapper">
-                <select class="form-select upload-form-select" id="categorySelect" onchange="setUploadCategory(this.value)">
+                <select class="m-select upload-form-select" id="categorySelect" onchange="setUploadCategory(this.value)">
                   ${Object.entries(CATEGORIES).map(([cat, config]) => `
                     <option value="${cat}" ${selectedCategory === cat ? 'selected' : ''}>
-                      ${config.icon} ${cat}
+                      ${cat}
                     </option>
                   `).join('')}
                 </select>
-                <span class="select-arrow">▼</span>
+                <span class="select-arrow">${icons.chevronDown()}</span>
               </div>
             </div>
             
             <!-- Priority Link Selector -->
             <div class="form-group upload-form-group">
-              <label class="form-label">Link to Priority (Optional)</label>
+              <label class="form-label m-body">Link to Priority (Optional)</label>
               <div class="select-wrapper">
-                <select class="form-select upload-form-select" id="prioritySelect" onchange="setUploadPriority(this.value)">
+                <select class="m-select upload-form-select" id="prioritySelect" onchange="setUploadPriority(this.value)">
                   <option value="">-- No Priority --</option>
                   ${priorities.map(p => `
                     <option value="${p.id}" ${selectedPriorityId === p.id ? 'selected' : ''}>
@@ -290,13 +292,13 @@ export function createDocsSection(containerId) {
                     </option>
                   `).join('')}
                 </select>
-                <span class="select-arrow">▼</span>
+                <span class="select-arrow">${icons.chevronDown()}</span>
               </div>
-              ${priorities.length === 0 ? '<small class="form-hint">No priorities available. Create priorities first to link files.</small>' : ''}
+              ${priorities.length === 0 ? '<small class="form-hint m-caption">No priorities available. Create priorities first to link files.</small>' : ''}
             </div>
             
             <div id="fileDropzoneContainer" class="upload-dropzone-container"></div>
-            <div class="upload-instructions">
+            <div class="upload-instructions m-caption">
               <p>Supported files: Images, PDFs, Documents, Spreadsheets</p>
               <p>Max file size: 10MB</p>
             </div>
@@ -315,7 +317,7 @@ export function createDocsSection(containerId) {
       const priorities = store.get('priorities') || []
       const linkedPriority = priorities.find(p => p.id === doc.priorityId || p.id === parseInt(doc.priorityId))
       if (linkedPriority) {
-        priorityIndicator = ' 🔗'
+        priorityIndicator = ` ${icons.link()}`
       }
     }
 
@@ -323,14 +325,14 @@ export function createDocsSection(containerId) {
       <div class="recent-doc-item" onclick="openDocument('${doc.id}')">
         <span class="recent-doc-icon">${getFileIcon(doc.type)}</span>
         <div class="recent-doc-content">
-          <div class="recent-doc-name">${escapeHtml(doc.name)}${priorityIndicator}</div>
+          <div class="recent-doc-name m-body">${escapeHtml(doc.name)}${priorityIndicator}</div>
           <div class="recent-doc-meta">
-            <span class="recent-doc-category ${catConfig.colorClass}"
-            >${catConfig.icon} ${doc.category}</span>
-            <span class="recent-doc-date">${formatDate(doc.uploadedAt || doc.lastModified)}</span>
+            <span class="recent-doc-category ${catConfig.colorClass} m-caption"
+            >${icons[catConfig.icon]()} ${doc.category}</span>
+            <span class="recent-doc-date m-caption">${formatDate(doc.uploadedAt || doc.lastModified)}</span>
           </div>
         </div>
-        <span class="recent-doc-type">.${doc.type}</span>
+        <span class="recent-doc-type m-caption">.${doc.type}</span>
       </div>
     `
   }
@@ -346,8 +348,8 @@ export function createDocsSection(containerId) {
       if (linkedPriority) {
         const priorityText = linkedPriority.text || linkedPriority.title || 'Linked Priority'
         linkedPriorityHtml = `
-          <div class="doc-priority-link">
-            <span>🔗</span>
+          <div class="doc-priority-link m-caption">
+            <span>${icons.link()}</span>
             <span>${escapeHtml(priorityText)}</span>
           </div>
         `
@@ -355,23 +357,23 @@ export function createDocsSection(containerId) {
     }
 
     return `
-      <div class="doc-card doc-card-${doc.category.toLowerCase().replace(/\s+/g, '-')}"
+      <div class="m-card doc-card doc-card-${doc.category.toLowerCase().replace(/\s+/g, '-')}"
            onclick="openDocument('${doc.id}')">
         <div class="doc-card-header">
           <span class="doc-icon">${getFileIcon(doc.type)}</span>
-          <span class="doc-category-badge ${catConfig.colorClass}"
-          >${catConfig.icon} ${doc.category}</span>
+          <span class="doc-category-badge ${catConfig.colorClass} m-badge"
+          >${icons[catConfig.icon]()} ${doc.category}</span>
         </div>
         <div class="doc-card-content">
-          <h4 class="doc-name">${escapeHtml(doc.name)}</h4>
+          <h4 class="doc-name m-title">${escapeHtml(doc.name)}</h4>
           ${doc.path ? `
-            <div class="doc-path">${escapeHtml(doc.path)}</div>
+            <div class="doc-path m-caption">${escapeHtml(doc.path)}</div>
           ` : ''}
           ${linkedPriorityHtml}
         </div>
         <div class="doc-card-footer">
-          <span class="doc-date">🕐 ${formatDate(doc.uploadedAt || doc.lastModified)}</span>
-          <span class="doc-type">.${doc.type}</span>
+          <span class="doc-date m-caption">${icons.clock()} ${formatDate(doc.uploadedAt || doc.lastModified)}</span>
+          <span class="doc-type m-caption">.${doc.type}</span>
         </div>
       </div>
     `

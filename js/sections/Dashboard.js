@@ -172,7 +172,7 @@ export function createDashboardSection(containerId) {
     ]
     
     return `
-      <div class="section-card">
+      <div class="m-card">
         <div class="section-card-header">
           <div class="section-card-title">${icons.zap()} Quick Actions</div>
         </div>
@@ -343,7 +343,7 @@ export function createDashboardSection(containerId) {
                   <div class="m-caption recommendation-subtext">${rec.subtext}</div>
                 </div>
                 ${rec.action ? `
-                  <button class="m-btn m-touch recommendation-action">${rec.action}</button>
+                  <button class="m-btn-secondary m-touch recommendation-action">${rec.action}</button>
                 ` : ''}
               </div>
             `).join('')}
@@ -423,10 +423,10 @@ export function createDashboardSection(containerId) {
           <div class="m-title welcome-greeting">${greeting}, Oleg</div>
           <div class="welcome-status">
             ${pendingPriorities > 0 
-              ? `<span class="m-badge status-badge">${pendingPriorities} pending</span>` 
-              : '<span class="m-badge status-badge status-success"><i data-lucide="check" class="lucide-icon"></i> All caught up</span>'
+              ? `<span class="m-badge-primary">${pendingPriorities} pending</span>` 
+              : '<span class="m-badge-success">${icons.check()} All caught up</span>'
             }
-            <span class="m-badge board-label">${getCurrentBoardLabel()}</span>
+            <span class="m-badge-secondary">${getCurrentBoardLabel()}</span>
           </div>
         </div>
         <div class="welcome-time">
@@ -494,8 +494,8 @@ export function createDashboardSection(containerId) {
             <div class="empty-state-icon"><i data-lucide="clipboard-list" class="lucide-icon"></i></div>
             <div class="m-title empty-state-title">No active priorities</div>
             <div class="m-body empty-state-text">Create your first priority to get started</div>
-            <button class="m-btn m-btn-primary m-touch" onclick="openPriorityModal()">
-              <i data-lucide="plus" class="lucide-icon"></i> Create Priority
+            <button class="m-btn-primary m-touch" onclick="openPriorityModal()">
+              ${icons.plus()} Create Priority
             </button>
           </div>
         ` : `
@@ -533,7 +533,7 @@ export function createDashboardSection(containerId) {
           
           ${topPriorities.length >= 5 ? `
             <div class="card-footer">
-              <button class="m-touch m-btn btn-text" onclick="showSection('priorities')">View all priorities <i data-lucide="arrow-right" class="lucide-icon"></i></button>
+              <button class="m-touch m-btn-secondary" onclick="showSection('priorities')">View all priorities ${icons.arrowRight()}</button>
             </div>
           ` : ''}
         `}
@@ -623,14 +623,14 @@ export function createDashboardSection(containerId) {
 }
 
 function getBoardEmoji(board) {
-  const emojis = {
-    'etsy': '🛒',
-    'photography': '📸',
-    'wholesale': '🏪',
-    '3dprint': '🖨️',
-    'all': '🏢'
+  const iconMap = {
+    'etsy': icons.cart(),
+    'photography': icons.camera(),
+    'wholesale': icons.store(),
+    '3dprint': icons.printer(),
+    'all': icons.building()
   }
-  return emojis[board] || '📋'
+  return iconMap[board] || icons.clipboard()
 }
 
 // Helper function to create metric card grid

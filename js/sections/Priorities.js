@@ -9,6 +9,7 @@ import { toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { createDraggableList } from '../utils/dragDrop.js'
 import { addTouchFeedback, initSwipe, haptic } from '../utils/mobileInteractions.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let currentAssignee = null
@@ -91,24 +92,24 @@ export function createPrioritiesSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar m-card">
         <div class="welcome-content">
-          <div class="welcome-greeting m-title">⭐ Priorities</div>
+          <div class="welcome-greeting m-title">${icons.star()} Priorities</div>
           <div class="welcome-status">
             ${overdueCount > 0 
-              ? `<span class="status-badge status-danger m-badge">🔥 ${overdueCount} overdue</span>`
+              ? `<span class="m-badge-danger">${icons.flame()} ${overdueCount} overdue</span>`
               : blockedCount > 0
-                ? `<span class="status-badge status-warning m-badge">🔒 ${blockedCount} blocked</span>`
-                : `<span class="status-badge m-badge">${activeCount} active</span>`
+                ? `<span class="m-badge-warning">${icons.lock()} ${blockedCount} blocked</span>`
+                : `<span class="m-badge-primary">${activeCount} active</span>`
             }
-            <span class="board-label m-badge">${boardLabel}</span>
+            <span class="m-badge-secondary">${boardLabel}</span>
             ${currentFilter !== 'all' || currentAssignee ? 
-              `<span class="status-badge status-info m-badge">Showing ${filteredCount}</span>` : ''}
+              `<span class="m-badge-info">Showing ${filteredCount}</span>` : ''}
           </div>
         </div>
         <div class="welcome-actions">
-          <button class="btn btn-secondary hide-mobile m-touch" onclick="toggleBulkMode()"
-          >${bulk.isActive ? '✓ Done' : '☰ Bulk'}</button>
-          <button class="btn btn-primary m-btn-primary m-touch" onclick="openPriorityModal()">
-            <span>➕</span>
+          <button class="m-btn-secondary hide-mobile m-touch" onclick="toggleBulkMode()"
+          >${bulk.isActive ? icons.check() + ' Done' : icons.menu() + ' Bulk'}</button>
+          <button class="m-btn-primary m-touch" onclick="openPriorityModal()">
+            <span>${icons.plus()}</span>
             <span class="hide-mobile">New Priority</span>
           </button>
         </div>
@@ -128,19 +129,19 @@ export function createPrioritiesSection(containerId) {
           </button>
           <button class="filter-btn ${currentFilter === 'urgent' ? 'active' : ''} m-touch" onclick="setPriorityFilter('urgent')"
             title="Urgent & high priority">
-            <span>🔥 Urgent</span>
+            <span>${icons.flame()} Urgent</span>
           </button>
           <button class="filter-btn ${currentFilter === 'due-soon' ? 'active' : ''} m-touch" onclick="setPriorityFilter('due-soon')"
             title="Due within 3 days">
-            <span>⏰ Due Soon</span>
+            <span>${icons.clock()} Due Soon</span>
           </button>
           <button class="filter-btn ${currentFilter === 'blocked' ? 'active' : ''} m-touch" onclick="setPriorityFilter('blocked')"
             title="Blocked by dependencies">
-            <span>🔒 Blocked</span>
+            <span>${icons.lock()} Blocked</span>
           </button>
           <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''} m-touch" onclick="setPriorityFilter('completed')"
             title="Completed priorities">
-            <span>✅ Done</span>
+            <span>${icons.check()} Done</span>
           </button>
           
           <div class="filter-divider"></div>
@@ -148,28 +149,28 @@ export function createPrioritiesSection(containerId) {
           <button class="filter-btn assignee-btn ${currentAssignee === 'KimiClaw' ? 'active' : ''} m-touch" 
             onclick="setPriorityAssignee('KimiClaw')"
             title="Assigned to KimiClaw">
-            <span>🤖 Kimi</span>
+            <span>${icons.bot()} Kimi</span>
           </button>
           <button class="filter-btn assignee-btn ${currentAssignee === 'Oleg' ? 'active' : ''} m-touch" 
             onclick="setPriorityAssignee('Oleg')"
             title="Assigned to Oleg">
-            <span>👤 Oleg</span>
+            <span>${icons.user()} Oleg</span>
           </button>
           ${currentAssignee ? `
             <button class="filter-btn m-touch" onclick="setPriorityAssignee(null)" title="Clear assignee filter">
-              <span>✕</span>
+              <span>${icons.x()}</span>
             </button>
           ` : ''}
         </div>
         
         <div class="view-toggle m-view-toggle">
-          <button class="btn btn-sm ${viewMode === 'kanban' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+          <button class="m-btn-secondary m-touch ${viewMode === 'kanban' ? 'active' : ''}" 
             onclick="setPriorityView('kanban')" title="Kanban view">
-            📋 Board
+            ${icons.clipboard()} Board
           </button>
-          <button class="btn btn-sm ${viewMode === 'list' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+          <button class="m-btn-secondary m-touch ${viewMode === 'list' ? 'active' : ''}" 
             onclick="setPriorityView('list')" title="List view with drag & drop">
-            ☰ List
+            ${icons.menu()} List
           </button>
         </div>
       </div>
@@ -185,14 +186,14 @@ export function createPrioritiesSection(containerId) {
       
       ${filteredCount === 0 && items.length === 0 ? `
         <div class="empty-state">
-          <div class="empty-state-icon">⭐</div>
+          <div class="empty-state-icon">${icons.star()}</div>
           <div class="empty-state-title m-title">No priorities found</div>
           <div class="empty-state-text m-body">
             ${currentFilter !== 'all' || currentAssignee 
               ? 'Try changing your filters or create a new priority' 
               : 'Create your first priority to get started'}
           </div>
-          <button class="btn btn-primary m-btn-primary m-touch" onclick="openPriorityModal()">➕ Create Priority</button>
+          <button class="m-btn-primary m-touch" onclick="openPriorityModal()">${icons.plus()} Create Priority</button>
         </div>
       ` : ''}
     `
@@ -205,9 +206,9 @@ export function createPrioritiesSection(containerId) {
       } else if (viewMode === 'kanban') {
         kanbanInstance = createKanban('prioritiesKanban', {
           columns: [
-            { id: 'later', label: 'Later', icon: '📥' },
-            { id: 'now', label: 'Now', icon: '⚡' },
-            { id: 'done', label: 'Done', icon: '✅' }
+            { id: 'later', label: 'Later', icon: 'download' },
+            { id: 'now', label: 'Now', icon: 'zap' },
+            { id: 'done', label: 'Done', icon: 'check' }
           ],
           items: items,
           renderItem: (priority) => renderPriorityCard(priority, allPriorities)
@@ -260,7 +261,7 @@ export function createPrioritiesSection(containerId) {
             <!-- Header Row -->
             <div class="priority-card-header">
               <h4 class="priority-card-title">
-                ${isBlocked ? '<span class="blocked-badge" title="Blocked">🔒</span>' : ''}
+                ${isBlocked ? `<span class="blocked-badge" title="Blocked">${icons.lock()}</span>` : ''}
                 ${escapeHtml(priority.text)}
               </h4>
               
@@ -275,7 +276,7 @@ export function createPrioritiesSection(containerId) {
                   </svg>
                 </button>
               ` : priority.completed ? `
-                <span class="priority-done-icon">✓</span>
+                <span class="priority-done-icon">${icons.check()}</span>
               ` : ''}
             </div>
             
@@ -288,17 +289,17 @@ export function createPrioritiesSection(containerId) {
             <div class="priority-card-meta">
               ${alert ? `
                 <span class="priority-alert ${alert.type}">
-                  ${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}
+                  ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
                 </span>
               ` : ''}
               
               ${priority.dueDate && !alert ? `
-                <span class="priority-due">📅 ${formatDate(priority.dueDate)}</span>
+                <span class="priority-due">${icons.calendar()} ${formatDate(priority.dueDate)}</span>
               ` : ''}
               
               ${priority.assignee ? `
                 <span class="priority-assignee ${priority.assignee}">
-                  ${priority.assignee === 'KimiClaw' ? '🤖' : '👤'} ${priority.assignee}
+                  ${priority.assignee === 'KimiClaw' ? icons.bot() : icons.user()} ${priority.assignee}
                 </span>
               ` : ''}
               
@@ -307,11 +308,11 @@ export function createPrioritiesSection(containerId) {
               ` : ''}
               
               ${priority.recurring && priority.recurring !== 'none' ? `
-                <span class="priority-recurring" title="Recurring: ${priority.recurring}">🔄</span>
+                <span class="priority-recurring" title="Recurring: ${priority.recurring}">${icons.refresh()}</span>
               ` : ''}
               
               ${fileCount > 0 ? `
-                <span class="priority-files" title="${fileCount} file${fileCount > 1 ? 's' : ''} attached">📎 ${fileCount}</span>
+                <span class="priority-files" title="${fileCount} file${fileCount > 1 ? 's' : ''} attached">${icons.paperclip()} ${fileCount}</span>
               ` : ''}
             </div>
             
@@ -358,15 +359,15 @@ export function createPrioritiesSection(containerId) {
         <div class="priority-list-content"
         >
           <div class="priority-list-title"
-          >${isBlocked ? '🔒 ' : ''}${escapeHtml(priority.text)}</div>
+          >${isBlocked ? icons.lock() + ' ' : ''}${escapeHtml(priority.text)}</div>
           
           <div class="priority-list-meta"
           >
-            ${alert ? `<span class="${alert.type}">${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}</span>` : ''}
-            ${priority.dueDate ? `<span>📅 ${formatDate(priority.dueDate)}</span>` : ''}
-            ${priority.assignee ? `<span>${priority.assignee === 'KimiClaw' ? '🤖' : '👤'} ${priority.assignee}</span>` : ''}
+            ${alert ? `<span class="${alert.type}">${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}</span>` : ''}
+            ${priority.dueDate ? `<span>${icons.calendar()} ${formatDate(priority.dueDate)}</span>` : ''}
+            ${priority.assignee ? `<span>${priority.assignee === 'KimiClaw' ? icons.bot() : icons.user()} ${priority.assignee}</span>` : ''}
             ${priority.board && priority.board !== 'all' ? `<span>${getBoardEmoji(priority.board)} ${priority.board}</span>` : ''}
-            ${priority.tags?.length ? `<span>🏷️ ${priority.tags.slice(0, 2).join(', ')}</span>` : ''}
+            ${priority.tags?.length ? `<span>${icons.tag()} ${priority.tags.slice(0, 2).join(', ')}</span>` : ''}
           </div>
         </div>
         
@@ -377,9 +378,9 @@ export function createPrioritiesSection(containerId) {
         </div>
         
         ${!priority.completed ? `
-          <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); quickComplete(${priority.id})"
-          >✓</button>
-        ` : '<span style="color: var(--accent-success);">✓</span>'}
+          <button class="m-btn-secondary" onclick="event.stopPropagation(); quickComplete(${priority.id})"
+          >${icons.check()}</button>
+        ` : `<span style="color: var(--accent-success);">${icons.check()}</span>`}
       </div>
     `
   }
@@ -390,9 +391,9 @@ export function createPrioritiesSection(containerId) {
     
     // Group items by status
     const groups = {
-      now: { label: 'Now', icon: '⚡', items: [] },
-      later: { label: 'Later', icon: '📥', items: [] },
-      done: { label: 'Done', icon: '✅', items: [] }
+      now: { label: 'Now', icon: icons.zap(), items: [] },
+      later: { label: 'Later', icon: icons.download(), items: [] },
+      done: { label: 'Done', icon: icons.check(), items: [] }
     }
     
     items.forEach(item => {
@@ -463,24 +464,24 @@ export function createPrioritiesSection(containerId) {
         
         <div class="m-list-item-content mobile-priority-content">
           <div class="m-list-item-title mobile-priority-title">
-            ${isBlocked ? '<span class="mobile-blocked-indicator" title="Blocked">🔒</span>' : ''}
+            ${isBlocked ? '<span class="mobile-blocked-indicator" title="Blocked">' + icons.lock() + '</span>' : ''}
             ${escapeHtml(priority.text)}
           </div>
           
           <div class="m-card-meta mobile-priority-meta">
             ${alert ? `
               <span class="mobile-priority-alert ${alert.type}">
-                ${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}
+                ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
               </span>
             ` : ''}
             
             ${priority.dueDate && !alert ? `
-              <span class="mobile-priority-due">📅 ${formatDate(priority.dueDate)}</span>
+              <span class="mobile-priority-due">${icons.calendar()} ${formatDate(priority.dueDate)}</span>
             ` : ''}
             
             ${priority.assignee ? `
               <span class="mobile-priority-assignee ${priority.assignee}">
-                ${priority.assignee === 'KimiClaw' ? '🤖' : '👤'} ${priority.assignee}
+                ${priority.assignee === 'KimiClaw' ? icons.bot() : icons.user()} ${priority.assignee}
               </span>
             ` : ''}
             
@@ -546,7 +547,7 @@ export function createPrioritiesSection(containerId) {
     return `
       <div class="bulk-checkbox-wrapper">
         <div class="bulk-checkbox ${isChecked ? 'checked' : ''}" data-id="${id}">
-          ${isChecked ? '✓' : ''}
+          ${isChecked ? icons.check() : ''}
         </div>
       </div>
     `
@@ -567,7 +568,7 @@ export function createPrioritiesSection(containerId) {
     return `
       <div class="priority-time-bar">
         <div class="priority-time-header">
-          <span>⏱️ ${formatDuration(spent)} / ${formatDuration(estimate)}</span>
+          <span>${icons.clock()} ${formatDuration(spent)} / ${formatDuration(estimate)}</span>
           <span>${percent}%</span>
         </div>
         <div class="priority-time-progress">
@@ -588,7 +589,7 @@ export function createPrioritiesSection(containerId) {
     
     return `
       <div class="priority-blocked-by">
-        <span>🔒 Blocked by: ${blockerNames.join(', ')}</span>
+        <span>${icons.lock()} Blocked by: ${blockerNames.join(', ')}</span>
       </div>
     `
   }
@@ -691,14 +692,14 @@ export function createPrioritiesSection(containerId) {
 }
 
 function getBoardEmoji(board) {
-  const emojis = {
-    'etsy': '🛒',
-    'photography': '📸',
-    'wholesale': '🏪',
-    '3dprint': '🖨️',
-    'all': '🏢'
+  const iconMap = {
+    'etsy': icons.cart(),
+    'photography': icons.camera(),
+    'wholesale': icons.store(),
+    '3dprint': icons.printer(),
+    'all': icons.building()
   }
-  return emojis[board] || '📋'
+  return iconMap[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {

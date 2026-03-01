@@ -3,6 +3,7 @@ import { toast } from '../components/Toast.js'
 import { getDueAlert } from '../utils/priority.js'
 import { openEventModal } from '../components/EventModal.js'
 import { addTouchFeedback } from '../utils/mobileInteractions.js'
+import { icons } from '../utils/icons.js'
 
 let currentDate = new Date()
 let selectedDate = null
@@ -55,38 +56,38 @@ export function createCalendarSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar m-card">
         <div class="welcome-content">
-          <div class="welcome-greeting m-title">📅 Calendar</div>
+          <div class="welcome-greeting m-title">${icons.calendar()} Calendar</div>
           <div class="welcome-status">
-            <span class="status-badge m-badge">${monthItems.count} items this ${viewMode}</span>
+            <span class="m-badge">${monthItems.count} items this ${viewMode}</span>
             ${upcomingItems.overdue > 0 ? `
-              <span class="status-badge status-danger m-badge">🔥 ${upcomingItems.overdue} overdue</span>
+              <span class="m-badge m-badge-danger">${icons.flame()} ${upcomingItems.overdue} overdue</span>
             ` : ''}
           </div>
         </div>
         <div class="welcome-actions">
           <div class="view-toggle m-view-toggle">
-            <button class="btn btn-sm ${viewMode === 'month' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+            <button class="m-btn-secondary ${viewMode === 'month' ? 'active' : ''} m-touch" 
               onclick="setCalendarView('month')">Month</button>
-            <button class="btn btn-sm ${viewMode === 'week' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+            <button class="m-btn-secondary ${viewMode === 'week' ? 'active' : ''} m-touch" 
               onclick="setCalendarView('week')">Week</button>
-            <button class="btn btn-sm ${viewMode === 'day' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+            <button class="m-btn-secondary ${viewMode === 'day' ? 'active' : ''} m-touch" 
               onclick="setCalendarView('day')">Day</button>
           </div>
           <div class="calendar-nav">
-            <button class="btn btn-sm btn-secondary m-touch" onclick="changePeriod(-1)">◀</button>
+            <button class="m-btn-secondary m-touch" onclick="changePeriod(-1)">${icons.chevronLeft()}</button>
             <div class="calendar-month m-title">${getPeriodLabel()}</div>
-            <button class="btn btn-sm btn-secondary m-touch" onclick="changePeriod(1)">▶</button>
-            <button class="btn btn-sm btn-text m-touch" onclick="goToToday()">Today</button>
+            <button class="m-btn-secondary m-touch" onclick="changePeriod(1)">${icons.chevronRight()}</button>
+            <button class="m-btn-secondary m-touch" onclick="goToToday()">Today</button>
           </div>
-          <button class="btn btn-primary m-btn-primary m-touch" onclick="openEventModal()">
-            <span>➕</span>
+          <button class="m-btn-primary m-touch" onclick="openEventModal()">
+            <span>${icons.plus()}</span>
             <span class="hide-mobile">Add Event</span>
           </button>
         </div>
       </div>
       
       <!-- Calendar Grid -->
-      <div class="card calendar-card m-card">
+      <div class="m-card calendar-card">
         ${viewMode === 'month' ? renderMonthView(firstDay, daysInMonth, daysInPrevMonth, monthItems, priorities, events) : ''}
         ${viewMode === 'week' ? renderWeekView(priorities, events) : ''}
         ${viewMode === 'day' ? renderDayView(priorities, events) : ''}
@@ -96,15 +97,15 @@ export function createCalendarSection(containerId) {
       ${selectedDate ? renderDayDetails(selectedDate, priorities, events) : ''}
       
       <!-- Upcoming Items -->
-      <div class="card upcoming-card m-card">
+      <div class="m-card upcoming-card">
         <div class="card-header">
-          <div class="card-title m-title">⏰ Upcoming</div>
-          <span class="upcoming-count m-badge">${upcomingItems.items.length} items</span>
+          <div class="card-title m-title">${icons.clock()} Upcoming</div>
+          <span class="m-badge">${upcomingItems.items.length} items</span>
         </div>
         
         ${upcomingItems.items.length === 0 ? `
           <div class="empty-state-small">
-            <div class="empty-state-icon">📅</div>
+            <div class="empty-state-icon">${icons.calendar()}</div>
             <div class="empty-state-text m-body">No upcoming items</div>
           </div>
         ` : `
@@ -140,7 +141,7 @@ export function createCalendarSection(containerId) {
     return `
       <div class="calendar-weekdays">
         ${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `
-          <div class="calendar-weekday">${d}</div>
+          <div class="calendar-weekday m-caption">${d}</div>
         `).join('')}
       </div>
       <div class="calendar-days">
@@ -159,7 +160,7 @@ export function createCalendarSection(containerId) {
           const date = new Date(weekStart)
           date.setDate(weekStart.getDate() + i)
           const isToday = date.toDateString() === new Date().toDateString()
-          return `<div class="calendar-weekday ${isToday ? 'today' : ''}">${d} ${date.getDate()}</div>`
+          return `<div class="calendar-weekday ${isToday ? 'today' : ''} m-caption">${d} ${date.getDate()}</div>`
         }).join('')}
       </div>
       <div class="calendar-week-view">
@@ -170,15 +171,15 @@ export function createCalendarSection(containerId) {
           const isToday = date.toDateString() === new Date().toDateString()
           
           return `
-            <div class="week-day ${isToday ? 'today' : ''}" onclick="selectDate('${date.toISOString().split('T')[0]}')">
+            <div class="week-day ${isToday ? 'today' : ''} m-touch" onclick="selectDate('${date.toISOString().split('T')[0]}')">
               <div class="week-day-items">
-                ${dayItems.length === 0 ? '<span class="no-items">-</span>' : 
+                ${dayItems.length === 0 ? '<span class="no-items m-caption">-</span>' : 
                   dayItems.slice(0, 5).map(item => `
-                    <div class="week-item ${item.type} ${item.completed ? 'completed' : ''}">
-                      ${item.type === 'priority' ? '⚡' : '🎉'} ${truncateText(item.text || item.name, 20)}
+                    <div class="week-item ${item.type} ${item.completed ? 'completed' : ''} m-body">
+                      ${item.type === 'priority' ? icons.zap() : icons.party()} ${truncateText(item.text || item.name, 20)}
                     </div>
                   `).join('')}
-                ${dayItems.length > 5 ? `<div class="more-items">+${dayItems.length - 5} more</div>` : ''}
+                ${dayItems.length > 5 ? `<div class="more-items m-caption">+${dayItems.length - 5} more</div>` : ''}
               </div>
             </div>
           `
@@ -225,20 +226,20 @@ export function createCalendarSection(containerId) {
             
             return `
               <div class="day-hour ${isBusinessHour ? 'business-hour' : ''}">
-                <div class="hour-label">${formatHour(hour)}</div>
+                <div class="hour-label m-caption">${formatHour(hour)}</div>
                 <div class="hour-content">
                   ${itemsAtHour.map(item => `
-                    <div class="day-item-detail ${item.type}" 
+                    <div class="day-item-detail ${item.type} m-touch" 
                          onclick="${item.type === 'priority' ? `openEditPriorityModal(${item.id})` : `openEventModal(${item.id})`}">
-                      <span class="item-icon">${item.type === 'priority' ? '⚡' : '🎉'}</span>
-                      <span class="item-text">${escapeHtml(item.text || item.name)}</span>
-                      <span class="item-time">${formatTime(item.dueDate || item.date)}</span>
+                      <span class="item-icon">${item.type === 'priority' ? icons.zap() : icons.party()}</span>
+                      <span class="item-text m-body">${escapeHtml(item.text || item.name)}</span>
+                      <span class="item-time m-caption">${formatTime(item.dueDate || item.date)}</span>
                     </div>
                   `).join('')}
                   
                   ${itemsAtHour.length === 0 ? `
-                    <div class="hour-empty" onclick="createEventOnDay(${currentDate.getFullYear()}, ${currentDate.getMonth()}, ${currentDate.getDate()}, ${hour})">
-                      <span class="add-hint">+ Add event</span>
+                    <div class="hour-empty m-touch" onclick="createEventOnDay(${currentDate.getFullYear()}, ${currentDate.getMonth()}, ${currentDate.getDate()}, ${hour})">
+                      <span class="add-hint m-caption">${icons.plus()} Add event</span>
                     </div>
                   ` : ''}
                 </div>
@@ -249,19 +250,19 @@ export function createCalendarSection(containerId) {
         
         ${dayItems.length === 0 ? `
           <div class="empty-state-small">
-            <div class="empty-state-icon">📅</div>
-            <div class="empty-state-text">No items for this day</div>
-            <button class="btn btn-sm btn-secondary" 
+            <div class="empty-state-icon">${icons.calendar()}</div>
+            <div class="empty-state-text m-body">No items for this day</div>
+            <button class="m-btn-secondary m-touch" 
                     onclick="createEventOnDay(${currentDate.getFullYear()}, ${currentDate.getMonth()}, ${currentDate.getDate()})" 
                     style="margin-top: 1rem;">
-              ➕ Add Event
+              ${icons.plus()} Add Event
             </button>
           </div>
         ` : ''}
         
         <div class="day-view-footer">
-          <button class="btn btn-sm btn-text" onclick="showAllHours()">
-            ${hoursToShow.length < 24 ? '🕐 Show All Hours' : '📅 Show Business Hours'}
+          <button class="m-btn-secondary m-touch" onclick="showAllHours()">
+            ${hoursToShow.length < 24 ? icons.clock() + ' Show All Hours' : icons.calendar() + ' Show Business Hours'}
           </button>
         </div>
       </div>
@@ -341,9 +342,9 @@ export function createCalendarSection(containerId) {
              ondblclick="createEventOnDay(${currentDate.getFullYear()}, ${currentDate.getMonth()}, ${day})"
         >
           <div class="day-header">
-            <span class="day-number">${displayDay}</span>
+            <span class="day-number m-body">${displayDay}</span>
             ${dayData.count > 0 ? `
-              <span class="day-count ${hasOverdue ? 'overdue' : hasUrgent ? 'urgent' : ''}">${dayData.count}</span>
+              <span class="day-count ${hasOverdue ? 'overdue' : hasUrgent ? 'urgent' : ''} m-caption">${dayData.count}</span>
             ` : ''}
           </div>
           
@@ -389,7 +390,7 @@ export function createCalendarSection(containerId) {
     // Add "more" indicator if needed
     const totalItems = dayData.priorities.length + dayData.events.length
     if (totalItems > maxDots) {
-      dots.push(`<div class="day-more">+${totalItems - maxDots}</div>`)
+      dots.push(`<div class="day-more m-caption">+${totalItems - maxDots}</div>`)
     }
     
     return dots.join('')
@@ -402,7 +403,7 @@ export function createCalendarSection(containerId) {
     items.push(...dayData.priorities.slice(0, 2).map(p => {
       const alert = getDueAlert(p)
       return `
-        <div class="day-item priority ${p.completed ? 'completed' : ''} ${alert?.type || ''}"
+        <div class="day-item priority ${p.completed ? 'completed' : ''} ${alert?.type || ''} m-body"
              title="${escapeHtml(p.text)}"
              onclick="event.stopPropagation(); openEditPriorityModal(${p.id})"
         >
@@ -413,16 +414,16 @@ export function createCalendarSection(containerId) {
     }))
     
     items.push(...dayData.events.slice(0, 2).map(e => `
-      <div class="day-item event" title="${escapeHtml(e.name || e.title)}"
+      <div class="day-item event m-body" title="${escapeHtml(e.name || e.title)}"
            onclick="event.stopPropagation(); openEventModal(${e.id})"
       >
-        <span class="item-dot">🎉</span>
+        <span class="item-dot">${icons.party()}</span>
         <span class="item-text">${truncateText(e.name || e.title, 10)}</span>
       </div>
     `))
     
     if (dayData.count > 4) {
-      items.push(`<div class="day-more">+${dayData.count - 4} more</div>`)
+      items.push(`<div class="day-more m-caption">+${dayData.count - 4} more</div>`)
     }
     
     return items.join('')
@@ -450,20 +451,20 @@ export function createCalendarSection(containerId) {
     })
     
     return `
-      <div class="card day-details-card m-card">
+      <div class="m-card day-details-card">
         <div class="day-details-header">
           <div class="day-details-title m-title">${dateStr}</div>
           <div class="day-details-actions">
-            <button class="btn btn-sm btn-primary m-touch" onclick="openEventModalForDate('${dateStr}')">➕ Add Event</button>
-            <button class="btn btn-sm btn-text m-touch" onclick="closeDayDetails()">✕</button>
+            <button class="m-btn-primary m-touch" onclick="openEventModalForDate('${dateStr}')">${icons.plus()} Add Event</button>
+            <button class="m-btn-secondary m-touch" onclick="closeDayDetails()">${icons.x()}</button>
           </div>
         </div>
         
         ${dayPriorities.length === 0 && dayEvents.length === 0 ? `
           <div class="empty-state-small">
             <div class="empty-state-text m-body">No items for this day</div>
-            <button class="btn btn-sm btn-secondary m-touch" onclick="createEventOnDay(${year}, ${month}, ${day})" style="margin-top: 1rem;">
-              ➕ Add Event
+            <button class="m-btn-secondary m-touch" onclick="createEventOnDay(${year}, ${month}, ${day})" style="margin-top: 1rem;">
+              ${icons.plus()} Add Event
             </button>
           </div>
         ` : `
@@ -488,11 +489,11 @@ export function createCalendarSection(containerId) {
             
             ${dayEvents.map(e => `
               <div class="day-detail-item event m-touch" onclick="openEventModal(${e.id})">
-                <div class="detail-icon">🎉</div>
+                <div class="detail-icon">${icons.party()}</div>
                 <div class="detail-content">
                   <div class="detail-text m-body">${escapeHtml(e.name || e.title)}</div>
                   <div class="detail-meta m-caption">
-                    <span>📍 ${escapeHtml(e.location || 'TBD')}</span>
+                    <span>${icons.mapPin()} ${escapeHtml(e.location || 'TBD')}</span>
                   </div>
                 </div>
               </div>
@@ -500,8 +501,8 @@ export function createCalendarSection(containerId) {
           </div>
           
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <button class="btn btn-sm btn-secondary m-touch" onclick="createEventOnDay(${year}, ${month}, ${day})" style="width: 100%;">
-              ➕ Add Event
+            <button class="m-btn-secondary m-touch" onclick="createEventOnDay(${year}, ${month}, ${day})" style="width: 100%;">
+              ${icons.plus()} Add Event
             </button>
           </div>
         `}
@@ -515,23 +516,23 @@ export function createCalendarSection(containerId) {
     const daysUntil = Math.ceil((new Date(item.dueDate || item.date) - new Date()) / (1000 * 60 * 60 * 24))
     
     return `
-      <div class="m-list-item upcoming-item ${isPriority ? 'priority' : 'event'} ${alert?.type || ''} ${daysUntil < 0 ? 'past' : ''}"
+      <div class="m-list-item upcoming-item ${isPriority ? 'priority' : 'event'} ${alert?.type || ''} ${daysUntil < 0 ? 'past' : ''} m-touch"
            onclick="${isPriority ? `openEditPriorityModal(${item.id})` : `openEditEventModal(${item.id})`}">
         <div class="upcoming-date">
-          <div class="upcoming-day">${new Date(item.dueDate || item.date).getDate()}</div>
-          <div class="upcoming-month">${new Date(item.dueDate || item.date).toLocaleDateString('en-US', { month: 'short' })}</div>
+          <div class="upcoming-day m-title">${new Date(item.dueDate || item.date).getDate()}</div>
+          <div class="upcoming-month m-caption">${new Date(item.dueDate || item.date).toLocaleDateString('en-US', { month: 'short' })}</div>
         </div>
         <div class="m-list-item-content upcoming-content">
-          <div class="m-list-item-title upcoming-title">${escapeHtml(item.text || item.name || item.title)}</div>
-          <div class="m-card-meta upcoming-meta">
+          <div class="m-list-item-title upcoming-title m-body">${escapeHtml(item.text || item.name || item.title)}</div>
+          <div class="m-card-meta upcoming-meta m-caption">
             ${alert ? `<span class="upcoming-alert ${alert.type}">${alert.icon} ${alert.text}</span>` : ''}
             ${daysUntil >= 0 ? `<span class="upcoming-countdown">in ${daysUntil}d</span>` : ''}
-            ${item.location ? `<span>📍 ${escapeHtml(item.location)}</span>` : ''}
+            ${item.location ? `<span>${icons.mapPin()} ${escapeHtml(item.location)}</span>` : ''}
           </div>
         </div>
         
         <div class="m-list-item-actions upcoming-type">
-          ${isPriority ? '⭐' : '🎉'}
+          ${isPriority ? icons.star() : icons.party()}
         </div>
       </div>
     `

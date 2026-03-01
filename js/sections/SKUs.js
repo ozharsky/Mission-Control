@@ -3,14 +3,15 @@ import { parseSKUCSV, readFile, exportToCSV } from '../utils/csv.js'
 import { toast } from '../components/Toast.js'
 import { filterByBoard } from '../components/BoardSelector.js'
 import { openSKUModal, deleteSKU } from '../components/SKUModal.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let searchQuery = ''
 
 const STOCK_LEVELS = {
-  low: { threshold: 5, label: 'Low', color: 'var(--accent-danger)', bg: 'rgba(239, 68, 68, 0.1)' },
-  medium: { threshold: 10, label: 'Medium', color: 'var(--accent-warning)', bg: 'rgba(245, 158, 11, 0.1)' },
-  good: { threshold: Infinity, label: 'Good', color: 'var(--accent-success)', bg: 'rgba(16, 185, 129, 0.1)' }
+  low: { threshold: 5, label: 'Low', colorClass: 'm-badge-danger' },
+  medium: { threshold: 10, label: 'Medium', colorClass: 'm-badge-warning' },
+  good: { threshold: Infinity, label: 'Good', colorClass: 'm-badge-success' }
 }
 
 export function createSKUsSection(containerId) {
@@ -68,31 +69,31 @@ export function createSKUsSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">📦 SKU Stock</div>
+          <div class="welcome-greeting m-title">${icons.package()} SKU Stock</div>
           <div class="welcome-status">
             ${stats.low > 0 ? `
-              <span class="status-badge" style="background: ${STOCK_LEVELS.low.bg}; color: ${STOCK_LEVELS.low.color};"
-              >⚠️ ${stats.low} low stock</span>
+              <span class="m-badge-danger"
+              >${icons.alert()} ${stats.low} low stock</span>
             ` : `
-              <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success);"
-              >✅ Stock OK</span>
+              <span class="m-badge-success"
+              >${icons.check()} Stock OK</span>
             `}
-            <span class="status-badge">${stats.total} SKUs</span>
+            <span class="m-badge-secondary">${stats.total} SKUs</span>
           </div>
         </div>
         <div class="welcome-actions">
-          <button class="btn btn-sm btn-secondary hide-mobile" onclick="downloadSkuTemplate()">
-            📥 Template
+          <button class="m-btn-secondary m-touch hide-mobile" onclick="downloadSkuTemplate()">
+            ${icons.download()} Template
           </button>
-          <button class="btn btn-sm btn-secondary" onclick="exportSKUs()">
-            📤 Export
+          <button class="m-btn-secondary m-touch" onclick="exportSKUs()">
+            ${icons.upload()} Export
           </button>
-          <button class="btn btn-primary" onclick="openSKUModal()">
-            <span>➕</span>
+          <button class="m-btn-primary m-touch" onclick="openSKUModal()">
+            <span>${icons.plus()}</span>
             <span class="hide-mobile">Add SKU</span>
           </button>
-          <button class="btn btn-sm btn-secondary" onclick="document.getElementById('skuFileInput').click()">
-            <span>📁</span>
+          <button class="m-btn-secondary m-touch" onclick="document.getElementById('skuFileInput').click()">
+            <span>${icons.folder()}</span>
             <span class="hide-mobile">Import</span>
           </button>
         </div>
@@ -102,24 +103,24 @@ export function createSKUsSection(containerId) {
              onchange="handleSkuFileSelect(this)">
       
       <!-- Stock Stats Card -->
-      <div class="card stock-stats-card">
+      <div class="m-card stock-stats-card">
         <div class="stock-stats">
           <div class="stock-stat low">
-            <div class="stock-value" style="color: ${STOCK_LEVELS.low.color};">${stats.low}</div>
-            <div class="stock-label">Low (<5)</div>
+            <div class="stock-value m-title m-badge-danger">${stats.low}</div>
+            <div class="stock-label m-caption">Low (<5)</div>
           </div>
           <div class="stock-stat medium">
-            <div class="stock-value" style="color: ${STOCK_LEVELS.medium.color};">${stats.medium}</div>
-            <div class="stock-label">Medium (5-9)</div>
+            <div class="stock-value m-title m-badge-warning">${stats.medium}</div>
+            <div class="stock-label m-caption">Medium (5-9)</div>
           </div>
           <div class="stock-stat good">
-            <div class="stock-value" style="color: ${STOCK_LEVELS.good.color};">${stats.good}</div>
-            <div class="stock-label">Good (10+)</div>
+            <div class="stock-value m-title m-badge-success">${stats.good}</div>
+            <div class="stock-label m-caption">Good (10+)</div>
           </div>
           <div class="stock-divider"></div>
           <div class="stock-stat total">
-            <div class="stock-value">${stats.totalStock}</div>
-            <div class="stock-label">Total Units</div>
+            <div class="stock-value m-title">${stats.totalStock}</div>
+            <div class="stock-label m-caption">Total Units</div>
           </div>
         </div>
       </div>
@@ -127,38 +128,34 @@ export function createSKUsSection(containerId) {
       <!-- Filters & Search -->
       <div class="sku-toolbar">
         <div class="filter-bar sku-filters">
-          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('all')"
           >
             <span>All</span>
-            <span class="filter-count">${stats.total}</span>
+            <span class="filter-count m-badge-secondary">${stats.total}</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'low' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'low' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('low')"
-            style="${currentFilter === 'low' ? `border-color: ${STOCK_LEVELS.low.color};` : ''}"
           >
-            <span>⚠️ Low</span>
-            <span class="filter-count" style="background: ${STOCK_LEVELS.low.bg}; color: ${STOCK_LEVELS.low.color};"
-            >${stats.low}</span>
+            <span>${icons.alert()} Low</span>
+            <span class="filter-count m-badge-danger">${stats.low}</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'medium' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'medium' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('medium')"
-            style="${currentFilter === 'medium' ? `border-color: ${STOCK_LEVELS.medium.color};` : ''}"
           >
-            <span>📊 Medium</span>
+            <span>${icons.chart()} Medium</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'good' ? 'active' : ''}" 
+          <button class="filter-btn ${currentFilter === 'good' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('good')"
-            style="${currentFilter === 'good' ? `border-color: ${STOCK_LEVELS.good.color};` : ''}"
           >
-            <span>✅ Good</span>
+            <span>${icons.check()} Good</span>
           </button>
         </div>
         
         <div class="sku-search">
           <input type="text" 
-            class="search-input" 
-            placeholder="🔍 Search SKUs..."
+            class="search-input m-input" 
+            placeholder="${icons.search()} Search SKUs..."
             value="${searchQuery}"
             oninput="setSkuSearch(this.value)"
           >
@@ -167,23 +164,23 @@ export function createSKUsSection(containerId) {
       
       <!-- SKU List -->
       ${skus.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">📦</div>
-          <div class="empty-state-title">${allSkus.length === 0 ? 'No SKUs loaded' : 'No SKUs match'}</div>
-          <div class="empty-state-text">
+        <div class="empty-state m-card">
+          <div class="empty-state-icon">${icons.package()}</div>
+          <div class="empty-state-title m-title">${allSkus.length === 0 ? 'No SKUs loaded' : 'No SKUs match'}</div>
+          <div class="empty-state-text m-body">
             ${allSkus.length === 0 
               ? 'Import your SKU inventory from CSV to start tracking stock levels.'
               : 'Try adjusting your filters or search query.'}
           </div>
           ${allSkus.length === 0 ? `
-            <button class="btn btn-primary" onclick="document.getElementById('skuFileInput').click()">
-              📁 Import CSV
+            <button class="m-btn-primary m-touch" onclick="document.getElementById('skuFileInput').click()">
+              ${icons.folder()} Import CSV
             </button>
           ` : ''}
         </div>
       ` : `
-        <div class="sku-list">
-          <div class="sku-list-header">
+        <div class="sku-list m-card">
+          <div class="sku-list-header m-caption">
             <span>SKU Code</span>
             <span>Product Name</span>
             <span class="numeric">Stock</span>
@@ -201,13 +198,13 @@ export function createSKUsSection(containerId) {
     return `
       <div class="sku-row ${sku.stock < STOCK_LEVELS.low.threshold ? 'low-stock' : ''}">
         <div class="sku-code">
-          <span class="sku-code-text">${escapeHtml(sku.code)}</span>
+          <span class="sku-code-text m-body">${escapeHtml(sku.code)}</span>
         </div>
-        <div class="sku-name">${escapeHtml(sku.name)}</div>
+        <div class="sku-name m-body">${escapeHtml(sku.name)}</div>
         
         <div class="sku-stock numeric">
           <input type="number" 
-            class="stock-input"
+            class="stock-input m-input"
             value="${sku.stock}" 
             min="0"
             onchange="updateSkuStock('${sku.code}', this.value)"
@@ -215,15 +212,15 @@ export function createSKUsSection(containerId) {
         </div>
         
         <div class="sku-status numeric">
-          <span class="status-pill" style="background: ${level.bg}; color: ${level.color};"
+          <span class="${level.colorClass} m-caption"
           >${level.label}</span>
         </div>
         
         <div class="sku-actions">
-          <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openSKUModal(${sku.id})"
-          >✏️ Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteSKU(${sku.id})"
-          >🗑️ Delete</button>
+          <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); openSKUModal(${sku.id})"
+          >${icons.edit()} Edit</button>
+          <button class="m-btn-secondary m-touch danger" onclick="event.stopPropagation(); deleteSKU(${sku.id})"
+          >${icons.delete()} Delete</button>
         </div>
       </div>
     `

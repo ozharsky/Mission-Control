@@ -6,6 +6,7 @@ import { toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { getDueAlert } from '../utils/priority.js'
 import { addTouchFeedback, initSwipeActions, haptic } from '../utils/mobileInteractions.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let searchQuery = ''
@@ -94,19 +95,19 @@ export function createProjectsSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar m-card">
         <div class="welcome-content">
-          <div class="welcome-greeting m-title">📁 Projects</div>
+          <div class="welcome-greeting m-title">${icons.folder()} Projects</div>
           <div class="welcome-status">
             ${overdueCount > 0 
-              ? `<span class="status-badge status-danger m-badge">🔥 ${overdueCount} overdue</span>`
+              ? `<span class="m-badge-danger">${icons.flame()} ${overdueCount} overdue</span>`
               : highPriorityCount > 0
-                ? `<span class="status-badge status-warning m-badge">⚡ ${highPriorityCount} high priority</span>`
-                : `<span class="status-badge m-badge">${totalActive} active</span>`
+                ? `<span class="m-badge-warning">${icons.zap()} ${highPriorityCount} high priority</span>`
+                : `<span class="m-badge-primary">${totalActive} active</span>`
             }
-            <span class="board-label m-badge">${boardLabel}</span>
+            <span class="m-badge-secondary">${boardLabel}</span>
           </div>
         </div>
-        <button class="btn btn-primary m-btn-primary m-touch" onclick="openProjectModal()">
-          <span>➕</span>
+        <button class="m-btn-primary m-touch" onclick="openProjectModal()">
+          <span>${icons.plus()}</span>
           <span class="hide-mobile">New Project</span>
         </button>
       </div>
@@ -118,16 +119,16 @@ export function createProjectsSection(containerId) {
           <span class="filter-count m-badge">${totalActive + done.length}</span>
         </button>
         <button class="filter-btn ${currentFilter === 'etsy' ? 'active' : ''} m-touch" onclick="setProjectFilter('etsy')">
-          <span>🛒 Etsy</span>
+          <span>${icons.cart()} Etsy</span>
         </button>
         <button class="filter-btn ${currentFilter === 'photo' ? 'active' : ''} m-touch" onclick="setProjectFilter('photo')">
-          <span>📸 Photo</span>
+          <span>${icons.camera()} Photo</span>
         </button>
         <button class="filter-btn ${currentFilter === 'b2b' ? 'active' : ''} m-touch" onclick="setProjectFilter('b2b')">
-          <span>🏪 B2B</span>
+          <span>${icons.store()} B2B</span>
         </button>
         <button class="filter-btn ${currentFilter === 'high' ? 'active' : ''} m-touch" onclick="setProjectFilter('high')">
-          <span>🔥 High Priority</span>
+          <span>${icons.flame()} High Priority</span>
         </button>
       </div>
       
@@ -135,21 +136,21 @@ export function createProjectsSection(containerId) {
       <div class="project-toolbar m-toolbar">
         <div class="project-search">
           <input type="text" 
-            class="search-input m-input" 
-            placeholder="🔍 Search projects..."
+            class="m-input" 
+            placeholder="${icons.search()} Search projects..."
             value="${searchQuery}"
             oninput="setProjectSearch(this.value)"
           >
         </div>
         
         <div class="view-toggle m-view-toggle">
-          <button class="btn btn-sm ${viewMode === 'kanban' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+          <button class="m-btn-secondary m-touch ${viewMode === 'kanban' ? 'active' : ''}" 
             onclick="setProjectView('kanban')" title="Kanban board view">
-            📋 Board
+            ${icons.clipboard()} Board
           </button>
-          <button class="btn btn-sm ${viewMode === 'list' ? 'btn-primary' : 'btn-secondary'} m-touch" 
+          <button class="m-btn-secondary m-touch ${viewMode === 'list' ? 'active' : ''}" 
             onclick="setProjectView('list')" title="List view">
-            ☰ List
+            ${icons.menu()} List
           </button>
         </div>
       </div>
@@ -163,10 +164,10 @@ export function createProjectsSection(containerId) {
       
       ${totalActive === 0 && done.length === 0 ? `
         <div class="empty-state">
-          <div class="empty-state-icon">📁</div>
+          <div class="empty-state-icon">${icons.folder()}</div>
           <div class="empty-state-title m-title">No projects yet</div>
           <div class="empty-state-text m-body">Create your first project to get started</div>
-          <button class="btn btn-primary m-btn-primary m-touch" onclick="openProjectModal()">➕ Create Project</button>
+          <button class="m-btn-primary m-touch" onclick="openProjectModal()">${icons.plus()} Create Project</button>
         </div>
       ` : ''}
     `
@@ -176,10 +177,10 @@ export function createProjectsSection(containerId) {
       if (viewMode === 'kanban') {
         kanbanInstance = createKanban('projectsKanban', {
           columns: [
-            { id: 'backlog', label: 'Backlog', icon: '📥' },
-            { id: 'todo', label: 'To Do', icon: '📝' },
-            { id: 'inprogress', label: 'In Progress', icon: '⚡' },
-            { id: 'done', label: 'Done', icon: '✅' }
+            { id: 'backlog', label: 'Backlog', icon: 'download' },
+            { id: 'todo', label: 'To Do', icon: 'file-text' },
+            { id: 'inprogress', label: 'In Progress', icon: 'zap' },
+            { id: 'done', label: 'Done', icon: 'check' }
           ],
           items: allProjects,
           renderItem: (project) => renderProjectCard(project)
@@ -212,7 +213,7 @@ export function createProjectsSection(containerId) {
               </svg>
             </button>
           ` : `
-            <span class="project-done-icon">✓</span>
+            <span class="project-done-icon">${icons.check()}</span>
           `}
         </div>
         
@@ -229,12 +230,12 @@ export function createProjectsSection(containerId) {
           
           ${alert && !isDone ? `
             <span class="project-alert ${alert.type}">
-              ${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}
+              ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
             </span>
           ` : ''}
           
           ${project.dueDate && !alert ? `
-            <span class="project-due">📅 ${formatDate(project.dueDate)}</span>
+            <span class="project-due">${icons.calendar()} ${formatDate(project.dueDate)}</span>
           ` : ''}
           
           ${project.board && project.board !== 'all' ? `
@@ -277,10 +278,10 @@ export function createProjectsSection(containerId) {
     }
     
     const statusConfig = {
-      backlog: { label: 'Backlog', icon: '📥', color: 'var(--text-muted)' },
-      todo: { label: 'To Do', icon: '📝', color: 'var(--accent-primary)' },
-      inprogress: { label: 'In Progress', icon: '⚡', color: 'var(--accent-warning)' },
-      done: { label: 'Done', icon: '✅', color: 'var(--accent-success)' }
+      backlog: { label: 'Backlog', icon: icons.download(), color: 'var(--text-muted)' },
+      todo: { label: 'To Do', icon: icons.file(), color: 'var(--accent-primary)' },
+      inprogress: { label: 'In Progress', icon: icons.zap(), color: 'var(--accent-warning)' },
+      done: { label: 'Done', icon: icons.check(), color: 'var(--accent-success)' }
     }
     
     listContainer.innerHTML = Object.entries(grouped)
@@ -321,13 +322,13 @@ export function createProjectsSection(containerId) {
           </div>
           
           ${!isDone ? `
-            <button class="btn btn-sm btn-secondary project-list-item-btn m-touch" 
+            <button class="m-btn-secondary project-list-item-btn m-touch" 
                     onclick="event.stopPropagation(); quickCompleteProject(${project.id}, '${project.status}')"
                     title="Mark complete">
-              ✓
+              ${icons.check()}
             </button>
           ` : `
-            <span class="project-list-item-done">✓</span>
+            <span class="project-list-item-done">${icons.check()}</span>
           `}
         </div>
         
@@ -339,12 +340,12 @@ export function createProjectsSection(containerId) {
           
           ${alert && !isDone ? `
             <span class="project-alert ${alert.type}">
-              ${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}
+              ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
             </span>
           ` : ''}
           
           ${project.dueDate && !alert ? `
-            <span class="project-list-item-due">📅 ${formatDate(project.dueDate)}</span>
+            <span class="project-list-item-due">${icons.calendar()} ${formatDate(project.dueDate)}</span>
           ` : ''}
           
           ${project.board && project.board !== 'all' ? `
@@ -438,7 +439,7 @@ export function createProjectsSection(containerId) {
           
           initSwipeActions(el, [
             { 
-              icon: '✓', 
+              icon: icons.check(), 
               label: 'Complete', 
               variant: 'success',
               onClick: () => {
@@ -458,14 +459,14 @@ export function createProjectsSection(containerId) {
 }
 
 function getBoardEmoji(board) {
-  const emojis = {
-    'etsy': '🛒',
-    'photography': '📸',
-    'wholesale': '🏪',
-    '3dprint': '🖨️',
-    'all': '🏢'
+  const iconMap = {
+    'etsy': icons.cart(),
+    'photography': icons.camera(),
+    'wholesale': icons.store(),
+    '3dprint': icons.printer(),
+    'all': icons.building()
   }
-  return emojis[board] || '📋'
+  return iconMap[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {

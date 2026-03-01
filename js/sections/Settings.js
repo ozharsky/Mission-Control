@@ -4,15 +4,16 @@ import { themeManager } from '../utils/themeManager.js'
 import { customThemeManager } from '../utils/customThemes.js'
 import { isFirebaseConfigured, isGitHubConfigured, isPrinterConfigured, saveFirebaseConfig, saveGitHubConfig, savePrinterConfig, testFirebaseConnection, testGitHubConnection, testPrinterConnection } from '../config.js'
 import { syncStorage } from '../storage/sync.js'
+import { icons } from '../utils/icons.js'
 
 let activeSection = 'general'
 
 const SETTINGS_SECTIONS = [
-  { id: 'general', label: 'General', icon: '⚙️' },
-  { id: 'appearance', label: 'Appearance', icon: '🎨' },
-  { id: 'notifications', label: 'Notifications', icon: '🔔' },
-  { id: 'integrations', label: 'Integrations', icon: '🔌' },
-  { id: 'data', label: 'Data & Backup', icon: '💾' }
+  { id: 'general', label: 'General', icon: 'settings' },
+  { id: 'appearance', label: 'Appearance', icon: 'palette' },
+  { id: 'notifications', label: 'Notifications', icon: 'bell' },
+  { id: 'integrations', label: 'Integrations', icon: 'plug' },
+  { id: 'data', label: 'Data & Backup', icon: 'save' }
 ]
 
 export function createSettingsSection(containerId) {
@@ -45,9 +46,9 @@ export function createSettingsSection(containerId) {
     container.innerHTML = `
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">⚙️ Settings</div>
+          <div class="welcome-greeting m-title">${icons.settings()} Settings</div>
           <div class="welcome-status">
-            <span class="status-badge">Mission Control v5</span>
+            <span class="m-badge">Mission Control v5</span>
           </div>
         </div>
       </div>
@@ -55,10 +56,10 @@ export function createSettingsSection(containerId) {
       <div class="settings-layout">
         <!-- Mobile Tab Navigation -->
         <div class="settings-nav-mobile">
-          <select class="settings-mobile-select" onchange="window.setSettingsSection(this.value)">
+          <select class="settings-mobile-select m-select" onchange="window.setSettingsSection(this.value)">
             ${SETTINGS_SECTIONS.map(section => `
               <option value="${section.id}" ${activeSection === section.id ? 'selected' : ''}>
-                ${section.icon} ${section.label}
+                ${section.label}
               </option>
             `).join('')}
           </select>
@@ -67,11 +68,11 @@ export function createSettingsSection(containerId) {
         <!-- Desktop Sidebar Navigation -->
         <div class="settings-nav">
           ${SETTINGS_SECTIONS.map(section => `
-            <button class="settings-nav-item ${activeSection === section.id ? 'active' : ''}"
+            <button class="settings-nav-item ${activeSection === section.id ? 'active' : ''} m-touch"
               onclick="window.setSettingsSection('${section.id}')"
             >
-              <span class="nav-icon">${section.icon}</span>
-              <span class="nav-label">${section.label}</span>
+              <span class="nav-icon">${icons[section.icon]()}</span>
+              <span class="nav-label m-body">${section.label}</span>
             </button>
           `).join('')}
         </div>
@@ -100,45 +101,44 @@ export function createSettingsSection(containerId) {
 
     return `
       <div class="settings-group">
-        <div class="settings-group-title">📈 Your Stats</div>
+        <div class="settings-group-title m-title">${icons.chart()} Your Stats</div>
 
         <div class="metrics-grid settings-metrics">
-          <div class="metric-card">
-            <div class="metric-value">${stats.completed}</div>
-            <div class="metric-label">Completed</div>
+          <div class="m-card metric-card">
+            <div class="metric-value m-title">${stats.completed}</div>
+            <div class="metric-label m-body">Completed</div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-value">${stats.completionRate}%</div>
-            <div class="metric-label">Completion Rate</div>
+          <div class="m-card metric-card">
+            <div class="metric-value m-title">${stats.completionRate}%</div>
+            <div class="metric-label m-body">Completion Rate</div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-value">${stats.projectCount}</div>
-            <div class="metric-label">Projects</div>
+          <div class="m-card metric-card">
+            <div class="metric-value m-title">${stats.projectCount}</div>
+            <div class="metric-label m-body">Projects</div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-value">${stats.noteCount}</div>
-            <div class="metric-label">Notes</div>
+          <div class="m-card metric-card">
+            <div class="metric-value m-title">${stats.noteCount}</div>
+            <div class="metric-label m-body">Notes</div>
           </div>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">🎯 Goals</div>
+        <div class="settings-group-title m-title">${icons.target()} Goals</div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Monthly Order Target</div>
-            <div class="setting-desc">Target number of orders per month</div>
+            <div class="setting-label m-body">Monthly Order Target</div>
+            <div class="setting-desc m-caption">Target number of orders per month</div>
           </div>
 
           <input type="number"
-            class="form-input"
+            class="m-input"
             value="${ordersTarget}"
             onchange="window.updateOrderTarget(this.value)"
-            style="width: 100px;"
             min="1"
             max="10000"
           >
@@ -146,15 +146,14 @@ export function createSettingsSection(containerId) {
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Revenue Goal</div>
-            <div class="setting-desc">Monthly revenue target ($)</div>
+            <div class="setting-label m-body">Revenue Goal</div>
+            <div class="setting-desc m-caption">Monthly revenue target ($)</div>
           </div>
 
           <input type="number"
-            class="form-input"
+            class="m-input"
             value="${revenueGoal}"
             onchange="window.updateRevenueGoal(this.value)"
-            style="width: 120px;"
             min="0"
             max="1000000"
             step="100"
@@ -163,14 +162,14 @@ export function createSettingsSection(containerId) {
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">⌨️ Keyboard Shortcuts</div>
+        <div class="settings-group-title m-title">${icons.keyboard()} Keyboard Shortcuts</div>
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Press ? for help</div>
-            <div class="setting-desc">Show all keyboard shortcuts</div>
+            <div class="setting-label m-body">Press ? for help</div>
+            <div class="setting-desc m-caption">Show all keyboard shortcuts</div>
           </div>
 
-          <button class="btn btn-secondary" onclick="window.showShortcutsHelp()">
+          <button class="m-btn-secondary m-touch" onclick="window.showShortcutsHelp()">
             Show Shortcuts
           </button>
         </div>
@@ -185,31 +184,31 @@ export function createSettingsSection(containerId) {
 
     return `
       <div class="settings-group">
-        <div class="settings-group-title">🎨 Theme</div>
+        <div class="settings-group-title m-title">${icons.palette()} Theme</div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Color Scheme</div>
-            <div class="setting-desc">Choose light or dark mode</div>
+            <div class="setting-label m-body">Color Scheme</div>
+            <div class="setting-desc m-caption">Choose light or dark mode</div>
           </div>
 
           <div class="theme-selector">
-            <button class="theme-option ${currentTheme === 'light' ? 'active' : ''}"
+            <button class="theme-option ${currentTheme === 'light' ? 'active' : ''} m-touch"
               onclick="window.setTheme('light')"
-            >☀️ Light</button>
-            <button class="theme-option ${currentTheme === 'dark' ? 'active' : ''}"
+            >${icons.sun()} Light</button>
+            <button class="theme-option ${currentTheme === 'dark' ? 'active' : ''} m-touch"
               onclick="window.setTheme('dark')"
-            >🌙 Dark</button>
-            <button class="theme-option ${currentTheme === 'system' ? 'active' : ''}"
+            >${icons.moon()} Dark</button>
+            <button class="theme-option ${currentTheme === 'system' ? 'active' : ''} m-touch"
               onclick="window.setTheme('system')"
-            >💻 System</button>
+            >${icons.monitor()} System</button>
           </div>
         </div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Compact Mode</div>
-            <div class="setting-desc">Reduce padding for denser layout</div>
+            <div class="setting-label m-body">Compact Mode</div>
+            <div class="setting-desc m-caption">Reduce padding for denser layout</div>
           </div>
 
           <label class="toggle-switch">
@@ -223,8 +222,8 @@ export function createSettingsSection(containerId) {
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Reduce Motion</div>
-            <div class="setting-desc">Minimize animations for accessibility</div>
+            <div class="setting-label m-body">Reduce Motion</div>
+            <div class="setting-desc m-caption">Minimize animations for accessibility</div>
           </div>
 
           <label class="toggle-switch">
@@ -238,7 +237,7 @@ export function createSettingsSection(containerId) {
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">🎨 Accent Color</div>
+        <div class="settings-group-title m-title">${icons.palette()} Accent Color</div>
         <div class="theme-picker">
           ${renderThemePicker()}
         </div>
@@ -251,12 +250,12 @@ export function createSettingsSection(containerId) {
     const current = customThemeManager.currentCustomTheme || 'indigo'
 
     return Object.entries(themes).map(([id, theme]) => `
-      <button class="theme-option ${current === id ? 'active' : ''}"
+      <button class="theme-option ${current === id ? 'active' : ''} m-touch"
         onclick="window.setAccentTheme('${id}')"
         style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-secondary); cursor: pointer;"
       >
         <div style="width: 20px; height: 20px; border-radius: 50%; background: ${theme.colors.primary};"></div>
-        <span>${theme.name}</span>
+        <span class="m-body">${theme.name}</span>
       </button>
     `).join('')
   }
@@ -268,12 +267,12 @@ export function createSettingsSection(containerId) {
 
     return `
       <div class="settings-group">
-        <div class="settings-group-title">🔔 Notifications</div>
+        <div class="settings-group-title m-title">${icons.bell()} Notifications</div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Enable Notifications</div>
-            <div class="setting-desc">Receive browser notifications</div>
+            <div class="setting-label m-body">Enable Notifications</div>
+            <div class="setting-desc m-caption">Receive browser notifications</div>
           </div>
 
           <label class="toggle-switch">
@@ -287,8 +286,8 @@ export function createSettingsSection(containerId) {
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Due Date Reminders</div>
-            <div class="setting-desc">Notify when tasks are due within 24 hours</div>
+            <div class="setting-label m-body">Due Date Reminders</div>
+            <div class="setting-desc m-caption">Notify when tasks are due within 24 hours</div>
           </div>
 
           <label class="toggle-switch">
@@ -302,8 +301,8 @@ export function createSettingsSection(containerId) {
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Email Alerts</div>
-            <div class="setting-desc">Send critical alerts via email (requires configuration)</div>
+            <div class="setting-label m-body">Email Alerts</div>
+            <div class="setting-desc m-caption">Send critical alerts via email (requires configuration)</div>
           </div>
 
           <label class="toggle-switch">
@@ -342,117 +341,117 @@ export function createSettingsSection(containerId) {
 
     return `
       <div class="settings-group">
-        <div class="settings-group-title">🔥 Firebase Configuration</div>
-        <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
+        <div class="settings-group-title m-title">${icons.flame()} Firebase Configuration</div>
+        <p class="m-caption" style="color: var(--text-secondary); margin-bottom: 1rem;">
           Required for real-time sync, file storage, and cloud backup. 
           <a href="https://console.firebase.google.com" target="_blank" style="color: var(--accent-primary);">Get config from Firebase Console →</a>
         </p>
         
         <div class="form-group">
-          <label class="form-label">API Key *</label>
-          <input type="text" class="form-input" id="fbApiKey" value="${fbApiKey}" placeholder="AIzaSy...">
+          <label class="form-label m-body">API Key *</label>
+          <input type="text" class="m-input" id="fbApiKey" value="${fbApiKey}" placeholder="AIzaSy...">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Auth Domain *</label>
-          <input type="text" class="form-input" id="fbAuthDomain" value="${fbAuthDomain}" placeholder="your-project.firebaseapp.com">
+          <label class="form-label m-body">Auth Domain *</label>
+          <input type="text" class="m-input" id="fbAuthDomain" value="${fbAuthDomain}" placeholder="your-project.firebaseapp.com">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Database URL *</label>
-          <input type="text" class="form-input" id="fbUrl" value="${fbUrl}" placeholder="https://your-project-default-rtdb.firebaseio.com/">
+          <label class="form-label m-body">Database URL *</label>
+          <input type="text" class="m-input" id="fbUrl" value="${fbUrl}" placeholder="https://your-project-default-rtdb.firebaseio.com/">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Project ID *</label>
-          <input type="text" class="form-input" id="fbProjectId" value="${fbProjectId}" placeholder="your-project-id">
+          <label class="form-label m-body">Project ID *</label>
+          <input type="text" class="m-input" id="fbProjectId" value="${fbProjectId}" placeholder="your-project-id">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Storage Bucket *</label>
-          <input type="text" class="form-input" id="fbStorageBucket" value="${fbStorageBucket}" placeholder="your-project.appspot.com">
+          <label class="form-label m-body">Storage Bucket *</label>
+          <input type="text" class="m-input" id="fbStorageBucket" value="${fbStorageBucket}" placeholder="your-project.appspot.com">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Messaging Sender ID</label>
-          <input type="text" class="form-input" id="fbMessagingSenderId" value="${fbMessagingSenderId}" placeholder="123456789">
+          <label class="form-label m-body">Messaging Sender ID</label>
+          <input type="text" class="m-input" id="fbMessagingSenderId" value="${fbMessagingSenderId}" placeholder="123456789">
         </div>
         
         <div class="form-group">
-          <label class="form-label">App ID *</label>
-          <input type="text" class="form-input" id="fbAppId" value="${fbAppId}" placeholder="1:123456789:web:abcdef123456">
+          <label class="form-label m-body">App ID *</label>
+          <input type="text" class="m-input" id="fbAppId" value="${fbAppId}" placeholder="1:123456789:web:abcdef123456">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Database Secret (optional - for REST API)</label>
-          <input type="password" class="form-input" id="fbSecret" value="${fbSecret}" placeholder="For legacy REST API access">
+          <label class="form-label m-body">Database Secret (optional - for REST API)</label>
+          <input type="password" class="m-input" id="fbSecret" value="${fbSecret}" placeholder="For legacy REST API access">
         </div>
 
         <div class="setting-item" style="margin-top: 1rem;">
           <div class="setting-info">
-            <div class="setting-label">Connection Status</div>
-            <div class="setting-desc">${firebaseConnected ? '✅ Firebase connected' : '❌ Not configured'}</div>
+            <div class="setting-label m-body">Connection Status</div>
+            <div class="setting-desc m-caption">${firebaseConnected ? icons.check() + ' Firebase connected' : icons.x() + ' Not configured'}</div>
           </div>
-          <button class="btn btn-secondary" onclick="window.testFirebase()">Test Connection</button>
+          <button class="m-btn-secondary m-touch" onclick="window.testFirebase()">Test Connection</button>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">🐙 GitHub Backup</div>
-        <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
+        <div class="settings-group-title m-title">${icons.github()} GitHub Backup</div>
+        <p class="m-caption" style="color: var(--text-secondary); margin-bottom: 1rem;">
           Backup your data to a GitHub Gist for version control and additional redundancy.
         </p>
         
         <div class="form-group">
-          <label class="form-label">GitHub Token</label>
-          <input type="password" class="form-input" id="ghToken" value="${ghToken}" placeholder="ghp_...">
-          <span class="form-hint">Personal access token with 'gist' scope</span>
+          <label class="form-label m-body">GitHub Token</label>
+          <input type="password" class="m-input" id="ghToken" value="${ghToken}" placeholder="ghp_...">
+          <span class="form-hint m-caption">Personal access token with 'gist' scope</span>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Gist ID</label>
-          <input type="text" class="form-input" id="ghGistId" value="${ghGistId}" placeholder="Gist ID for data storage">
-          <span class="form-hint">ID of a secret gist for data storage</span>
+          <label class="form-label m-body">Gist ID</label>
+          <input type="text" class="m-input" id="ghGistId" value="${ghGistId}" placeholder="Gist ID for data storage">
+          <span class="form-hint m-caption">ID of a secret gist for data storage</span>
         </div>
 
         <div class="setting-item" style="margin-top: 1rem;">
           <div class="setting-info">
-            <div class="setting-label">Connection Status</div>
-            <div class="setting-desc">${githubConnected ? '✅ GitHub connected' : '❌ Not configured'}</div>
+            <div class="setting-label m-body">Connection Status</div>
+            <div class="setting-desc m-caption">${githubConnected ? icons.check() + ' GitHub connected' : icons.x() + ' Not configured'}</div>
           </div>
-          <button class="btn btn-secondary" onclick="window.testGitHub()">Test Connection</button>
+          <button class="m-btn-secondary m-touch" onclick="window.testGitHub()">Test Connection</button>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">🖨️ SimplyPrint Integration</div>
-        <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
+        <div class="settings-group-title m-title">${icons.printer()} SimplyPrint Integration</div>
+        <p class="m-caption" style="color: var(--text-secondary); margin-bottom: 1rem;">
           Connect to your SimplyPrint 3D printer management system.
         </p>
         
         <div class="form-group">
-          <label class="form-label">Proxy URL</label>
-          <input type="text" class="form-input" id="printerProxy" value="${printerProxy}" placeholder="https://your-app.vercel.app/api/printers">
-          <span class="form-hint">Your Vercel proxy URL for SimplyPrint API</span>
+          <label class="form-label m-body">Proxy URL</label>
+          <input type="text" class="m-input" id="printerProxy" value="${printerProxy}" placeholder="https://your-app.vercel.app/api/printers">
+          <span class="form-hint m-caption">Your Vercel proxy URL for SimplyPrint API</span>
         </div>
 
         <div class="setting-item" style="margin-top: 1rem;">
           <div class="setting-info">
-            <div class="setting-label">Connection Status</div>
-            <div class="setting-desc">${printerConnected ? '✅ Printer API connected' : '❌ Not configured'}</div>
+            <div class="setting-label m-body">Connection Status</div>
+            <div class="setting-desc m-caption">${printerConnected ? icons.check() + ' Printer API connected' : icons.x() + ' Not configured'}</div>
           </div>
-          <button class="btn btn-secondary" onclick="window.testPrinter()">Test Connection</button>
+          <button class="m-btn-secondary m-touch" onclick="window.testPrinter()">Test Connection</button>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">💾 Save Configuration</div>
-        <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
+        <div class="settings-group-title m-title">${icons.save()} Save Configuration</div>
+        <p class="m-caption" style="color: var(--text-secondary); margin-bottom: 1rem;">
           Save all integration settings. The app will reload to apply new Firebase configuration.
         </p>
         <div class="backup-actions" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <button class="btn btn-primary" onclick="window.saveAllIntegrations()">💾 Save All Settings</button>
-          <button class="btn btn-secondary" onclick="window.clearAllIntegrations()">🗑️ Clear All</button>
+          <button class="m-btn-primary m-touch" onclick="window.saveAllIntegrations()">${icons.save()} Save All Settings</button>
+          <button class="m-btn-secondary m-touch" onclick="window.clearAllIntegrations()">${icons.delete()} Clear All</button>
         </div>
       </div>
     `
@@ -463,12 +462,12 @@ export function createSettingsSection(containerId) {
 
     return `
       <div class="settings-group">
-        <div class="settings-group-title">💾 Backup & Restore</div>
+        <div class="settings-group-title m-title">${icons.save()} Backup & Restore</div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Auto Backup</div>
-            <div class="setting-desc">Automatically backup data to configured cloud storage</div>
+            <div class="setting-label m-body">Auto Backup</div>
+            <div class="setting-desc m-caption">Automatically backup data to configured cloud storage</div>
           </div>
 
           <label class="toggle-switch">
@@ -481,67 +480,67 @@ export function createSettingsSection(containerId) {
         </div>
 
         ${lastBackup ? `
-          <div class="backup-info" style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 1rem;">
-            <span>🕐 Last backup: ${formatDate(lastBackup)}</span>
+          <div class="backup-info m-card" style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 1rem;">
+            <span class="m-body">${icons.clock()} Last backup: ${formatDate(lastBackup)}</span>
           </div>
         ` : ''}
 
         <div class="backup-actions" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-          <button class="btn btn-primary" onclick="window.backupNow()">
-            💾 Backup Now
+          <button class="m-btn-primary m-touch" onclick="window.backupNow()">
+            ${icons.save()} Backup Now
           </button>
 
-          <button class="btn btn-secondary" onclick="window.restoreFromBackup()">
-            📤 Restore from File
+          <button class="m-btn-secondary m-touch" onclick="window.restoreFromBackup()">
+            ${icons.upload()} Restore from File
           </button>
         </div>
 
         <div class="setting-item" style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
           <div class="setting-info">
-            <div class="setting-label">Cloud Sync</div>
-            <div class="setting-desc">Manually trigger sync to Firebase/GitHub</div>
+            <div class="setting-label m-body">Cloud Sync</div>
+            <div class="setting-desc m-caption">Manually trigger sync to Firebase/GitHub</div>
           </div>
-          <button class="btn btn-secondary" onclick="window.manualCloudSync()">🔄 Sync Now</button>
+          <button class="m-btn-secondary m-touch" onclick="window.manualCloudSync()">${icons.refresh()} Sync Now</button>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title">📊 Data Management</div>
+        <div class="settings-group-title m-title">${icons.chart()} Data Management</div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Export Data</div>
-            <div class="setting-desc">Download all your data as JSON for offline storage</div>
+            <div class="setting-label m-body">Export Data</div>
+            <div class="setting-desc m-caption">Download all your data as JSON for offline storage</div>
           </div>
 
-          <button class="btn btn-primary" onclick="window.exportData()">
-            📥 Export JSON
+          <button class="m-btn-primary m-touch" onclick="window.exportData()">
+            ${icons.download()} Export JSON
           </button>
         </div>
 
         <div class="setting-item">
           <div class="setting-info">
-            <div class="setting-label">Import Data</div>
-            <div class="setting-desc">Restore from a backup JSON file</div>
+            <div class="setting-label m-body">Import Data</div>
+            <div class="setting-desc m-caption">Restore from a backup JSON file</div>
           </div>
 
-          <button class="btn btn-secondary" onclick="window.importData()">
-            📤 Import JSON
+          <button class="m-btn-secondary m-touch" onclick="window.importData()">
+            ${icons.upload()} Import JSON
           </button>
         </div>
       </div>
 
       <div class="settings-group">
-        <div class="settings-group-title" style="color: var(--accent-danger);">⚠️ Danger Zone</div>
+        <div class="settings-group-title m-title" style="color: var(--accent-danger);">${icons.alert()} Danger Zone</div>
 
-        <div class="danger-zone" style="border: 1px solid var(--accent-danger); border-radius: var(--radius); padding: 1rem;">
+        <div class="danger-zone m-card" style="border: 1px solid var(--accent-danger); border-radius: var(--radius); padding: 1rem;">
           <div class="setting-item" style="border-bottom: none; padding-bottom: 0;">
             <div class="setting-info">
-              <div class="setting-label" style="color: var(--accent-danger);">Clear All Data</div>
-              <div class="setting-desc">Permanently delete everything. An automatic backup will be downloaded first. Cannot be undone.</div>
+              <div class="setting-label m-body" style="color: var(--accent-danger);">Clear All Data</div>
+              <div class="setting-desc m-caption">Permanently delete everything. An automatic backup will be downloaded first. Cannot be undone.</div>
             </div>
 
-            <button class="btn btn-danger" onclick="window.clearAllData()">
+            <button class="m-btn-danger m-touch" onclick="window.clearAllData()">
               Clear All Data
             </button>
           </div>
@@ -745,7 +744,7 @@ export function createSettingsSection(containerId) {
     a.click()
     URL.revokeObjectURL(url)
 
-    if (confirm('⚠️ WARNING: This will delete ALL data.\n\nA backup has been downloaded.\n\nContinue?')) {
+    if (confirm('WARNING: This will delete ALL data.\n\nA backup has been downloaded.\n\nContinue?')) {
       if (prompt('Type DELETE to confirm:') === 'DELETE') {
         localStorage.clear()
         toast.success('All data cleared')

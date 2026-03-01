@@ -3,6 +3,7 @@ import { toast } from '../components/Toast.js'
 import { filterByBoard } from '../components/BoardSelector.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
 import { parseMarkdown, hasMarkdown, stripMarkdown } from '../utils/markdown.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let searchQuery = ''
@@ -102,19 +103,18 @@ export function createNotesSection(containerId) {
     
     container.innerHTML = `
       <!-- Welcome Header -->
-      <div class="welcome-bar">
+      <div class="welcome-bar m-card">
         <div class="welcome-content">
-          <div class="welcome-greeting">📝 Notes</div>
+          <div class="welcome-greeting m-title">${icons.file()} Notes</div>
           <div class="welcome-status">
             ${pinnedCount > 0 ? `
-              <span class="status-badge" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-warning);"
-              >📌 ${pinnedCount} pinned</span>
+              <span class="m-badge m-badge-warning">${icons.pin()} ${pinnedCount} pinned</span>
             ` : ''}
-            <span class="status-badge">${totalCount} notes</span>
+            <span class="m-badge">${totalCount} notes</span>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="startNewNote()">
-          <span>➕</span>
+        <button class="m-btn-primary m-touch" onclick="startNewNote()">
+          <span>${icons.plus()}</span>
           <span class="hide-mobile">New Note</span>
         </button>
       </div>      
@@ -123,32 +123,32 @@ export function createNotesSection(containerId) {
       <div class="notes-toolbar">
         <div class="notes-search">
           <input type="text" 
-            class="search-input" 
-            placeholder="🔍 Search notes..."
+            class="m-input" 
+            placeholder="Search notes..."
             value="${searchQuery}"
             oninput="setNoteSearch(this.value)"
           >
         </div>        
         <div class="filter-bar notes-filters">
-          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" 
+          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" 
             onclick="setNoteFilter('all')"
           >
             <span>All</span>
             <span class="filter-count">${totalCount}</span>
           </button>          
-          <button class="filter-btn ${currentFilter === 'pinned' ? 'active' : ''}" 
+          <button class="m-btn-secondary ${currentFilter === 'pinned' ? 'active' : ''} m-touch" 
             onclick="setNoteFilter('pinned')"
           >
-            <span>📌 Pinned</span>
+            <span>${icons.pin()} Pinned</span>
             <span class="filter-count">${pinnedCount}</span>
           </button>        
         </div>      
       </div>      
       <!-- New Note Input -->
-      <div class="card new-note-card" id="newNoteCard" style="display: none;">
+      <div class="m-card new-note-card" id="newNoteCard" style="display: none;">
         <div class="new-note-header">
           <input type="text" 
-            class="new-note-title-input" 
+            class="m-input" 
             id="newNoteTitle" 
             placeholder="Note title (optional)..."
           >          
@@ -163,43 +163,43 @@ export function createNotesSection(containerId) {
           </div>        
         </div>        
         <textarea 
-          class="new-note-textarea" 
+          class="m-input" 
           id="newNoteText" 
           placeholder="Type your note here..."
           rows="4"
         ></textarea>
         
         <!-- Markdown Toolbar -->
-        <div class="markdown-toolbar" style="display: flex; gap: 0.5rem; padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 0.5rem; flex-wrap: wrap;">
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('**', '**')" title="Bold"><strong>B</strong></button>
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('*', '*')" title="Italic"><em>I</em></button>
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('# ', '')" title="Heading">H</button>
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('- ', '')" title="List">•</button>
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('[]()', '')" title="Link">🔗</button>
-          <button type="button" class="btn btn-sm btn-text" onclick="insertMarkdown('\`', '\`')" title="Code">&lt;/&gt;</button>
-          <span style="color: var(--text-muted); margin-left: auto; font-size: 0.75rem;">
-            💡 Markdown supported
+        <div class="markdown-toolbar">
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('**', '**')" title="Bold">${icons.bold()}</button>
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('*', '*')" title="Italic">${icons.italic()}</button>
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('# ', '')" title="Heading">${icons.heading()}</button>
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('- ', '')" title="List">${icons.list()}</button>
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('[]()', '')" title="Link">${icons.link()}</button>
+          <button type="button" class="m-btn-secondary m-touch" onclick="insertMarkdown('\`', '\`')" title="Code">${icons.code()}</button>
+          <span class="m-caption" style="color: var(--text-muted); margin-left: auto;">
+            ${icons.lightbulb()} Markdown supported
           </span>
         </div>
         
         <div class="new-note-actions">
-          <button class="btn btn-secondary" onclick="cancelNewNote()">Cancel</button>          
-          <button class="btn btn-primary" onclick="saveNewNote()">Save Note</button>        
+          <button class="m-btn-secondary m-touch" onclick="cancelNewNote()">Cancel</button>          
+          <button class="m-btn-primary m-touch" onclick="saveNewNote()">Save Note</button>        
         </div>      
       </div>      
       <!-- Quick Add (when not editing) -->
-      <div class="card quick-add-card" id="quickAddCard" onclick="startNewNote()">
+      <div class="m-card quick-add-card" id="quickAddCard" onclick="startNewNote()">
         <div class="quick-add-placeholder">
-          <span>✏️</span>
-          <span>Click to add a quick note...</span>        
+          <span>${icons.edit()}</span>
+          <span class="m-body">Click to add a quick note...</span>        
         </div>      
       </div>      
       <!-- Notes Grid -->
       ${notes.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">📝</div>
-          <div class="empty-state-title">${allNotes.length === 0 ? 'No notes yet' : 'No notes match'}</div>
-          <div class="empty-state-text">
+        <div class="empty-state m-card">
+          <div class="empty-state-icon">${icons.file()}</div>
+          <div class="empty-state-title m-title">${allNotes.length === 0 ? 'No notes yet' : 'No notes match'}</div>
+          <div class="empty-state-text m-body">
             ${allNotes.length === 0 
               ? 'Add your first note to capture quick thoughts and ideas.'
               : 'Try adjusting your search or filter.'}
@@ -219,68 +219,61 @@ export function createNotesSection(containerId) {
     
     if (isEditing) {
       return `
-        <div class="note-card editing" 
+        <div class="note-card editing m-card" 
              style="background: ${color.bg}; border-color: ${color.border};">
           <input type="text" 
-            class="edit-note-title" 
+            class="m-input" 
             id="editNoteTitle-${note.id}"
             value="${escapeHtml(note.title || '')}"
             placeholder="Note title..."
           >
           <textarea 
-            class="edit-note-text" 
+            class="m-input" 
             id="editNoteText-${note.id}"
             rows="4"
           >${escapeHtml(note.text)}</textarea>
           
           <!-- Markdown Toolbar for Edit -->
-          <div class="markdown-toolbar" style="display: flex; gap: 0.5rem; padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin: 0.5rem 0; flex-wrap: wrap;"
-          >
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '**', '**')" title="Bold"
-            ><strong>B</strong></button>
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '*', '*')" title="Italic"
-            ><em>I</em></button>
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '# ', '')" title="Heading"
-            >H</button>
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '- ', '')" title="List"
-            >•</button>
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '[]()', '')" title="Link"
-            >🔗</button>
-            <button type="button" class="btn btn-sm btn-text" onclick="insertEditMarkdown(${note.id}, '\`', '\`')" title="Code"
-            >&lt;/&gt;</button>
+          <div class="markdown-toolbar">
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '**', '**')" title="Bold">${icons.bold()}</button>
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '*', '*')" title="Italic">${icons.italic()}</button>
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '# ', '')" title="Heading">${icons.heading()}</button>
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '- ', '')" title="List">${icons.list()}</button>
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '[]()', '')" title="Link">${icons.link()}</button>
+            <button type="button" class="m-btn-secondary m-touch" onclick="insertEditMarkdown(${note.id}, '\`', '\`')" title="Code">${icons.code()}</button>
           </div>
           
           <div class="note-actions">
-            <button class="btn btn-sm btn-secondary" onclick="cancelEditNote()">Cancel</button>
-            <button class="btn btn-sm btn-primary" onclick="saveEditNote(${note.id})">Save</button>
+            <button class="m-btn-secondary m-touch" onclick="cancelEditNote()">Cancel</button>
+            <button class="m-btn-primary m-touch" onclick="saveEditNote(${note.id})">Save</button>
           </div>
         </div>
       `
     }
     
     return `
-      <div class="note-card ${note.pinned ? 'pinned' : ''} ${hasMarkdown(note.text) ? 'has-markdown' : ''}"
+      <div class="note-card ${note.pinned ? 'pinned' : ''} ${hasMarkdown(note.text) ? 'has-markdown' : ''} m-card"
            style="background: ${color.bg}; border-color: ${color.border};"
            onclick="startEditNote(${note.id})">        
-        ${note.pinned ? '<div class="note-pin">📌</div>' : ''}
+        ${note.pinned ? '<div class="note-pin">' + icons.pin() + '</div>' : ''}
         
         ${note.title ? `
-          <h4 class="note-title">${escapeHtml(note.title)}</h4>
+          <h4 class="note-title m-title">${escapeHtml(note.title)}</h4>
         ` : ''}
         
-        <div class="note-text markdown-content">${parseMarkdown(note.text)}</div>        
+        <div class="note-text markdown-content m-body">${parseMarkdown(note.text)}</div>        
         <div class="note-footer">
-          <span class="note-date">${formatDate(note.createdAt)}</span>          
+          <span class="note-date m-caption">${formatDate(note.createdAt)}</span>          
           <div class="note-actions-row" onclick="event.stopPropagation()">            
-            <button class="note-action-btn" onclick="togglePinNote(${note.id})"
+            <button class="note-action-btn m-touch" onclick="togglePinNote(${note.id})"
               title="${note.pinned ? 'Unpin' : 'Pin'}"
             >
-              ${note.pinned ? '📌' : '📍'}
+              ${note.pinned ? icons.pin() : icons.mapPin()}
             </button>            
-            <button class="note-action-btn delete" onclick="deleteNote(${note.id})"
+            <button class="note-action-btn delete m-touch" onclick="deleteNote(${note.id})"
               title="Delete"
             >
-              🗑️
+              ${icons.delete()}
             </button>          
           </div>        
         </div>      

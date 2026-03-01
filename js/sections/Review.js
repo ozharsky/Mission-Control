@@ -2,6 +2,7 @@
 
 import { store } from '../state/store.js'
 import { toast } from '../components/Toast.js'
+import { icons } from '../utils/icons.js'
 
 let currentPeriod = 7
 
@@ -153,14 +154,14 @@ export function createReviewSection(containerId) {
     if (stats.completionRate >= 80) {
       insights.push({
         type: 'success',
-        icon: '🎉',
+        icon: 'party',
         title: 'Excellent completion rate!',
         message: `You're completing ${stats.completionRate}% of your tasks. Keep it up!`
       })
     } else if (stats.completionRate < 50) {
       insights.push({
         type: 'warning',
-        icon: '⚠️',
+        icon: 'alert',
         title: 'Completion rate is low',
         message: 'Consider breaking tasks into smaller pieces or reducing your workload.'
       })
@@ -169,7 +170,7 @@ export function createReviewSection(containerId) {
     if (stats.overdue > 5) {
       insights.push({
         type: 'danger',
-        icon: '🔥',
+        icon: 'flame',
         title: 'Many overdue tasks',
         message: `You have ${stats.overdue} overdue tasks. Time to clean up the backlog!`
       })
@@ -178,7 +179,7 @@ export function createReviewSection(containerId) {
     if (revenue.hasData && revenue.growthRate > 20) {
       insights.push({
         type: 'success',
-        icon: '📈',
+        icon: 'trendUp',
         title: 'Revenue growing!',
         message: `Your revenue is up ${revenue.growthRate}% compared to last period.`
       })
@@ -187,7 +188,7 @@ export function createReviewSection(containerId) {
     if (stats.completed > stats.created && stats.created > 0) {
       insights.push({
         type: 'success',
-        icon: '⚡',
+        icon: 'zap',
         title: 'Closing more than opening',
         message: `You completed ${stats.completed} tasks and created ${stats.created}. Great focus!`
       })
@@ -197,20 +198,19 @@ export function createReviewSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">📊 Review</div>
+          <div class="welcome-greeting m-title">${icons.chart()} Review</div>
           <div class="welcome-status">
-            <span class="status-badge ${stats.completionRate >= 80 ? 'success' : stats.completionRate >= 50 ? 'warning' : ''}"
+            <span class="m-badge ${stats.completionRate >= 80 ? 'm-badge-success' : stats.completionRate >= 50 ? 'm-badge-warning' : ''}"
             >${stats.completionRate}% completion</span>
             ${stats.overdue > 0 ? `
-              <span class="status-badge" style="background: rgba(239, 68, 68, 0.15); color: var(--accent-danger);"
-              >🔥 ${stats.overdue} overdue</span>
+              <span class="m-badge-danger">${icons.flame()} ${stats.overdue} overdue</span>
             ` : ''}
           </div>
         </div>
         
         <div class="period-selector">
           ${PERIODS.map(p => `
-            <button class="btn btn-sm ${currentPeriod === p.value ? 'btn-primary' : 'btn-secondary'}"
+            <button class="m-btn-secondary ${currentPeriod === p.value ? 'active' : ''} m-touch"
               onclick="setReviewPeriod(${p.value})"
             >${p.label}</button>
           `).join('')}
@@ -221,11 +221,11 @@ export function createReviewSection(containerId) {
       ${insights.length > 0 ? `
         <div class="insights-section">
           ${insights.map(i => `
-            <div class="insight-card ${i.type}">
-              <span class="insight-icon">${i.icon}</span>
+            <div class="insight-card ${i.type} m-card">
+              <span class="insight-icon">${icons[i.icon]()}</span>
               <div class="insight-content">
-                <div class="insight-title">${i.title}</div>
-                <div class="insight-message">${i.message}</div>
+                <div class="insight-title m-title">${i.title}</div>
+                <div class="insight-message m-body">${i.message}</div>
               </div>
             </div>
           `).join('')}
@@ -234,134 +234,134 @@ export function createReviewSection(containerId) {
       
       <!-- Main Metrics Grid -->
       <div class="metrics-grid review-metrics">
-        <div class="metric-card ${stats.completionRate >= 80 ? 'success' : stats.completionRate >= 50 ? 'warning' : 'danger'}">
-          <div class="metric-value">${stats.completionRate}%</div>
-          <div class="metric-label">Completion Rate</div>
+        <div class="m-card metric-card ${stats.completionRate >= 80 ? 'success' : stats.completionRate >= 50 ? 'warning' : 'danger'}">
+          <div class="metric-value m-title">${stats.completionRate}%</div>
+          <div class="metric-label m-body">Completion Rate</div>
           ${completionChange !== 0 ? `
-            <div class="metric-change ${completionChange > 0 ? 'positive' : 'negative'}"
-            >${completionChange > 0 ? '📈' : '📉'} ${Math.abs(completionChange)}%</div>
+            <div class="metric-change ${completionChange > 0 ? 'positive' : 'negative'} m-caption"
+            >${completionChange > 0 ? icons.trendUp() : icons.trendDown()} ${Math.abs(completionChange)}%</div>
           ` : ''}
         </div>        
-        <div class="metric-card">
-          <div class="metric-value">${stats.completed}</div>
-          <div class="metric-label">Completed</div>
-          <div class="metric-sub">of ${stats.total} total</div>
+        <div class="m-card metric-card">
+          <div class="metric-value m-title">${stats.completed}</div>
+          <div class="metric-label m-body">Completed</div>
+          <div class="metric-sub m-caption">of ${stats.total} total</div>
         </div>        
-        <div class="metric-card">
-          <div class="metric-value">${stats.created}</div>
-          <div class="metric-label">Created</div>
-          <div class="metric-sub">new tasks</div>
+        <div class="m-card metric-card">
+          <div class="metric-value m-title">${stats.created}</div>
+          <div class="metric-label m-body">Created</div>
+          <div class="metric-sub m-caption">new tasks</div>
         </div>        
-        <div class="metric-card ${stats.avgCompletionTime > 7 ? 'warning' : ''}">
-          <div class="metric-value">${stats.avgCompletionTime}d</div>
-          <div class="metric-label">Avg Completion</div>
-          <div class="metric-sub">from start to finish</div>
+        <div class="m-card metric-card ${stats.avgCompletionTime > 7 ? 'warning' : ''}">
+          <div class="metric-value m-title">${stats.avgCompletionTime}d</div>
+          <div class="metric-label m-body">Avg Completion</div>
+          <div class="metric-sub m-caption">from start to finish</div>
         </div>      
       </div>      
       
       <!-- Status Breakdown -->
-      <div class="card status-breakdown-card">
+      <div class="m-card status-breakdown-card">
         <div class="card-header">
-          <div class="card-title">📋 Task Status Breakdown</div>
+          <div class="card-title m-title">${icons.clipboard()} Task Status Breakdown</div>
         </div>        
         <div class="status-breakdown">
           <div class="status-item">
             <div class="status-info">
               <div class="status-dot" style="background: var(--accent-primary);"></div>
-              <span>Now (In Progress)</span>
+              <span class="m-body">Now (In Progress)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
                 <div class="status-fill" style="width: ${(stats.byStatus.now / Math.max(stats.total, 1)) * 100}%; background: var(--accent-primary);"
                 ></div>
               </div>
-              <span class="status-count">${stats.byStatus.now}</span>
+              <span class="status-count m-body">${stats.byStatus.now}</span>
             </div>
           </div>          
           <div class="status-item">
             <div class="status-info">
               <div class="status-dot" style="background: var(--text-muted);"></div>
-              <span>Later (Backlog)</span>
+              <span class="m-body">Later (Backlog)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
                 <div class="status-fill" style="width: ${(stats.byStatus.later / Math.max(stats.total, 1)) * 100}%; background: var(--text-muted);"
                 ></div>
               </div>
-              <span class="status-count">${stats.byStatus.later}</span>
+              <span class="status-count m-body">${stats.byStatus.later}</span>
             </div>
           </div>          
           <div class="status-item">
             <div class="status-info">
               <div class="status-dot" style="background: var(--accent-success);"></div>
-              <span>Done (Completed)</span>
+              <span class="m-body">Done (Completed)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
                 <div class="status-fill" style="width: ${(stats.byStatus.done / Math.max(stats.total, 1)) * 100}%; background: var(--accent-success);"
                 ></div>
               </div>
-              <span class="status-count">${stats.byStatus.done}</span>
+              <span class="status-count m-body">${stats.byStatus.done}</span>
             </div>
           </div>        
         </div>        
         <div class="urgent-stats">
           <div class="urgent-item ${stats.overdue > 0 ? 'danger' : ''}">
-            <span class="urgent-icon">🔥</span>
-            <span class="urgent-label">Overdue</span>
-            <span class="urgent-value">${stats.overdue}</span>
+            <span class="urgent-icon">${icons.flame()}</span>
+            <span class="urgent-label m-body">Overdue</span>
+            <span class="urgent-value m-title">${stats.overdue}</span>
           </div>          
           <div class="urgent-item ${stats.dueSoon > 0 ? 'warning' : ''}">
-            <span class="urgent-icon">⏰</span>
-            <span class="urgent-label">Due Soon</span>
-            <span class="urgent-value">${stats.dueSoon}</span>
+            <span class="urgent-icon">${icons.clock()}</span>
+            <span class="urgent-label m-body">Due Soon</span>
+            <span class="urgent-value m-title">${stats.dueSoon}</span>
           </div>        
         </div>      
       </div>      
       
       <!-- Revenue Section -->
       ${revenue.hasData ? `
-        <div class="card revenue-review-card">
+        <div class="m-card revenue-review-card">
           <div class="card-header">
-            <div class="card-title">💰 Revenue Performance</div>
-            <span class="revenue-period">Last ${currentPeriod} days</span>
+            <div class="card-title m-title">${icons.dollar()} Revenue Performance</div>
+            <span class="revenue-period m-caption">Last ${currentPeriod} days</span>
           </div>          
           <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-value">$${revenue.total.toLocaleString()}</div>
-              <div class="metric-label">Total Revenue</div>
+            <div class="m-card metric-card">
+              <div class="metric-value m-title">$${revenue.total.toLocaleString()}</div>
+              <div class="metric-label m-body">Total Revenue</div>
             </div>            
-            <div class="metric-card">
-              <div class="metric-value">$${revenue.average}</div>
-              <div class="metric-label">Avg/Month</div>
+            <div class="m-card metric-card">
+              <div class="metric-value m-title">$${revenue.average}</div>
+              <div class="metric-label m-body">Avg/Month</div>
             </div>            
-            <div class="metric-card ${parseFloat(revenue.growthRate) >= 0 ? 'success' : 'danger'}">
-              <div class="metric-value">${revenue.growthRate}%</div>
-              <div class="metric-label">Growth</div>
+            <div class="m-card metric-card ${parseFloat(revenue.growthRate) >= 0 ? 'success' : 'danger'}">
+              <div class="metric-value m-title">${revenue.growthRate}%</div>
+              <div class="metric-label m-body">Growth</div>
             </div>            
-            <div class="metric-card">
-              <div class="metric-value">${revenue.totalOrders}</div>
-              <div class="metric-label">Orders</div>
+            <div class="m-card metric-card">
+              <div class="metric-value m-title">${revenue.totalOrders}</div>
+              <div class="metric-label m-body">Orders</div>
             </div>          
-          </div>        
-        </div>
+        </div>        
+      </div>
       ` : ''}
       
       <!-- Top Tags -->
       ${stats.byTags.length > 0 ? `
-        <div class="card tags-review-card">
-          <div class="card-title">🏷️ Top Tags</div>          
+        <div class="m-card tags-review-card">
+          <div class="card-title m-title">${icons.tag()} Top Tags</div>          
           <div class="tags-cloud">
             ${stats.byTags.map(([tag, count], index) => `
               <div class="tag-item ${index < 3 ? 'top' : ''}"
                    style="${index < 3 ? 'background: rgba(99, 102, 241, 0.15); color: var(--accent-primary);' : ''}"
               >
-                <span class="tag-name">#${tag}</span>
-                <span class="tag-count">${count}</span>
+                <span class="tag-name m-body">#${tag}</span>
+                <span class="tag-count m-caption">${count}</span>
               </div>
             `).join('')}
           </div>        
-        </div>
+      </div>
       ` : ''}
     `
   }

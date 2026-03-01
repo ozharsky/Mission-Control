@@ -3,18 +3,19 @@ import { toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { openLeadModal } from '../components/LeadModal.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
+import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let currentStatus = 'all'
 let searchQuery = ''
 
 const STATUS_CONFIG = {
-  new: { label: 'New', icon: '🆕', colorClass: 'badge-status-active' },
-  contacted: { label: 'Contacted', icon: '📧', colorClass: 'badge-status-blocked' },
-  qualified: { label: 'Qualified', icon: '✅', colorClass: 'badge-status-done' },
-  proposal: { label: 'Proposal', icon: '📄', colorClass: 'badge-status-pending' },
-  closed: { label: 'Closed', icon: '🔒', colorClass: 'text-muted' },
-  lost: { label: 'Lost', icon: '❌', colorClass: 'text-danger' }
+  new: { label: 'New', icon: icons.star(), colorClass: 'm-badge-primary' },
+  contacted: { label: 'Contacted', icon: icons.mail(), colorClass: 'm-badge-warning' },
+  qualified: { label: 'Qualified', icon: icons.check(), colorClass: 'm-badge-success' },
+  proposal: { label: 'Proposal', icon: icons.file(), colorClass: 'm-badge-info' },
+  closed: { label: 'Closed', icon: icons.lock(), colorClass: 'm-badge-muted' },
+  lost: { label: 'Lost', icon: icons.x(), colorClass: 'm-badge-danger' }
 }
 
 export function createLeadsSection(containerId) {
@@ -75,41 +76,41 @@ export function createLeadsSection(containerId) {
       <!-- Welcome Header -->
       <div class="welcome-bar">
         <div class="welcome-content">
-          <div class="welcome-greeting">🎯 Leads</div>
+          <div class="welcome-greeting m-title">${icons.target()} Leads</div>
           <div class="welcome-status">
             ${newCount > 0 ? `
-              <span class="status-badge" style="background: rgba(99, 102, 241, 0.15); color: var(--accent-primary);"
-              >🆕 ${newCount} new</span>
+              <span class="m-badge-primary"
+              >${icons.star()} ${newCount} new</span>
             ` : ''}
             ${qualifiedCount > 0 ? `
-              <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-success);"
-              >✅ ${qualifiedCount} qualified</span>
+              <span class="m-badge-success"
+              >${icons.check()} ${qualifiedCount} qualified</span>
             ` : ''}
-            <span class="status-badge">${allLeads.length} total</span>
+            <span class="m-badge-secondary">${allLeads.length} total</span>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="openLeadModal()">
-          <span>➕</span>
+        <button class="m-btn-primary m-touch" onclick="openLeadModal()">
+          <span>${icons.plus()}</span>
           <span class="hide-mobile">Add Lead</span>
         </button>
       </div>
       
       <!-- Pipeline Value Card -->
-      <div class="card pipeline-card">
+      <div class="m-card pipeline-card">
         <div class="pipeline-stats">
           <div class="pipeline-stat">
-            <div class="pipeline-value">$${totalValue.toLocaleString()}</div>
-            <div class="pipeline-label">Filtered Pipeline</div>
+            <div class="pipeline-value m-title">$${totalValue.toLocaleString()}</div>
+            <div class="pipeline-label m-caption">Filtered Pipeline</div>
           </div>
           <div class="pipeline-divider"></div>
           <div class="pipeline-stat">
-            <div class="pipeline-value total">$${totalPotential.toLocaleString()}</div>
-            <div class="pipeline-label">Total Potential</div>
+            <div class="pipeline-value total m-title">$${totalPotential.toLocaleString()}</div>
+            <div class="pipeline-label m-caption">Total Potential</div>
           </div>
           <div class="pipeline-divider"></div>
           <div class="pipeline-stat">
-            <div class="pipeline-value">${Math.round((qualifiedCount / allLeads.length) * 100) || 0}%</div>
-            <div class="pipeline-label">Conversion Rate</div>
+            <div class="pipeline-value m-title">${Math.round((qualifiedCount / allLeads.length) * 100) || 0}%</div>
+            <div class="pipeline-label m-caption">Conversion Rate</div>
           </div>
         </div>
       </div>
@@ -118,22 +119,22 @@ export function createLeadsSection(containerId) {
       <div class="leads-toolbar">
         <div class="leads-search">
           <input type="text" 
-            class="search-input" 
-            placeholder="🔍 Search leads..."
+            class="search-input m-input" 
+            placeholder="${icons.search()} Search leads..."
             value="${searchQuery}"
             oninput="setLeadSearch(this.value)"
           >
         </div>
         
         <div class="filter-bar lead-filters">
-          <button class="filter-btn ${currentStatus === 'all' ? 'active' : ''}" onclick="setLeadStatus('all')"
+          <button class="filter-btn ${currentStatus === 'all' ? 'active' : ''} m-touch" onclick="setLeadStatus('all')"
           title="Show all leads">
           <span>All</span>
-          <span class="filter-count">${allLeads.length}</span>
+          <span class="filter-count m-badge-secondary">${allLeads.length}</span>
         </button>
         
         ${Object.entries(STATUS_CONFIG).map(([key, config]) => `
-          <button class="filter-btn ${currentStatus === key ? 'active' : ''} ${currentStatus === key ? config.colorClass : ''}"
+          <button class="filter-btn ${currentStatus === key ? 'active' : ''} m-touch"
             onclick="setLeadStatus('${key}')"
             title="${config.label} leads"
           >
@@ -147,17 +148,17 @@ export function createLeadsSection(containerId) {
       <!-- Board Filter Notice -->
       ${store.get('currentBoard') !== 'all' ? `
         <div class="board-filter-notice">
-          <span>📍 Showing leads for: ${getCurrentBoardLabel()}</span>
-          <button class="btn btn-sm btn-text" onclick="clearBoardFilter()">Show All</button>
+          <span>${icons.mapPin()} Showing leads for: ${getCurrentBoardLabel()}</span>
+          <button class="m-btn-secondary m-touch" onclick="clearBoardFilter()">Show All</button>
         </div>
       ` : ''}
       
       <!-- Leads List -->
       ${leads.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">🎯</div>
-          <div class="empty-state-title">${allLeads.length === 0 ? 'No leads yet' : 'No leads match filter'}</div>
-          <div class="empty-state-text">
+        <div class="empty-state m-card">
+          <div class="empty-state-icon">${icons.target()}</div>
+          <div class="empty-state-title m-title">${allLeads.length === 0 ? 'No leads yet' : 'No leads match filter'}</div>
+          <div class="empty-state-text m-body">
             ${allLeads.length === 0 
               ? 'Add your first B2B wholesale lead to start tracking opportunities.'
               : store.get('currentBoard') !== 'all' 
@@ -165,9 +166,9 @@ export function createLeadsSection(containerId) {
                 : 'Try changing your status filter to see more leads.'}
           </div>
           ${store.get('currentBoard') !== 'all' && allLeads.length > 0 ? `
-            <button class="btn btn-secondary" onclick="clearBoardFilter()" style="margin-bottom: 0.5rem;">📍 Show All Boards</button>
+            <button class="m-btn-secondary m-touch" onclick="clearBoardFilter()" style="margin-bottom: 0.5rem;">${icons.mapPin()} Show All Boards</button>
           ` : ''}
-          <button class="btn btn-primary" onclick="openLeadModal()">➕ Add Lead</button>
+          <button class="m-btn-primary m-touch" onclick="openLeadModal()">${icons.plus()} Add Lead</button>
         </div>
       ` : `
         <div class="leads-grid">
@@ -184,50 +185,50 @@ export function createLeadsSection(containerId) {
       : null
     
     return `
-      <div class="lead-card lead-card-${lead.status}" onclick="openEditLeadModal(${lead.id})">
+      <div class="m-card lead-card lead-card-${lead.status}" onclick="openEditLeadModal(${lead.id})">
         <div class="lead-card-header">
           <div class="lead-info">
-            <h4 class="lead-name">${escapeHtml(lead.name)}</h4>
-            <div class="lead-company">${escapeHtml(lead.company)}</div>
+            <h4 class="lead-name m-title">${escapeHtml(lead.name)}</h4>
+            <div class="lead-company m-body">${escapeHtml(lead.company)}</div>
           </div>
           <div class="lead-value">
-            <div class="value-amount">$${(lead.value || 0).toLocaleString()}</div>
-            <div class="value-label">est. value</div>
+            <div class="value-amount m-title">$${(lead.value || 0).toLocaleString()}</div>
+            <div class="value-label m-caption">est. value</div>
           </div>
         </div>
         
         <div class="lead-card-body">
           <div class="lead-status-row">
-            <span class="lead-status-badge ${statusConfig.colorClass}"
+            <span class="${statusConfig.colorClass}"
             >${statusConfig.icon} ${statusConfig.label}</span>
             
             ${lead.board && lead.board !== 'all' ? `
-              <span class="lead-board">${getBoardEmoji(lead.board)} ${lead.board}</span>
+              <span class="lead-board m-caption">${getBoardEmoji(lead.board)} ${lead.board}</span>
             ` : ''}
           </div>
           
           ${lead.notes ? `
-            <div class="lead-notes">${escapeHtml(lead.notes)}</div>
+            <div class="lead-notes m-body">${escapeHtml(lead.notes)}</div>
           ` : ''}
           
           <div class="lead-meta">
             ${daysSinceContact !== null ? `
-              <span class="lead-last-contact ${daysSinceContact > 7 ? 'stale' : ''}"
+              <span class="lead-last-contact ${daysSinceContact > 7 ? 'stale' : ''} m-caption"
               >
                 ${daysSinceContact === 0 ? 'Today' : daysSinceContact === 1 ? 'Yesterday' : `${daysSinceContact}d ago`}
               </span>
-            ` : '<span class="lead-last-contact">Never contacted</span>'}
+            ` : '<span class="lead-last-contact m-caption">Never contacted</span>'}
           </div>
         </div>
         
         <div class="lead-card-actions">
-          <button class="lead-action-btn" onclick="event.stopPropagation(); openEditLeadModal(${lead.id})"
-          >✏️ Edit</button>
-          <button class="lead-action-btn" onclick="event.stopPropagation(); updateLeadStatus(${lead.id}, 'contacted')"
+          <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); openEditLeadModal(${lead.id})"
+          >${icons.edit()} Edit</button>
+          <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); updateLeadStatus(${lead.id}, 'contacted')"
             ${lead.status === 'contacted' ? 'disabled' : ''}
-          >📧 Contact</button>
-          <button class="lead-action-btn danger" onclick="event.stopPropagation(); deleteLead(${lead.id})"
-          >🗑️ Delete</button>
+          >${icons.mail()} Contact</button>
+          <button class="m-btn-secondary m-touch danger" onclick="event.stopPropagation(); deleteLead(${lead.id})"
+          >${icons.delete()} Delete</button>
         </div>
       </div>
     `
@@ -266,6 +267,11 @@ export function createLeadsSection(containerId) {
     render()
   }
   
+  window.setLeadStatus = (status) => {
+    currentStatus = status
+    render()
+  }
+  
   window.clearBoardFilter = () => {
     store.set('currentBoard', 'all')
     toast.success('Showing all boards')
@@ -281,13 +287,13 @@ export function createLeadsSection(containerId) {
 
 function getBoardEmoji(board) {
   const emojis = {
-    'etsy': '🛒',
-    'photography': '📸',
-    'wholesale': '🏪',
-    '3dprint': '🖨️',
-    'all': '🏢'
+    'etsy': icons.cart(),
+    'photography': icons.camera(),
+    'wholesale': icons.store(),
+    '3dprint': icons.printer(),
+    'all': icons.building()
   }
-  return emojis[board] || '📋'
+  return emojis[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {
