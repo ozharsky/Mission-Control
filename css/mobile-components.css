@@ -1385,3 +1385,279 @@
     font-size: 0.8125rem;
   }
 }
+
+/* ========================================
+   MODAL COMPONENT STYLES
+   ======================================== */
+
+/* Modal Overlay */
+.m-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.m-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Container */
+.m-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.m-modal-overlay.active .m-modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Modal Sizes */
+.m-modal-sm { max-width: 360px; }
+.m-modal-md { max-width: 500px; }
+.m-modal-lg { max-width: 720px; }
+.m-modal-xl { max-width: 960px; }
+.m-modal-full { max-width: 95vw; }
+
+/* Modal Header */
+.m-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.m-modal-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.m-modal-icon {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.m-modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.m-modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0;
+}
+
+/* Modal Close Button */
+.m-modal-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.m-modal-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.m-modal-close:active {
+  transform: scale(0.95);
+}
+
+/* Modal Body */
+.m-modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Modal Footer */
+.m-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+/* Confirmation Modal */
+.m-modal-confirm {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.m-modal-confirm-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent-primary);
+}
+
+.m-modal-confirm-icon.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent-danger);
+}
+
+.m-modal-confirm-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.m-modal-confirm-message {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Mobile Modal Styles */
+@media (max-width: 768px) {
+  .m-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .m-modal {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .m-modal-overlay.active .m-modal {
+    transform: translateY(0);
+  }
+  
+  .m-modal-header {
+    padding: 1.25rem 1rem 1rem;
+    position: relative;
+  }
+  
+  /* Drag handle for mobile */
+  .m-modal-header::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+  }
+  
+  .m-modal-title {
+    padding-top: 0.5rem;
+  }
+  
+  .m-modal-body {
+    padding: 1rem;
+    max-height: calc(90vh - 140px);
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .m-modal-footer {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    padding: 1rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+  }
+  
+  .m-modal-footer .m-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+  
+  /* Form grid to single column on mobile */
+  .m-modal-body [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Larger touch targets for inputs */
+  .m-modal-body .m-input,
+  .m-modal-body .m-select,
+  .m-modal-body .m-textarea {
+    font-size: 16px;
+    padding: 0.75rem 1rem;
+    min-height: 48px;
+  }
+  
+  .m-modal-confirm-icon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .m-modal-confirm-title {
+    font-size: 1rem;
+  }
+  
+  .m-modal-confirm-message {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .m-modal-header {
+    padding: 1rem 0.875rem 0.875rem;
+  }
+  
+  .m-modal-title {
+    font-size: 1rem;
+  }
+  
+  .m-modal-body {
+    padding: 0.875rem;
+  }
+  
+  .m-modal-footer {
+    padding: 0.875rem;
+  }
+}
