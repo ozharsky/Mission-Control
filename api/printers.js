@@ -57,45 +57,21 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid action' });
     }
     
-    // Try different SimplyPrint endpoints
-    const endpoints = [
-      `https://api.simplyprint.io/${companyId}/printers`,
-      `https://api.simplyprint.io/${companyId}/printer`,
-      `https://api.simplyprint.io/printers?company_id=${companyId}`,
-      `https://simplyprint.io/api/${companyId}/printers`,
-      `https://api.simplyprint.io/v2/${companyId}/printers`,
-      `https://api.simplyprint.io/${companyId}/devices`,
-      `https://api.simplyprint.io/devices?company_id=${companyId}`
-    ];
+    // SimplyPrint API uses POST not GET
+    const simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/Get`;
     
-    let response = null;
-    let lastError = null;
-    
-    for (const url of endpoints) {
-      try {
-        console.log('[Vercel API] Trying endpoint:', url);
-        response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'X-API-KEY': apiKey,
-            'accept': 'application/json',
-            'content-type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          console.log('[Vercel API] Success with:', url);
-          break;
-        }
-      } catch (e) {
-        lastError = e;
-        console.log('[Vercel API] Failed:', url, e.message);
-      }
-    }
-    
-    if (!response || !response.ok) {
-      throw new Error(`All endpoints failed. Last error: ${lastError?.message}`);
-    }
+    const response = await fetch(simplyPrintUrl, {
+      method: 'POST',
+      headers: {
+        'X-API-KEY': apiKey,
+        'accept': 'application/json',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        page: 1,
+        page_size: 100
+      })
+    });
     
     console.log('[Vercel API] SimplyPrint response status:', response.status);
     
@@ -118,13 +94,14 @@ export default async function handler(req, res) {
     }
     
     // Transform SimplyPrint data to expected format
+    // SimplyPrint returns { status: true, data: [...] }
     let printers = [];
-    if (Array.isArray(data)) {
+    if (data.status && Array.isArray(data.data)) {
+      printers = data.data;
+    } else if (Array.isArray(data)) {
       printers = data;
     } else if (data.printers) {
       printers = data.printers;
-    } else if (data.data) {
-      printers = data.data;
     }
     
     console.log('[Vercel API] Transformed printers count:', printers.length);
