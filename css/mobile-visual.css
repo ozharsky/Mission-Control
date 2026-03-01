@@ -308,3 +308,39 @@
     align-items: center;
   }
 }
+
+/* ========================================
+   METRIC CARDS
+   ======================================== */
+
+.metric-card {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 1rem;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.metric-card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.metric-card-title {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
