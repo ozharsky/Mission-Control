@@ -260,6 +260,10 @@ export function createInventorySection(containerId) {
       if (btn) {
         btn.disabled = false
         btn.innerHTML = '<i data-lucide="refresh-cw" class="lucide-icon"></i> Refresh'
+        // Re-initialize Lucide icons
+        if (window.lucide) {
+          window.lucide.createIcons()
+        }
       }
     }
   }

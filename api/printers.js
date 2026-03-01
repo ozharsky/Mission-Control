@@ -56,7 +56,18 @@ export default async function handler(req, res) {
     }
     
     const data = await response.json();
-    return res.status(200).json(data);
+    
+    // Transform SimplyPrint data to expected format
+    let printers = [];
+    if (Array.isArray(data)) {
+      printers = data;
+    } else if (data.printers) {
+      printers = data.printers;
+    } else if (data.data) {
+      printers = data.data;
+    }
+    
+    return res.status(200).json({ printers });
     
   } catch (error) {
     console.error('API Error:', error);
