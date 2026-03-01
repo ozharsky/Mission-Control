@@ -6,6 +6,7 @@ import { animationController } from './js/components/ui/Animations.js'
 
 // Import new utilities
 import { lazyLoader } from './js/utils/lazyLoader-v2.js'
+import { diagnoseDatabaseConnection } from './js/utils/dbDiagnostics.js'
 
 // Cache-busting version - increment when deploying updates
 const APP_VERSION = 'v108'
