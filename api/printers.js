@@ -18,6 +18,12 @@ export default async function handler(req, res) {
   const apiKey = process.env.SIMPLYPRINT_API_KEY;
   const companyId = process.env.SIMPLYPRINT_COMPANY_ID;
   
+  console.log('[Vercel API] Env vars:', { 
+    hasApiKey: !!apiKey, 
+    hasCompanyId: !!companyId,
+    companyId: companyId ? companyId.substring(0, 5) + '...' : null
+  });
+  
   if (!apiKey || !companyId) {
     return res.status(500).json({ 
       error: 'SimplyPrint not configured',
@@ -56,6 +62,7 @@ export default async function handler(req, res) {
     }
     
     const data = await response.json();
+    console.log('[Vercel API] SimplyPrint response:', JSON.stringify(data).substring(0, 200));
     
     // Transform SimplyPrint data to expected format
     let printers = [];
@@ -66,6 +73,8 @@ export default async function handler(req, res) {
     } else if (data.data) {
       printers = data.data;
     }
+    
+    console.log('[Vercel API] Transformed printers count:', printers.length);
     
     return res.status(200).json({ printers });
     
