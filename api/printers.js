@@ -48,16 +48,42 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid action' });
     }
     
-    // Forward request to SimplyPrint
-    // SimplyPrint uses X-API-KEY header
-    const response = await fetch(simplyPrintUrl, {
-      method: 'GET',
-      headers: {
-        'X-API-KEY': apiKey,
-        'accept': 'application/json',
-        'content-type': 'application/json'
+    // Try different SimplyPrint endpoints
+    const endpoints = [
+      `https://api.simplyprint.io/${companyId}/printers`,
+      `https://api.simplyprint.io/${companyId}/printers/list`,
+      `https://api.simplyprint.io/v1/${companyId}/printers`,
+      `https://api.simplyprint.io/public/${companyId}/printers`
+    ];
+    
+    let response = null;
+    let lastError = null;
+    
+    for (const url of endpoints) {
+      try {
+        console.log('[Vercel API] Trying endpoint:', url);
+        response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-API-KEY': apiKey,
+            'accept': 'application/json',
+            'content-type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          console.log('[Vercel API] Success with:', url);
+          break;
+        }
+      } catch (e) {
+        lastError = e;
+        console.log('[Vercel API] Failed:', url, e.message);
       }
-    });
+    }
+    
+    if (!response || !response.ok) {
+      throw new Error(`All endpoints failed. Last error: ${lastError?.message}`);
+    }
     
     console.log('[Vercel API] SimplyPrint response status:', response.status);
     
