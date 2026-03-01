@@ -1,6 +1,9 @@
 // Import page transitions
 import { pageTransition } from './js/utils/pageTransition.js'
 
+// Import animation controller
+import { animationController } from './js/components/ui/Animations.js'
+
 // Import new utilities
 import { lazyLoader } from './js/utils/lazyLoader-v2.js'
 
@@ -208,6 +211,9 @@ async function init() {
   // Expose loading states globally
   window.loadingStates = loadingStates
   
+  // Expose animation controller globally
+  window.animationController = animationController
+  
   // Initialize bulk operations
   try {
     bulk.init()
@@ -371,10 +377,16 @@ async function showSection(sectionId) {
   // Hide all sections
   sections.forEach(s => s.style.display = 'none')
   
-  // Show target with transition
+  // Show target with enhanced animation
   if (currentEl && currentEl !== targetEl) {
     targetEl.style.display = 'block'
-    await pageTransition.slideIn(targetEl)
+    await animationController.animateIn(targetEl, 'slide')
+    
+    // Stagger animate cards in the new section
+    const cards = targetEl.querySelectorAll('.m-card, .card, .metric-card')
+    if (cards.length > 0) {
+      await animationController.stagger(Array.from(cards), 'slideUp', { initialDelay: 100 })
+    }
   } else {
     targetEl.style.display = 'block'
   }
