@@ -12,7 +12,16 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
   
-  const { action, printer_id } = req.query;
+  const { action, printer_id, test } = req.query;
+  
+  // Handle test request
+  if (test === 'env') {
+    return res.status(200).json({
+      hasApiKey: !!process.env.SIMPLYPRINT_API_KEY,
+      hasCompanyId: !!process.env.SIMPLYPRINT_COMPANY_ID,
+      companyId: process.env.SIMPLYPRINT_COMPANY_ID ? process.env.SIMPLYPRINT_COMPANY_ID.substring(0, 5) + '...' : null
+    });
+  }
   
   // Get SimplyPrint credentials from environment variables
   const apiKey = process.env.SIMPLYPRINT_API_KEY;
