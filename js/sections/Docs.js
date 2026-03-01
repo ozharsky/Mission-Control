@@ -93,7 +93,7 @@ export function createDocsSection(containerId) {
 
     container.innerHTML = `
       <!-- Welcome Header -->
-      <div class="welcome-bar">
+      <div class="welcome-bar m-card">
         <div class="welcome-content">
           <div class="welcome-greeting m-title">${icons.folder()} Docs</div>
           <div class="welcome-status">
