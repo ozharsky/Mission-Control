@@ -41,8 +41,33 @@ export default async function handler(req, res) {
       });
     }
     
-    // SimplyPrint API uses POST not GET
-    const simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/Get`;
+    // Determine endpoint and request body based on action
+    let simplyPrintUrl;
+    let requestBody = {};
+    
+    switch (action) {
+      case 'get_printers':
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/Get`;
+        requestBody = { page: 1, page_size: 100 };
+        break;
+      case 'get_printer':
+        if (!printer_id) {
+          return res.status(400).json({ error: 'printer_id required' });
+        }
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/Get`;
+        requestBody = { pid: parseInt(printer_id) };
+        break;
+      case 'get_jobs':
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/jobs/Get`;
+        requestBody = { page: 1, page_size: 50, state: 'printing,paused,completed' };
+        break;
+      case 'get_history':
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/history/Get`;
+        requestBody = { page: 1, page_size: 50 };
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid action. Use: get_printers, get_printer, get_jobs, get_history' });
+    }
     
     const response = await fetch(simplyPrintUrl, {
       method: 'POST',
@@ -51,10 +76,7 @@ export default async function handler(req, res) {
         'accept': 'application/json',
         'content-type': 'application/json'
       },
-      body: JSON.stringify({
-        page: 1,
-        page_size: 100
-      })
+      body: JSON.stringify(requestBody)
     });
     
     console.log('[Vercel API] SimplyPrint response status:', response.status);
