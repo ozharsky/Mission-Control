@@ -36,26 +36,26 @@ export default async function handler(req, res) {
     
     switch (action) {
       case 'get_printers':
-        simplyPrintUrl = `https://api.simplyprint.io/public/printers?company_id=${companyId}`;
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers`;
         break;
       case 'get_status':
         if (!printer_id) {
           return res.status(400).json({ error: 'printer_id required' });
         }
-        simplyPrintUrl = `https://api.simplyprint.io/public/printers/${printer_id}/status?company_id=${companyId}`;
+        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/${printer_id}/status`;
         break;
       default:
         return res.status(400).json({ error: 'Invalid action' });
     }
     
     // Forward request to SimplyPrint
-    // SimplyPrint uses API key as query parameter, not Bearer token
-    const simplyPrintUrlWithKey = `${simplyPrintUrl}&api_key=${apiKey}`;
-    
-    const response = await fetch(simplyPrintUrlWithKey, {
+    // SimplyPrint uses X-API-KEY header
+    const response = await fetch(simplyPrintUrl, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'X-API-KEY': apiKey,
+        'accept': 'application/json',
+        'content-type': 'application/json'
       }
     });
     
