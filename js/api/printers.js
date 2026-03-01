@@ -13,17 +13,23 @@ export const printerAPI = {
     }
     
     try {
-      const res = await fetch(`${this.getProxyUrl()}?action=get_printers`, {
+      const url = `${this.getProxyUrl()}?action=get_printers`
+      console.log('[Printers] Fetching from:', url)
+      
+      const res = await fetch(url, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
       
+      console.log('[Printers] Response status:', res.status, res.ok)
+      
       if (!res.ok) {
-        console.warn('[Printers] API error, using mock data')
+        console.warn('[Printers] API error (status:', res.status, '), using mock data')
         return getMockPrinters()
       }
       
       const data = await res.json()
+      console.log('[Printers] Response data:', data)
       
       // Check if API returned an error
       if (data.error) {
