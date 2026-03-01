@@ -6,7 +6,6 @@ import { confirmDelete } from '../components/ConfirmDialog.js'
 import { icons } from '../utils/icons.js'
 
 let currentFilter = 'upcoming'
-let searchQuery = ''
 
 const EVENT_TYPES = {
   cannabis: { label: 'Cannabis', icon: icons.leaf(), colorClass: 'm-badge-warning' },
@@ -38,16 +37,6 @@ export function createEventsSection(containerId) {
       filtered = filtered.filter(e => e.status === 'completed' || e.status === 'cancelled')
     } else if (currentFilter !== 'all') {
       filtered = filtered.filter(e => e.status === currentFilter)
-    }
-    
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(e =>
-        e.name?.toLowerCase().includes(query) ||
-        e.location?.toLowerCase().includes(query) ||
-        e.notes?.toLowerCase().includes(query)
-      )
     }
     
     // Sort by date (nearest first)
@@ -103,16 +92,8 @@ export function createEventsSection(containerId) {
         </button>
       </div>
       
-      <!-- Search & Filters -->
+      <!-- Filters -->
       <div class="events-toolbar">
-        <div class="events-search">
-          <input type="text" 
-            class="search-input m-input" 
-            placeholder="${icons.search()} Search events..."
-            value="${searchQuery}"
-            oninput="setEventSearch(this.value)"
-          >
-        </div>
         <div class="filter-bar event-filters">
           <button class="m-btn-secondary ${currentFilter === 'upcoming' ? 'active' : ''} m-touch" 
             onclick="setEventFilter('upcoming')">
@@ -261,11 +242,6 @@ export function createEventsSection(containerId) {
   // Expose functions globally
   window.setEventFilter = (filter) => {
     currentFilter = filter
-    render()
-  }
-  
-  window.setEventSearch = (query) => {
-    searchQuery = query
     render()
   }
   

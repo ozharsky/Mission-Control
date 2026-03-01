@@ -6,7 +6,6 @@ import { parseMarkdown, hasMarkdown, stripMarkdown } from '../utils/markdown.js'
 import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
-let searchQuery = ''
 let editingNoteId = null
 let previewMode = false
 
@@ -36,15 +35,6 @@ export function createNotesSection(containerId) {
     if (!Array.isArray(notes)) return []
     
     let filtered = filterByBoard(notes, 'board')
-    
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(n => 
-        n.text.toLowerCase().includes(query) ||
-        n.title?.toLowerCase().includes(query)
-      )
-    }
     
     // Sort by pinned first, then by date
     return filtered.sort((a, b) => {
@@ -119,16 +109,8 @@ export function createNotesSection(containerId) {
         </button>
       </div>      
       
-      <!-- Search & Filter -->
+      <!-- Filter -->
       <div class="notes-toolbar">
-        <div class="notes-search">
-          <input type="text" 
-            class="m-input" 
-            placeholder="Search notes..."
-            value="${searchQuery}"
-            oninput="setNoteSearch(this.value)"
-          >
-        </div>        
         <div class="filter-bar notes-filters">
           <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" 
             onclick="setNoteFilter('all')"
@@ -420,11 +402,6 @@ export function createNotesSection(containerId) {
   
   window.setNoteFilter = (filter) => {
     currentFilter = filter
-    render()
-  }
-  
-  window.setNoteSearch = (query) => {
-    searchQuery = query
     render()
   }
   

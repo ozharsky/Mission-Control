@@ -13,7 +13,7 @@ class ToastManager {
       this.container.className = 'toast-container'
       this.container.setAttribute('role', 'region')
       this.container.setAttribute('aria-live', 'polite')
-      this.container.setAttribute('aria-label', 'Notifications')
+      this.container.setAttribute('aria-label', 'Toast notifications')
       document.body.appendChild(this.container)
       
       // Add container styles
@@ -432,7 +432,7 @@ class ToastManager {
         ${message ? `<div class="toast-message">${this.escapeHtml(message)}</div>` : ''}
         ${actions.length > 0 ? `<div class="toast-actions">${actionButtons}</div>` : ''}
       </div>
-      <button class="toast-close" onclick="event.stopPropagation(); toast.dismiss('${id}')" aria-label="Close notification">✕</button>
+      <button class="toast-close" onclick="event.stopPropagation(); toast.dismiss('${id}')" aria-label="Close toast">✕</button>
       ${duration > 0 ? `<div class="toast-progress"><div class="toast-progress-bar" style="animation-duration: ${duration}ms;"></div></div>` : ''}
     `
     

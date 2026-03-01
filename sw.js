@@ -37,7 +37,6 @@ const STATIC_ASSETS = [
   './css/empty-states.css',
   './css/progress.css',
   './css/pagination.css',
-  './css/search.css',
   './css/bulk.css',
   './css/tooltips.css',
   './css/scoping.css',

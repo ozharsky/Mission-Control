@@ -55,13 +55,6 @@ class FilterPersistence {
       return false
     }
     
-    // Restore search input
-    const searchInput = container.querySelector('.search-input')
-    if (searchInput && saved.search) {
-      searchInput.value = saved.search
-      searchInput.dispatchEvent(new Event('input'))
-    }
-    
     // Restore status filters
     if (saved.status) {
       const statusBtns = container.querySelectorAll('.filter-btn[data-filter="status"]')
@@ -135,10 +128,6 @@ class FilterPersistence {
   // Capture current filter state
   captureState(container) {
     const state = {}
-    
-    // Search
-    const searchInput = container.querySelector('.search-input')
-    if (searchInput) state.search = searchInput.value
     
     // Status filters
     const activeStatus = container.querySelectorAll('.filter-btn[data-filter="status"].active')

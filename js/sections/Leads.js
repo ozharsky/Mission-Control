@@ -7,7 +7,6 @@ import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
 let currentStatus = 'all'
-let searchQuery = ''
 
 const STATUS_CONFIG = {
   new: { label: 'New', icon: icons.star(), colorClass: 'm-badge-primary' },
@@ -27,17 +26,6 @@ export function createLeadsSection(containerId) {
     
     if (currentStatus !== 'all') {
       filtered = filtered.filter(l => l.status === currentStatus)
-    }
-    
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(l =>
-        l.name?.toLowerCase().includes(query) ||
-        l.company?.toLowerCase().includes(query) ||
-        l.email?.toLowerCase().includes(query) ||
-        l.notes?.toLowerCase().includes(query)
-      )
     }
     
     // Sort by value (highest first), then by last contact (oldest first)
@@ -115,17 +103,8 @@ export function createLeadsSection(containerId) {
         </div>
       </div>
       
-      <!-- Search & Filters -->
+      <!-- Filters -->
       <div class="leads-toolbar">
-        <div class="leads-search">
-          <input type="text" 
-            class="search-input m-input" 
-            placeholder="${icons.search()} Search leads..."
-            value="${searchQuery}"
-            oninput="setLeadSearch(this.value)"
-          >
-        </div>
-        
         <div class="filter-bar lead-filters">
           <button class="m-btn-secondary ${currentStatus === 'all' ? 'active' : ''} m-touch" onclick="setLeadStatus('all')"
           title="Show all leads">
@@ -260,11 +239,6 @@ export function createLeadsSection(containerId) {
       const statusConfig = STATUS_CONFIG[newStatus]
       toast.success(`Moved to ${statusConfig.label}`, lead.name)
     }
-  }
-  
-  window.setLeadSearch = (query) => {
-    searchQuery = query
-    render()
   }
   
   window.setLeadStatus = (status) => {

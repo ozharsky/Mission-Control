@@ -9,7 +9,6 @@ import { addTouchFeedback, initSwipeActions, haptic } from '../utils/mobileInter
 import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
-let searchQuery = ''
 let viewMode = window.innerWidth < 768 ? 'list' : 'kanban' // Default to list on mobile
 let kanbanInstance = null
 
@@ -42,18 +41,6 @@ export function createProjectsSection(containerId) {
           }
           return true
         })
-      })
-    }
-    
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      Object.keys(filtered).forEach(status => {
-        filtered[status] = filtered[status].filter(p =>
-          p.title?.toLowerCase().includes(query) ||
-          p.desc?.toLowerCase().includes(query) ||
-          p.tags?.some(t => t.toLowerCase().includes(query))
-        )
       })
     }
     
@@ -132,17 +119,8 @@ export function createProjectsSection(containerId) {
         </button>
       </div>
       
-      <!-- Search & View Toggle -->
+      <!-- View Toggle -->
       <div class="project-toolbar m-toolbar">
-        <div class="project-search">
-          <input type="text" 
-            class="m-input" 
-            placeholder="${icons.search()} Search projects..."
-            value="${searchQuery}"
-            oninput="setProjectSearch(this.value)"
-          >
-        </div>
-        
         <div class="view-toggle m-view-toggle">
           <button class="m-btn-secondary m-touch ${viewMode === 'kanban' ? 'active' : ''}" 
             onclick="setProjectView('kanban')" title="Kanban board view">
@@ -384,11 +362,6 @@ export function createProjectsSection(containerId) {
   // Expose functions globally
   window.setProjectFilter = (filter) => {
     currentFilter = filter
-    render()
-  }
-  
-  window.setProjectSearch = (query) => {
-    searchQuery = query
     render()
   }
   

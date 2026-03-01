@@ -6,7 +6,6 @@ import { openSKUModal, deleteSKU } from '../components/SKUModal.js'
 import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
-let searchQuery = ''
 
 const STOCK_LEVELS = {
   low: { threshold: 5, label: 'Low', colorClass: 'm-badge-danger' },
@@ -28,15 +27,6 @@ export function createSKUsSection(containerId) {
       filtered = filtered.filter(s => s.stock >= STOCK_LEVELS.low.threshold && s.stock < STOCK_LEVELS.medium.threshold)
     } else if (currentFilter === 'good') {
       filtered = filtered.filter(s => s.stock >= STOCK_LEVELS.medium.threshold)
-    }
-    
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(s => 
-        s.code.toLowerCase().includes(query) ||
-        s.name.toLowerCase().includes(query)
-      )
     }
     
     // Sort by stock (lowest first), then by code
@@ -125,7 +115,7 @@ export function createSKUsSection(containerId) {
         </div>
       </div>
       
-      <!-- Filters & Search -->
+      <!-- Filters -->
       <div class="sku-toolbar">
         <div class="filter-bar sku-filters">
           <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" 
@@ -150,15 +140,6 @@ export function createSKUsSection(containerId) {
           >
             <span>${icons.check()} Good</span>
           </button>
-        </div>
-        
-        <div class="sku-search">
-          <input type="text" 
-            class="search-input m-input" 
-            placeholder="${icons.search()} Search SKUs..."
-            value="${searchQuery}"
-            oninput="setSkuSearch(this.value)"
-          >
         </div>
       </div>
       
@@ -233,11 +214,6 @@ export function createSKUsSection(containerId) {
       input.focus()
       input.select()
     }
-  }
-  
-  window.setSkuSearch = (query) => {
-    searchQuery = query
-    render()
   }
   
   window.setSkuFilter = (filter) => {

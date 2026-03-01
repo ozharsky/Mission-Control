@@ -4,11 +4,9 @@
 import { store } from './state/store.js'
 import { toast } from './components/Toast.js'
 import { keyboard } from './components/Keyboard.js'
-import { search } from './components/Search.js'
 import { bulk } from './components/Bulk.js'
 import { undoManager } from './state/undo.js'
 import { pomodoro } from './utils/pomodoro.js'
-import { notifications } from './utils/notifications.js'
 import { backupScheduler } from './utils/backupScheduler.js'
 import { activityFeed } from './utils/activityFeed.js'
 import { analytics } from './utils/analytics.js'
@@ -16,7 +14,6 @@ import { filterManager } from './utils/filters.js'
 import { customFields } from './utils/customFields.js'
 import { webhooks } from './utils/webhooks.js'
 import { automation } from './utils/automation.js'
-import { createSampleDataModal } from './components/SampleDataModal.js'
 import { openPriorityModal } from './components/PriorityModal.js'
 import { openProjectModal } from './components/ProjectModal.js'
 import { openEditProjectModal } from './components/EditProjectModal.js'
@@ -62,8 +59,7 @@ const modals = {
   project: {
     open: openProjectModal,
     edit: openEditProjectModal
-  },
-  sampleData: createSampleDataModal
+  }
 }
 
 // Utility functions
@@ -148,11 +144,9 @@ export const mc = {
   
   // Features
   keyboard,
-  search,
   bulk,
   undo: undoManager,
   pomodoro,
-  notifications,
   backupScheduler,
   activityFeed,
   analytics,

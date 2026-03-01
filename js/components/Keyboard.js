@@ -2,13 +2,13 @@ import { undoManager } from '../state/undo.js'
 
 export const keyboard = {
   _initialized: false,
-  
+
   init() {
     if (this._initialized) return
     this._initialized = true
     document.addEventListener('keydown', this.handleKeydown.bind(this))
   },
-  
+
   handleKeydown(e) {
     // Always allow typing in inputs/textareas (except Escape)
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
@@ -17,36 +17,35 @@ export const keyboard = {
       }
       return
     }
-    
+
     // Handle undo (Ctrl+Z / Cmd+Z)
     if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
       e.preventDefault()
       this.undo()
       return
     }
-    
+
     // Handle redo (Ctrl+Shift+Z / Cmd+Shift+Z or Ctrl+Y)
-    if (((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') || 
+    if (((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') ||
         ((e.ctrlKey || e.metaKey) && e.key === 'y')) {
       e.preventDefault()
       toast.info('Redo not available')
       return
     }
-    
+
     // Handle Ctrl/Cmd + shortcuts
     if (e.ctrlKey || e.metaKey) {
       const ctrlShortcuts = {
-        'n': () => { e.preventDefault(); this.newPriority(); },
-        'k': () => { e.preventDefault(); this.openSearch(); }
+        'n': () => { e.preventDefault(); this.newPriority(); }
       }
-      
+
       const key = e.key.toLowerCase()
       if (ctrlShortcuts[key]) {
         ctrlShortcuts[key]()
         return
       }
     }
-    
+
     // Single key shortcuts (only when NOT in input)
     const shortcuts = {
       '?': () => this.showHelp(),
@@ -58,13 +57,13 @@ export const keyboard = {
       'c': () => { e.preventDefault(); this.navigate('calendar'); },
       'Escape': () => this.closeAllModals()
     }
-    
+
     const key = e.key.toLowerCase()
     if (shortcuts[key]) {
       shortcuts[key]()
     }
   },
-  
+
   undo() {
     const recent = undoManager.getRecent(1)
     if (recent.length > 0) {
@@ -73,7 +72,7 @@ export const keyboard = {
       toast.info('Nothing to undo')
     }
   },
-  
+
   showHelp() {
     const help = document.createElement('div')
     help.className = 'modal-overlay active'
@@ -136,25 +135,19 @@ export const keyboard = {
     `
     document.body.appendChild(help)
   },
-  
+
   navigate(section) {
     if (window.mc?.showSection) {
       window.mc.showSection(section)
     }
   },
-  
+
   newPriority() {
     if (window.openPriorityModal) {
       window.openPriorityModal()
     }
   },
-  
-  openSearch() {
-    if (window.search?.open) {
-      window.search.open()
-    }
-  },
-  
+
   closeAllModals() {
     document.querySelectorAll('.modal-overlay').forEach(m => m.remove())
   }

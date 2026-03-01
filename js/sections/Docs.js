@@ -5,7 +5,6 @@ import { confirmDelete } from '../components/ConfirmDialog.js'
 import { icons } from '../utils/icons.js'
 
 let currentFilter = 'all'
-let searchQuery = ''
 let showUploadModal = false
 let uploadedFiles = []
 let selectedCategory = 'Other'
@@ -47,16 +46,6 @@ export function createDocsSection(containerId) {
     // Apply category filter
     if (currentFilter !== 'all') {
       filtered = filtered.filter(d => d.category === currentFilter)
-    }
-
-    // Apply search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(d =>
-        d.name.toLowerCase().includes(query) ||
-        d.category?.toLowerCase().includes(query) ||
-        d.path?.toLowerCase().includes(query)
-      )
     }
 
     // Sort by last modified (newest first)
@@ -118,16 +107,8 @@ export function createDocsSection(containerId) {
         </button>
       </div>
 
-      <!-- Search & Filter Toolbar -->
+      <!-- Filter Toolbar -->
       <div class="docs-toolbar">
-        <div class="docs-search">
-          <input type="text"
-            class="m-input search-input"
-            placeholder="Search documents..."
-            value="${searchQuery}"
-            oninput="setDocSearch(this.value)"
-          >
-        </div>
         <div class="filter-bar docs-filters">
           <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch"
             onclick="setDocFilter('all')"
@@ -147,8 +128,8 @@ export function createDocsSection(containerId) {
           ).join('')}
         </div>
       </div>
-      <!-- Recent Docs (only when no filter/search) -->
-      ${!searchQuery && currentFilter === 'all' && recentDocs.length > 0 ? `
+      <!-- Recent Docs (only when no filter) -->
+      ${currentFilter === 'all' && recentDocs.length > 0 ? `
         <div class="m-card recent-docs-card">
           <div class="card-header">
             <div class="card-title m-title">${icons.clock()} Recently Updated</div>
@@ -382,11 +363,6 @@ export function createDocsSection(containerId) {
   // Global functions
   window.setDocFilter = (filter) => {
     currentFilter = filter
-    render()
-  }
-
-  window.setDocSearch = (query) => {
-    searchQuery = query
     render()
   }
 

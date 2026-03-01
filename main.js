@@ -53,11 +53,10 @@ import { storageAdapter } from './js/state/local.js'
 import { syncStorage } from './js/storage/sync.js'
 import { keyboard } from './js/components/Keyboard.js'
 import { toast } from './js/components/Toast.js'
-import { search } from './js/components/Search.js'
 import { bulk } from './js/components/Bulk.js'
 import { createNavigation } from './js/components/Navigation.js'
 import { createMobileNav } from './js/components/MobileNav.js'
-import { notifications } from './js/utils/notifications.js'
+
 import { backupScheduler } from './js/utils/backupScheduler.js'
 import { createDashboardSection } from './js/sections/Dashboard.js'
 import { createProjectsSection } from './js/sections/Projects.js'
@@ -234,23 +233,6 @@ async function init() {
     syncStorage.startDiscordPolling(30000) // Check every 30 seconds
   } catch (err) {
     console.error('Discord polling failed:', err)
-  }
-  
-  // Initialize notifications (desktop only)
-  if (!isMobile) {
-    try {
-      notifications.requestPermission()
-    } catch (err) {
-      console.error('Notifications failed:', err)
-    }
-    
-    // Schedule priority reminders (desktop only)
-    try {
-      const priorities = store.get('priorities') || []
-      notifications.schedulePriorityReminders(priorities)
-    } catch (err) {
-      console.error('Priority reminders failed:', err)
-    }
   }
   
   // Initialize pull-to-refresh and scroll-to-top (mobile only)

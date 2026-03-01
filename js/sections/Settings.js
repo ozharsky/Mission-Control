@@ -11,7 +11,6 @@ let activeSection = 'general'
 const SETTINGS_SECTIONS = [
   { id: 'general', label: 'General', icon: 'settings' },
   { id: 'appearance', label: 'Appearance', icon: 'palette' },
-  { id: 'notifications', label: 'Notifications', icon: 'bell' },
   { id: 'integrations', label: 'Integrations', icon: 'plug' },
   { id: 'data', label: 'Data & Backup', icon: 'save' }
 ]
@@ -88,7 +87,6 @@ export function createSettingsSection(containerId) {
     switch (activeSection) {
       case 'general': return renderGeneralSettings(stats)
       case 'appearance': return renderAppearanceSettings()
-      case 'notifications': return renderNotificationSettings()
       case 'integrations': return renderIntegrationsSettings()
       case 'data': return renderDataSettings(lastBackup)
       default: return renderGeneralSettings(stats)
@@ -258,63 +256,6 @@ export function createSettingsSection(containerId) {
         <span class="m-body">${theme.name}</span>
       </button>
     `).join('')
-  }
-
-  function renderNotificationSettings() {
-    const notificationsEnabled = localStorage.getItem('mc_notifications') === 'true'
-    const dueReminders = localStorage.getItem('mc_due_reminders') !== 'false'
-    const emailAlerts = localStorage.getItem('mc_email_alerts') === 'true'
-
-    return `
-      <div class="settings-group">
-        <div class="settings-group-title m-title">${icons.bell()} Notifications</div>
-
-        <div class="setting-item">
-          <div class="setting-info">
-            <div class="setting-label m-body">Enable Notifications</div>
-            <div class="setting-desc m-caption">Receive browser notifications</div>
-          </div>
-
-          <label class="toggle-switch">
-            <input type="checkbox"
-              ${notificationsEnabled ? 'checked' : ''}
-              onchange="window.toggleNotifications(this.checked)"
-            >
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-info">
-            <div class="setting-label m-body">Due Date Reminders</div>
-            <div class="setting-desc m-caption">Notify when tasks are due within 24 hours</div>
-          </div>
-
-          <label class="toggle-switch">
-            <input type="checkbox"
-              ${dueReminders ? 'checked' : ''}
-              onchange="window.toggleDueReminders(this.checked)"
-            >
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="setting-item">
-          <div class="setting-info">
-            <div class="setting-label m-body">Email Alerts</div>
-            <div class="setting-desc m-caption">Send critical alerts via email (requires configuration)</div>
-          </div>
-
-          <label class="toggle-switch">
-            <input type="checkbox"
-              ${emailAlerts ? 'checked' : ''}
-              onchange="window.toggleEmailAlerts(this.checked)"
-            >
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    `
   }
 
   function renderIntegrationsSettings() {
@@ -608,24 +549,6 @@ export function createSettingsSection(containerId) {
     }
     store.set('revenueGoal', num)
     toast.success('Revenue goal updated')
-  }
-
-  window.toggleNotifications = (enabled) => {
-    localStorage.setItem('mc_notifications', enabled)
-    if (enabled && 'Notification' in window) {
-      Notification.requestPermission()
-    }
-    toast.success(enabled ? 'Notifications enabled' : 'Notifications disabled')
-  }
-
-  window.toggleDueReminders = (enabled) => {
-    localStorage.setItem('mc_due_reminders', enabled)
-    toast.success(enabled ? 'Due reminders enabled' : 'Due reminders disabled')
-  }
-
-  window.toggleEmailAlerts = (enabled) => {
-    localStorage.setItem('mc_email_alerts', enabled)
-    toast.success(enabled ? 'Email alerts enabled' : 'Email alerts disabled')
   }
 
   window.toggleAutoBackup = (enabled) => {

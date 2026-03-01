@@ -45,7 +45,6 @@ export const commandPalette = {
       
       // Actions
       { id: 'action-new-priority', label: 'New Priority', category: 'Actions', shortcut: 'Ctrl+N', action: () => this.newPriority() },
-      { id: 'action-search', label: 'Search', category: 'Actions', shortcut: 'Ctrl+K', action: () => this.openSearch() },
       { id: 'action-undo', label: 'Undo', category: 'Actions', shortcut: 'Ctrl+Z', action: () => this.undo() },
       
       // Quick Filters
@@ -317,12 +316,6 @@ export const commandPalette = {
   newPriority() {
     if (window.openPriorityModal) {
       window.openPriorityModal()
-    }
-  },
-
-  openSearch() {
-    if (window.search?.open) {
-      window.search.open()
     }
   },
 
