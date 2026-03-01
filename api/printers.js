@@ -13,49 +13,32 @@ export default async function handler(req, res) {
   }
   
   try {
-    const { action, printer_id, test } = req.query;
+    const { action, printer_id, test, debug } = req.query;
   
-  // Handle test request
-  if (test === 'env') {
-    return res.status(200).json({
-      hasApiKey: !!process.env.SIMPLYPRINT_API_KEY,
-      hasCompanyId: !!process.env.SIMPLYPRINT_COMPANY_ID,
-      companyId: process.env.SIMPLYPRINT_COMPANY_ID ? process.env.SIMPLYPRINT_COMPANY_ID.substring(0, 5) + '...' : null
-    });
-  }
-  
-  // Get SimplyPrint credentials from environment variables
-  const apiKey = process.env.SIMPLYPRINT_API_KEY;
-  const companyId = process.env.SIMPLYPRINT_COMPANY_ID;
-  
-  console.log('[Vercel API] Env vars:', { 
-    hasApiKey: !!apiKey, 
-    hasCompanyId: !!companyId,
-    companyId: companyId ? companyId.substring(0, 5) + '...' : null
-  });
-  
-  if (!apiKey || !companyId) {
-    return res.status(500).json({ 
-      error: 'SimplyPrint not configured',
-      message: 'API key or Company ID missing'
-    });
-  }
-  
-  try {
-    let simplyPrintUrl;
+    // Handle test request
+    if (test === 'env') {
+      return res.status(200).json({
+        hasApiKey: !!process.env.SIMPLYPRINT_API_KEY,
+        hasCompanyId: !!process.env.SIMPLYPRINT_COMPANY_ID,
+        companyId: process.env.SIMPLYPRINT_COMPANY_ID ? process.env.SIMPLYPRINT_COMPANY_ID.substring(0, 5) + '...' : null
+      });
+    }
     
-    switch (action) {
-      case 'get_printers':
-        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers`;
-        break;
-      case 'get_status':
-        if (!printer_id) {
-          return res.status(400).json({ error: 'printer_id required' });
-        }
-        simplyPrintUrl = `https://api.simplyprint.io/${companyId}/printers/${printer_id}/status`;
-        break;
-      default:
-        return res.status(400).json({ error: 'Invalid action' });
+    // Get SimplyPrint credentials from environment variables
+    const apiKey = process.env.SIMPLYPRINT_API_KEY;
+    const companyId = process.env.SIMPLYPRINT_COMPANY_ID;
+    
+    console.log('[Vercel API] Env vars:', { 
+      hasApiKey: !!apiKey, 
+      hasCompanyId: !!companyId,
+      companyId: companyId ? companyId.substring(0, 5) + '...' : null
+    });
+    
+    if (!apiKey || !companyId) {
+      return res.status(500).json({ 
+        error: 'SimplyPrint not configured',
+        message: 'API key or Company ID missing'
+      });
     }
     
     // SimplyPrint API uses POST not GET
@@ -86,7 +69,7 @@ export default async function handler(req, res) {
     console.log('[Vercel API] SimplyPrint raw response:', JSON.stringify(data));
     
     // Return the raw response for debugging
-    if (req.query.debug === 'raw') {
+    if (debug === 'raw') {
       return res.status(200).json({ 
         simplyPrintResponse: data,
         endpointUsed: simplyPrintUrl,
