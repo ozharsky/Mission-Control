@@ -17,12 +17,12 @@ const PRINTER_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZ
 
 // Lucide icon names for each status
 const STATUS_CONFIG = {
-  operational: { label: 'Online', icon: 'check-circle', colorClass: 'badge-status-done' },
-  printing: { label: 'Printing', icon: 'zap', colorClass: 'badge-status-active' },
-  paused: { label: 'Paused', icon: 'pause-circle', colorClass: 'badge-status-blocked' },
-  error: { label: 'Error', icon: 'alert-circle', colorClass: 'badge-status-blocked' },
-  offline: { label: 'Offline', icon: 'power-off', colorClass: 'text-muted' },
-  idle: { label: 'Idle', icon: 'moon', colorClass: 'text-secondary' }
+  operational: { label: 'Online', icon: 'check-circle', colorClass: 'm-badge-success', badgeClass: 'm-badge-online' },
+  printing: { label: 'Printing', icon: 'zap', colorClass: 'm-badge-primary', badgeClass: 'm-badge-printing' },
+  paused: { label: 'Paused', icon: 'pause-circle', colorClass: 'm-badge-warning', badgeClass: 'm-badge-paused' },
+  error: { label: 'Error', icon: 'alert-circle', colorClass: 'm-badge-danger', badgeClass: 'm-badge-error' },
+  offline: { label: 'Offline', icon: 'power-off', colorClass: 'm-badge-muted', badgeClass: 'm-badge-offline' },
+  idle: { label: 'Idle', icon: 'moon', colorClass: 'm-badge-secondary', badgeClass: 'm-badge-idle' }
 }
 
 export function createInventorySection(containerId) {
@@ -152,8 +152,8 @@ export function createInventorySection(containerId) {
       <div class="m-card printer-card ${printer.status} m-touch"
            onclick="showPrinterDetails(${printer.id})">
         <div class="m-card-header printer-header">
-          <h4 class="m-card-title printer-name">${printer.name}</h4>
-          <span class="m-badge" style="background: ${statusConfig.color}20; color: ${statusConfig.color};"
+          <span class="m-title printer-name">${printer.name}</span>
+          <span class="m-badge ${statusConfig.badgeClass}"
           >
             <i data-lucide="${statusConfig.icon}" class="lucide-icon"></i>
             ${statusConfig.label}
@@ -163,7 +163,7 @@ export function createInventorySection(containerId) {
         <div class="printer-image">
           <img src="${imageUrl}" alt="${printer.name}" loading="lazy"
                onerror="this.src='${PRINTER_PLACEHOLDER}'">
-          <div class="printer-status-indicator" style="background: ${statusConfig.color};"
+          <div class="printer-status-indicator ${statusConfig.badgeClass}"
                title="${statusConfig.label}"></div>
         </div>
 
@@ -182,7 +182,7 @@ export function createInventorySection(containerId) {
           </div>
 
           ${printer.model ? `
-            <div class="printer-model" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+            <div class="m-caption printer-model">
               <i data-lucide="box" class="lucide-icon"></i>
               ${printer.model}
             </div>
