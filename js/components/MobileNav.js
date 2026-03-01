@@ -8,7 +8,12 @@ const navItems = [
   { id: 'revenue', label: 'Revenue', icon: 'dollar-sign' },
   { id: 'notes', label: 'Notes', icon: 'file-text' },
   { id: 'calendar', label: 'Calendar', icon: 'calendar' },
+  { id: 'events', label: 'Events', icon: 'calendar-days' },
   { id: 'inventory', label: 'Printers', icon: 'printer' },
+  { id: 'skus', label: 'SKUs', icon: 'package' },
+  { id: 'leads', label: 'Leads', icon: 'users' },
+  { id: 'timeline', label: 'Timeline', icon: 'clock' },
+  { id: 'review', label: 'Review', icon: 'clipboard-check' },
   { id: 'docs', label: 'Docs', icon: 'folder' },
   { id: 'settings', label: 'Settings', icon: 'settings' }
 ];
