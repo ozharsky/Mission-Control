@@ -1,4 +1,5 @@
 // Helper to generate Lucide icon HTML inline
+// Version: v109
 export function icon(name, className = '') {
   return `<i data-lucide="${name}" class="lucide-icon ${className}"></i>`;
 }
