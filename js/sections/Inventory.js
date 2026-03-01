@@ -135,26 +135,27 @@ export function createInventorySection(containerId) {
     const statusConfig = STATUS_CONFIG[printer.status] || STATUS_CONFIG.idle
     const imageUrl = PRINTER_IMAGES[printer.name] || PRINTER_PLACEHOLDER
 
-    // Format temperatures
-    const toolTemp = printer.temp || printer.temps?.tool?.actual || 0
-    const bedTemp = printer.bedTemp || printer.temps?.bed?.actual || 0
-    const targetTool = printer.targetTemp || printer.temps?.tool?.target || 0
-    const targetBed = printer.targetBedTemp || printer.temps?.bed?.target || 0
+    // Format temperatures - handle both old and new data formats
+    const toolTemp = printer.temp || 0
+    const bedTemp = printer.bedTemp || 0
+    const targetTool = printer.targetTemp || 0
+    const targetBed = printer.targetBedTemp || 0
 
     // Format time remaining
-    const timeLeft = printer.timeLeft
-      ? formatDuration(printer.timeLeft)
-      : printer.job?.timeLeft
-        ? formatDuration(printer.job.timeLeft)
-        : null
+    const timeLeft = printer.job?.timeLeft
+      ? formatDuration(printer.job.timeLeft)
+      : null
+
+    // Determine if printer is actively printing
+    const isPrinting = printer.status === 'printing' && printer.progress > 0
+    const hasJob = printer.job && printer.job.name
 
     return `
       <div class="m-card printer-card ${printer.status} m-touch"
            onclick="showPrinterDetails(${printer.id})">
         <div class="m-card-header printer-header">
           <span class="m-title printer-name">${printer.name}</span>
-          <span class="m-badge ${statusConfig.badgeClass}"
-          >
+          <span class="m-badge ${statusConfig.badgeClass}">
             <i data-lucide="${statusConfig.icon}" class="lucide-icon"></i>
             ${statusConfig.label}
           </span>
@@ -181,17 +182,10 @@ export function createInventorySection(containerId) {
             </div>
           </div>
 
-          ${printer.model ? `
-            <div class="m-caption printer-model">
-              <i data-lucide="box" class="lucide-icon"></i>
-              ${printer.model}
-            </div>
-          ` : ''}
-
-          ${printer.progress > 0 ? `
+          ${isPrinting && hasJob ? `
             <div class="printer-progress">
               <div class="progress-header">
-                <span class="progress-filename">${truncateFilename(printer.job?.file || 'Printing...', 25)}</span>
+                <span class="progress-filename">${truncateFilename(printer.job.name, 25)}</span>
                 ${timeLeft ? `
                   <span class="progress-time">
                     <i data-lucide="clock" class="lucide-icon"></i>
@@ -200,8 +194,7 @@ export function createInventorySection(containerId) {
                 ` : ''}
               </div>
               <div class="progress-bar printer">
-                <div class="progress-fill" style="width: ${printer.progress}%;"
-                ></div>
+                <div class="progress-fill ${printer.status}" style="width: ${printer.progress}%"></div>
               </div>
               <div class="progress-footer">
                 <span>${printer.progress}% complete</span>
@@ -213,20 +206,10 @@ export function createInventorySection(containerId) {
               <span>Idle - Ready to print</span>
             </div>
           `}
-
-          ${printer.hasAMS ? `
-            <div class="printer-ams">
-              <span class="ams-label">AMS:</span>
-              <div class="ams-slots">
-                ${(printer.filaments || []).map(f => `
-                  <span class="ams-filament"
-                    style="background: ${f.color || '#ccc'};"
-                    title="${f.type || 'Unknown'} - ${f.leftPercent || 0}%"
-                  ></span>
-                `).join('')}
-              </div>
-            </div>
-          ` : ''}
+        </div>
+      </div>
+    `
+  }
         </div>
       </div>
     `
