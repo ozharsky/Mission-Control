@@ -533,7 +533,7 @@ export function createDashboardSection(containerId) {
           
           ${topPriorities.length >= 5 ? `
             <div class="card-footer">
-              <button class="m-touch m-btn-secondary" onclick="showSection('priorities')">View all priorities ${icons.arrowRight()}</button>
+              <button class="m-btn-secondary m-touch" onclick="showSection('priorities')">View all priorities ${icons.arrowRight()}</button>
             </div>
           ` : ''}
         `}

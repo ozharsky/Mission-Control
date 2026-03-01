@@ -250,7 +250,7 @@ export function createSettingsSection(containerId) {
     const current = customThemeManager.currentCustomTheme || 'indigo'
 
     return Object.entries(themes).map(([id, theme]) => `
-      <button class="theme-option ${current === id ? 'active' : ''} m-touch"
+      <button class="theme-option m-btn-secondary m-touch ${current === id ? 'active' : ''}"
         onclick="window.setAccentTheme('${id}')"
         style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-secondary); cursor: pointer;"
       >

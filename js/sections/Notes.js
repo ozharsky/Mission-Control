@@ -154,7 +154,7 @@ export function createNotesSection(containerId) {
           >          
           <div class="note-color-picker">
             ${NOTE_COLORS.map(c => `
-              <button class="color-option ${c.id === 'default' ? 'active' : ''}" 
+              <button class="color-option ${c.id === 'default' ? 'active' : ''} m-touch" 
                 data-color="${c.id}"
                 style="background: ${c.bg}; border-color: ${c.border};"
                 onclick="selectNoteColor('${c.id}')"

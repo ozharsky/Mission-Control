@@ -204,7 +204,7 @@ export function createProjectsSection(containerId) {
         <div class="m-card-header project-card-header">
           <h4 class="m-card-title project-title">${escapeHtml(project.title)}</h4>
           ${!isDone ? `
-            <button class="project-complete-btn" 
+            <button class="m-btn-secondary m-touch project-complete-btn" 
                     onclick="event.stopPropagation(); quickCompleteProject(${project.id}, '${project.status}')"
                     title="Mark complete">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -322,7 +322,7 @@ export function createProjectsSection(containerId) {
           </div>
           
           ${!isDone ? `
-            <button class="m-btn-secondary project-list-item-btn m-touch" 
+            <button class="m-btn-secondary m-touch project-list-item-btn" 
                     onclick="event.stopPropagation(); quickCompleteProject(${project.id}, '${project.status}')"
                     title="Mark complete">
               ${icons.check()}

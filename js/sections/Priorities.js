@@ -266,7 +266,7 @@ export function createPrioritiesSection(containerId) {
               </h4>
               
               ${!bulk.isActive && !priority.completed ? `
-                <button class="priority-complete-btn" 
+                <button class="m-btn-secondary m-touch priority-complete-btn" 
                   onclick="event.stopPropagation(); quickComplete(${priority.id})"
                   title="Mark complete">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
