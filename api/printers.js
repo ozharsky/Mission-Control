@@ -2,17 +2,18 @@
 // Handles CORS and forwards requests to SimplyPrint API
 
 export default async function handler(req, res) {
-  // Set CORS headers
+  // Set CORS headers FIRST (before any other code)
   res.setHeader('Access-Control-Allow-Origin', 'https://ozharsky.github.io');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-KEY');
   
-  // Handle preflight OPTIONS request
+  // Handle preflight OPTIONS request immediately
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
   
-  const { action, printer_id, test } = req.query;
+  try {
+    const { action, printer_id, test } = req.query;
   
   // Handle test request
   if (test === 'env') {
