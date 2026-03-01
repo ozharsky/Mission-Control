@@ -6,17 +6,25 @@
    This file contains ONLY desktop navigation styles.
    ======================================== */
 
+/* Hide desktop nav on mobile */
 .nav {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: var(--nav-width);
-  height: 100vh;
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
+  display: none;
+}
+
+/* Show desktop nav only on desktop */
+@media (min-width: 1024px) {
+  .nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--nav-width);
+    height: 100vh;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
 }
 
 .nav-header {
