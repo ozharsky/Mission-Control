@@ -27,13 +27,13 @@ const FILE_ICONS = {
 }
 
 const CATEGORIES = {
-  'Etsy': { icon: '🛒', color: '#ff6b6b' },
-  'Photography': { icon: '📸', color: '#4ecdc4' },
-  'Strategy': { icon: '🏢', color: '#45b7d1' },
-  'Research': { icon: '📊', color: '#96ceb4' },
-  'Marketing': { icon: '📢', color: '#feca57' },
-  'Operations': { icon: '⚙️', color: '#dfe6e9' },
-  'Other': { icon: '📁', color: '#b2bec3' }
+  'Etsy': { icon: '🛒', colorClass: 'badge-category-etsy', cssVar: '--color-category-etsy' },
+  'Photography': { icon: '📸', colorClass: 'badge-category-photography', cssVar: '--color-category-photography' },
+  'Strategy': { icon: '🏢', colorClass: 'badge-category-strategy', cssVar: '--color-category-strategy' },
+  'Research': { icon: '📊', colorClass: 'badge-category-research', cssVar: '--color-category-research' },
+  'Marketing': { icon: '📢', colorClass: 'badge-category-marketing', cssVar: '--color-category-marketing' },
+  'Operations': { icon: '⚙️', colorClass: 'badge-category-operations', cssVar: '--color-category-operations' },
+  'Other': { icon: '📁', colorClass: 'badge-category-other', cssVar: '--color-category-other' }
 }
 
 export function createDocsSection(containerId) {
@@ -325,7 +325,7 @@ export function createDocsSection(containerId) {
         <div class="recent-doc-content">
           <div class="recent-doc-name">${escapeHtml(doc.name)}${priorityIndicator}</div>
           <div class="recent-doc-meta">
-            <span class="recent-doc-category" style="color: ${catConfig.color};"
+            <span class="recent-doc-category ${catConfig.colorClass}"
             >${catConfig.icon} ${doc.category}</span>
             <span class="recent-doc-date">${formatDate(doc.uploadedAt || doc.lastModified)}</span>
           </div>
@@ -346,7 +346,7 @@ export function createDocsSection(containerId) {
       if (linkedPriority) {
         const priorityText = linkedPriority.text || linkedPriority.title || 'Linked Priority'
         linkedPriorityHtml = `
-          <div class="doc-priority-link" style="margin-top: 8px; padding: 4px 8px; background: rgba(78, 205, 196, 0.1); border-radius: 4px; font-size: 12px; color: #4ecdc4; display: flex; align-items: center; gap: 4px;">
+          <div class="doc-priority-link">
             <span>🔗</span>
             <span>${escapeHtml(priorityText)}</span>
           </div>
@@ -355,11 +355,11 @@ export function createDocsSection(containerId) {
     }
 
     return `
-      <div class="doc-card" onclick="openDocument('${doc.id}')"
-           style="border-top-color: ${catConfig.color};">
+      <div class="doc-card doc-card-${doc.category.toLowerCase().replace(/\s+/g, '-')}"
+           onclick="openDocument('${doc.id}')">
         <div class="doc-card-header">
           <span class="doc-icon">${getFileIcon(doc.type)}</span>
-          <span class="doc-category-badge" style="background: ${catConfig.color}20; color: ${catConfig.color};"
+          <span class="doc-category-badge ${catConfig.colorClass}"
           >${catConfig.icon} ${doc.category}</span>
         </div>
         <div class="doc-card-content">

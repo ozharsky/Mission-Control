@@ -9,12 +9,12 @@ let currentStatus = 'all'
 let searchQuery = ''
 
 const STATUS_CONFIG = {
-  new: { label: 'New', icon: '🆕', color: 'var(--accent-primary)' },
-  contacted: { label: 'Contacted', icon: '📧', color: 'var(--accent-warning)' },
-  qualified: { label: 'Qualified', icon: '✅', color: 'var(--accent-success)' },
-  proposal: { label: 'Proposal', icon: '📄', color: 'var(--accent-secondary)' },
-  closed: { label: 'Closed', icon: '🔒', color: 'var(--text-muted)' },
-  lost: { label: 'Lost', icon: '❌', color: 'var(--accent-danger)' }
+  new: { label: 'New', icon: '🆕', colorClass: 'badge-status-active' },
+  contacted: { label: 'Contacted', icon: '📧', colorClass: 'badge-status-blocked' },
+  qualified: { label: 'Qualified', icon: '✅', colorClass: 'badge-status-done' },
+  proposal: { label: 'Proposal', icon: '📄', colorClass: 'badge-status-pending' },
+  closed: { label: 'Closed', icon: '🔒', colorClass: 'text-muted' },
+  lost: { label: 'Lost', icon: '❌', colorClass: 'text-danger' }
 }
 
 export function createLeadsSection(containerId) {
@@ -133,13 +133,12 @@ export function createLeadsSection(containerId) {
         </button>
         
         ${Object.entries(STATUS_CONFIG).map(([key, config]) => `
-          <button class="filter-btn ${currentStatus === key ? 'active' : ''}" 
+          <button class="filter-btn ${currentStatus === key ? 'active' : ''} ${currentStatus === key ? config.colorClass : ''}"
             onclick="setLeadStatus('${key}')"
             title="${config.label} leads"
-            style="${currentStatus === key ? `border-color: ${config.color};` : ''}"
           >
             <span>${config.icon} ${config.label}</span>
-            <span class="filter-count" style="background: ${config.color}20; color: ${config.color};"
+            <span class="filter-count ${config.colorClass}"
             >${statusCounts[key] || 0}</span>
           </button>
         `).join('')}
@@ -185,8 +184,7 @@ export function createLeadsSection(containerId) {
       : null
     
     return `
-      <div class="lead-card" onclick="openEditLeadModal(${lead.id})"
-           style="border-left-color: ${statusConfig.color};">
+      <div class="lead-card lead-card-${lead.status}" onclick="openEditLeadModal(${lead.id})">
         <div class="lead-card-header">
           <div class="lead-info">
             <h4 class="lead-name">${escapeHtml(lead.name)}</h4>
@@ -200,7 +198,7 @@ export function createLeadsSection(containerId) {
         
         <div class="lead-card-body">
           <div class="lead-status-row">
-            <span class="lead-status-badge" style="background: ${statusConfig.color}20; color: ${statusConfig.color};"
+            <span class="lead-status-badge ${statusConfig.colorClass}"
             >${statusConfig.icon} ${statusConfig.label}</span>
             
             ${lead.board && lead.board !== 'all' ? `

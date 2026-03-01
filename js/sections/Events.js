@@ -8,19 +8,19 @@ let currentFilter = 'upcoming'
 let searchQuery = ''
 
 const EVENT_TYPES = {
-  cannabis: { label: 'Cannabis', icon: '🌿', color: '#4ade80' },
-  trade: { label: 'Trade Show', icon: '🏢', color: '#60a5fa' },
-  photo: { label: 'Photography', icon: '📸', color: '#f472b6' },
-  etsy: { label: 'Etsy', icon: '🛒', color: '#f59e0b' },
-  other: { label: 'Other', icon: '📅', color: '#9ca3af' }
+  cannabis: { label: 'Cannabis', icon: '🌿', colorClass: 'badge-event-cannabis' },
+  trade: { label: 'Trade Show', icon: '🏢', colorClass: 'badge-event-trade' },
+  photo: { label: 'Photography', icon: '📸', colorClass: 'badge-event-photo' },
+  etsy: { label: 'Etsy', icon: '🛒', colorClass: 'badge-event-etsy' },
+  other: { label: 'Other', icon: '📅', colorClass: 'badge-event-other' }
 }
 
 const STATUS_CONFIG = {
-  upcoming: { label: 'Upcoming', icon: '📅', color: 'var(--accent-primary)' },
-  confirmed: { label: 'Confirmed', icon: '✅', color: 'var(--accent-success)' },
-  tentative: { label: 'Tentative', icon: '❓', color: 'var(--accent-warning)' },
-  completed: { label: 'Completed', icon: '✓', color: 'var(--text-muted)' },
-  cancelled: { label: 'Cancelled', icon: '✕', color: 'var(--accent-danger)' }
+  upcoming: { label: 'Upcoming', icon: '📅', colorClass: 'badge-status-pending' },
+  confirmed: { label: 'Confirmed', icon: '✅', colorClass: 'badge-status-active' },
+  tentative: { label: 'Tentative', icon: '❓', colorClass: 'badge-status-blocked' },
+  completed: { label: 'Completed', icon: '✓', colorClass: 'text-muted' },
+  cancelled: { label: 'Cancelled', icon: '✕', colorClass: 'text-danger' }
 }
 
 export function createEventsSection(containerId) {
@@ -197,10 +197,10 @@ export function createEventsSection(containerId) {
             </div>
             
             <div class="event-meta-row">
-              <span class="event-type-badge" style="background: ${typeConfig.color}20; color: ${typeConfig.color};"
+              <span class="event-type-badge ${typeConfig.colorClass}"
               >${typeConfig.icon} ${typeConfig.label}</span>
               
-              <span class="event-status-badge" style="background: ${statusConfig.color}20; color: ${statusConfig.color};"
+              <span class="event-status-badge ${statusConfig.colorClass}"
               >${statusConfig.icon} ${statusConfig.label}</span>
               
               ${event.board && event.board !== 'all' ? `

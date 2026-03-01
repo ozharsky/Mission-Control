@@ -17,12 +17,12 @@ const PRINTER_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZ
 
 // Lucide icon names for each status
 const STATUS_CONFIG = {
-  operational: { label: 'Online', icon: 'check-circle', color: 'var(--accent-success)' },
-  printing: { label: 'Printing', icon: 'zap', color: 'var(--accent-primary)' },
-  paused: { label: 'Paused', icon: 'pause-circle', color: 'var(--accent-warning)' },
-  error: { label: 'Error', icon: 'alert-circle', color: 'var(--accent-danger)' },
-  offline: { label: 'Offline', icon: 'power-off', color: 'var(--text-muted)' },
-  idle: { label: 'Idle', icon: 'moon', color: 'var(--text-secondary)' }
+  operational: { label: 'Online', icon: 'check-circle', colorClass: 'badge-status-done' },
+  printing: { label: 'Printing', icon: 'zap', colorClass: 'badge-status-active' },
+  paused: { label: 'Paused', icon: 'pause-circle', colorClass: 'badge-status-blocked' },
+  error: { label: 'Error', icon: 'alert-circle', colorClass: 'badge-status-blocked' },
+  offline: { label: 'Offline', icon: 'power-off', colorClass: 'text-muted' },
+  idle: { label: 'Idle', icon: 'moon', colorClass: 'text-secondary' }
 }
 
 export function createInventorySection(containerId) {

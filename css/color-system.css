@@ -1,0 +1,413 @@
+/* ========================================
+   COLOR SYSTEM - Unified Color Tokens
+   Version: v104
+   
+   This file provides semantic color tokens
+   for consistent color usage across the app.
+   
+   Usage:
+   - Always use CSS variables, never hardcode colors
+   - Use semantic tokens (e.g., --color-success) 
+     instead of literal colors (e.g., --color-green)
+   - For component-specific colors, use the 
+     component color section
+   ======================================== */
+
+/* ========================================
+   SEMANTIC COLOR TOKENS
+   ======================================== */
+
+:root {
+  /* Primary Brand Colors */
+  --color-primary: var(--accent-primary, #6366f1);
+  --color-primary-hover: var(--accent-primary-hover, #818cf8);
+  --color-primary-subtle: rgba(99, 102, 241, 0.15);
+  --color-primary-glow: rgba(99, 102, 241, 0.3);
+  
+  /* Secondary Brand Colors */
+  --color-secondary: var(--accent-secondary, #8b5cf6);
+  --color-secondary-subtle: rgba(139, 92, 246, 0.15);
+  
+  /* Success/Positive States */
+  --color-success: var(--accent-success, #10b981);
+  --color-success-hover: var(--accent-success-hover, #34d399);
+  --color-success-subtle: rgba(16, 185, 129, 0.15);
+  --color-success-glow: rgba(16, 185, 129, 0.3);
+  
+  /* Warning/Caution States */
+  --color-warning: var(--accent-warning, #f59e0b);
+  --color-warning-hover: var(--accent-warning-hover, #fbbf24);
+  --color-warning-subtle: rgba(245, 158, 11, 0.15);
+  --color-warning-glow: rgba(245, 158, 11, 0.3);
+  
+  /* Danger/Error States */
+  --color-danger: var(--accent-danger, #ef4444);
+  --color-danger-hover: var(--accent-danger-hover, #f87171);
+  --color-danger-subtle: rgba(239, 68, 68, 0.15);
+  --color-danger-glow: rgba(239, 68, 68, 0.3);
+  
+  /* Info/Neutral States */
+  --color-info: var(--accent-info, #06b6d4);
+  --color-info-subtle: rgba(6, 182, 212, 0.15);
+  --color-info-glow: rgba(6, 182, 212, 0.3);
+  
+  /* Extended Color Palette - For Charts, Icons, Categories */
+  --color-purple: #6366f1;
+  --color-purple-subtle: rgba(99, 102, 241, 0.15);
+  
+  --color-blue: #3b82f6;
+  --color-blue-subtle: rgba(59, 130, 246, 0.15);
+  
+  --color-cyan: #06b6d4;
+  --color-cyan-subtle: rgba(6, 182, 212, 0.15);
+  
+  --color-teal: #14b8a6;
+  --color-teal-subtle: rgba(20, 184, 166, 0.15);
+  
+  --color-green: #10b981;
+  --color-green-subtle: rgba(16, 185, 129, 0.15);
+  
+  --color-amber: #f59e0b;
+  --color-amber-subtle: rgba(245, 158, 11, 0.15);
+  
+  --color-orange: #f97316;
+  --color-orange-subtle: rgba(249, 115, 22, 0.15);
+  
+  --color-red: #ef4444;
+  --color-red-subtle: rgba(239, 68, 68, 0.15);
+  
+  --color-pink: #ec4899;
+  --color-pink-subtle: rgba(236, 72, 153, 0.15);
+  
+  --color-rose: #f43f5e;
+  --color-rose-subtle: rgba(244, 63, 94, 0.15);
+  
+  --color-gray: #64748b;
+  --color-gray-subtle: rgba(100, 116, 139, 0.15);
+  
+  /* Category Colors - For Docs, Events, etc. */
+  --color-category-etsy: #ff6b6b;
+  --color-category-etsy-subtle: rgba(255, 107, 107, 0.15);
+  
+  --color-category-photography: #4ecdc4;
+  --color-category-photography-subtle: rgba(78, 205, 196, 0.15);
+  
+  --color-category-strategy: #45b7d1;
+  --color-category-strategy-subtle: rgba(69, 183, 209, 0.15);
+  
+  --color-category-research: #96ceb4;
+  --color-category-research-subtle: rgba(150, 206, 180, 0.15);
+  
+  --color-category-marketing: #feca57;
+  --color-category-marketing-subtle: rgba(254, 202, 87, 0.15);
+  
+  --color-category-operations: #dfe6e9;
+  --color-category-operations-subtle: rgba(223, 230, 233, 0.15);
+  
+  --color-category-other: #b2bec3;
+  --color-category-other-subtle: rgba(178, 190, 195, 0.15);
+  
+  /* Event Type Colors */
+  --color-event-cannabis: #4ade80;
+  --color-event-cannabis-subtle: rgba(74, 222, 128, 0.15);
+  
+  --color-event-trade: #60a5fa;
+  --color-event-trade-subtle: rgba(96, 165, 250, 0.15);
+  
+  --color-event-photo: #f472b6;
+  --color-event-photo-subtle: rgba(244, 114, 182, 0.15);
+  
+  --color-event-etsy: #f59e0b;
+  --color-event-etsy-subtle: rgba(245, 158, 11, 0.15);
+  
+  --color-event-other: #9ca3af;
+  --color-event-other-subtle: rgba(156, 163, 175, 0.15);
+  
+  /* Status Colors */
+  --color-status-active: var(--color-primary);
+  --color-status-active-subtle: var(--color-primary-subtle);
+  
+  --color-status-done: var(--color-success);
+  --color-status-done-subtle: var(--color-success-subtle);
+  
+  --color-status-blocked: var(--color-warning);
+  --color-status-blocked-subtle: var(--color-warning-subtle);
+  
+  --color-status-pending: var(--color-info);
+  --color-status-pending-subtle: var(--color-info-subtle);
+  
+  /* Priority Colors */
+  --color-priority-high: var(--color-danger);
+  --color-priority-high-subtle: var(--color-danger-subtle);
+  
+  --color-priority-medium: var(--color-warning);
+  --color-priority-medium-subtle: var(--color-warning-subtle);
+  
+  --color-priority-low: var(--color-success);
+  --color-priority-low-subtle: var(--color-success-subtle);
+  
+  /* Chart/Graph Colors */
+  --color-chart-1: var(--color-primary);
+  --color-chart-2: var(--color-success);
+  --color-chart-3: var(--color-info);
+  --color-chart-4: var(--color-warning);
+  --color-chart-5: var(--color-secondary);
+  --color-chart-6: var(--color-danger);
+  
+  /* Overlay Colors */
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-overlay-light: rgba(0, 0, 0, 0.4);
+  --color-overlay-subtle: rgba(0, 0, 0, 0.2);
+  
+  /* Shadow Colors */
+  --color-shadow-primary: rgba(99, 102, 241, 0.4);
+  --color-shadow-success: rgba(16, 185, 129, 0.4);
+  --color-shadow-danger: rgba(239, 68, 68, 0.4);
+  
+  /* Focus Ring Colors */
+  --color-focus-primary: rgba(99, 102, 241, 0.2);
+  --color-focus-success: rgba(16, 185, 129, 0.2);
+  --color-focus-danger: rgba(239, 68, 68, 0.2);
+}
+
+/* ========================================
+   UTILITY CLASSES FOR COLORS
+   ======================================== */
+
+/* Text Colors */
+.text-primary { color: var(--color-primary) !important; }
+.text-secondary { color: var(--color-secondary) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-danger { color: var(--color-danger) !important; }
+.text-info { color: var(--color-info) !important; }
+
+.text-purple { color: var(--color-purple) !important; }
+.text-blue { color: var(--color-blue) !important; }
+.text-cyan { color: var(--color-cyan) !important; }
+.text-teal { color: var(--color-teal) !important; }
+.text-green { color: var(--color-green) !important; }
+.text-amber { color: var(--color-amber) !important; }
+.text-orange { color: var(--color-orange) !important; }
+.text-red { color: var(--color-red) !important; }
+.text-pink { color: var(--color-pink) !important; }
+.text-rose { color: var(--color-rose) !important; }
+.text-gray { color: var(--color-gray) !important; }
+
+/* Background Colors */
+.bg-primary { background-color: var(--color-primary) !important; }
+.bg-primary-subtle { background-color: var(--color-primary-subtle) !important; }
+.bg-secondary { background-color: var(--color-secondary) !important; }
+.bg-secondary-subtle { background-color: var(--color-secondary-subtle) !important; }
+.bg-success { background-color: var(--color-success) !important; }
+.bg-success-subtle { background-color: var(--color-success-subtle) !important; }
+.bg-warning { background-color: var(--color-warning) !important; }
+.bg-warning-subtle { background-color: var(--color-warning-subtle) !important; }
+.bg-danger { background-color: var(--color-danger) !important; }
+.bg-danger-subtle { background-color: var(--color-danger-subtle) !important; }
+.bg-info { background-color: var(--color-info) !important; }
+.bg-info-subtle { background-color: var(--color-info-subtle) !important; }
+
+.bg-purple-subtle { background-color: var(--color-purple-subtle) !important; }
+.bg-blue-subtle { background-color: var(--color-blue-subtle) !important; }
+.bg-cyan-subtle { background-color: var(--color-cyan-subtle) !important; }
+.bg-teal-subtle { background-color: var(--color-teal-subtle) !important; }
+.bg-green-subtle { background-color: var(--color-green-subtle) !important; }
+.bg-amber-subtle { background-color: var(--color-amber-subtle) !important; }
+.bg-orange-subtle { background-color: var(--color-orange-subtle) !important; }
+.bg-red-subtle { background-color: var(--color-red-subtle) !important; }
+.bg-pink-subtle { background-color: var(--color-pink-subtle) !important; }
+.bg-rose-subtle { background-color: var(--color-rose-subtle) !important; }
+.bg-gray-subtle { background-color: var(--color-gray-subtle) !important; }
+
+/* Border Colors */
+.border-primary { border-color: var(--color-primary) !important; }
+.border-success { border-color: var(--color-success) !important; }
+.border-warning { border-color: var(--color-warning) !important; }
+.border-danger { border-color: var(--color-danger) !important; }
+.border-info { border-color: var(--color-info) !important; }
+
+/* ========================================
+   COMPONENT-SPECIFIC COLOR CLASSES
+   ======================================== */
+
+/* Status Badge Colors */
+.badge-status-active {
+  background: var(--color-status-active-subtle);
+  color: var(--color-status-active);
+}
+
+.badge-status-done {
+  background: var(--color-status-done-subtle);
+  color: var(--color-status-done);
+}
+
+.badge-status-blocked {
+  background: var(--color-status-blocked-subtle);
+  color: var(--color-status-blocked);
+}
+
+.badge-status-pending {
+  background: var(--color-status-pending-subtle);
+  color: var(--color-status-pending);
+}
+
+/* Priority Badge Colors */
+.badge-priority-high {
+  background: var(--color-priority-high-subtle);
+  color: var(--color-priority-high);
+}
+
+.badge-priority-medium {
+  background: var(--color-priority-medium-subtle);
+  color: var(--color-priority-medium);
+}
+
+.badge-priority-low {
+  background: var(--color-priority-low-subtle);
+  color: var(--color-priority-low);
+}
+
+/* Category Badge Colors */
+.badge-category-etsy {
+  background: var(--color-category-etsy-subtle);
+  color: var(--color-category-etsy);
+}
+
+.badge-category-photography {
+  background: var(--color-category-photography-subtle);
+  color: var(--color-category-photography);
+}
+
+.badge-category-strategy {
+  background: var(--color-category-strategy-subtle);
+  color: var(--color-category-strategy);
+}
+
+.badge-category-research {
+  background: var(--color-category-research-subtle);
+  color: var(--color-category-research);
+}
+
+.badge-category-marketing {
+  background: var(--color-category-marketing-subtle);
+  color: var(--color-category-marketing);
+}
+
+.badge-category-operations {
+  background: var(--color-category-operations-subtle);
+  color: var(--color-category-operations);
+}
+
+.badge-category-other {
+  background: var(--color-category-other-subtle);
+  color: var(--color-category-other);
+}
+
+/* Event Type Badge Colors */
+.badge-event-cannabis {
+  background: var(--color-event-cannabis-subtle);
+  color: var(--color-event-cannabis);
+}
+
+.badge-event-trade {
+  background: var(--color-event-trade-subtle);
+  color: var(--color-event-trade);
+}
+
+.badge-event-photo {
+  background: var(--color-event-photo-subtle);
+  color: var(--color-event-photo);
+}
+
+.badge-event-etsy {
+  background: var(--color-event-etsy-subtle);
+  color: var(--color-event-etsy);
+}
+
+.badge-event-other {
+  background: var(--color-event-other-subtle);
+  color: var(--color-event-other);
+}
+
+/* Icon Background Colors */
+.icon-bg-purple {
+  background: var(--color-purple-subtle);
+  color: var(--color-purple);
+}
+
+.icon-bg-blue {
+  background: var(--color-blue-subtle);
+  color: var(--color-blue);
+}
+
+.icon-bg-green {
+  background: var(--color-green-subtle);
+  color: var(--color-green);
+}
+
+.icon-bg-amber {
+  background: var(--color-amber-subtle);
+  color: var(--color-amber);
+}
+
+.icon-bg-red {
+  background: var(--color-red-subtle);
+  color: var(--color-red);
+}
+
+.icon-bg-cyan {
+  background: var(--color-cyan-subtle);
+  color: var(--color-cyan);
+}
+
+/* Trend Indicator Colors */
+.trend-up {
+  color: var(--color-success);
+  background: var(--color-success-subtle);
+}
+
+.trend-down {
+  color: var(--color-danger);
+  background: var(--color-danger-subtle);
+}
+
+.trend-neutral {
+  color: var(--color-gray);
+  background: var(--color-gray-subtle);
+}
+
+/* ========================================
+   FOCUS AND GLOW EFFECTS
+   ======================================== */
+
+.focus-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-primary);
+}
+
+.focus-success:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-success);
+}
+
+.focus-danger:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-danger);
+}
+
+.glow-primary {
+  box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.glow-success {
+  box-shadow: 0 0 20px var(--color-success-glow);
+}
+
+.glow-warning {
+  box-shadow: 0 0 20px var(--color-warning-glow);
+}
+
+.glow-danger {
+  box-shadow: 0 0 20px var(--color-danger-glow);
+}
