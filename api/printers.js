@@ -49,10 +49,12 @@ export default async function handler(req, res) {
     }
     
     // Forward request to SimplyPrint
-    const response = await fetch(simplyPrintUrl, {
+    // SimplyPrint uses API key as query parameter, not Bearer token
+    const simplyPrintUrlWithKey = `${simplyPrintUrl}&api_key=${apiKey}`;
+    
+    const response = await fetch(simplyPrintUrlWithKey, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       }
     });
