@@ -1,0 +1,549 @@
+/* ========================================
+   HOVER EFFECTS & TRANSITIONS
+   ======================================== */
+
+/* Lift effect on hover */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Glow effect on hover */
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+}
+
+/* Scale effect on hover */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Border glow effect */
+.hover-border-glow {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-border-glow:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Shine sweep effect */
+.hover-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.hover-shine:hover::before {
+  left: 100%;
+}
+
+/* Underline animation */
+.hover-underline {
+  position: relative;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Color transition */
+.hover-color {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* Rotate on hover */
+.hover-rotate:hover {
+  animation: hover-rotate 0.5s ease;
+}
+
+@keyframes hover-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Bounce on hover */
+.hover-bounce:hover {
+  animation: hover-bounce 0.5s ease;
+}
+
+@keyframes hover-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Pulse on hover */
+.hover-pulse:hover {
+  animation: hover-pulse 1s ease-in-out infinite;
+}
+
+@keyframes hover-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ========================================
+   FOCUS EFFECTS
+   ======================================== */
+
+/* Enhanced focus ring */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+/* Focus with scale */
+.focus-scale:focus-visible {
+  outline: none;
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+
+/* ========================================
+   ACTIVE/CLICK EFFECTS
+   ======================================== */
+
+/* Press effect */
+.active-press:active {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+/* Ripple container */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.ripple:active::after {
+  width: 200%;
+  height: 200%;
+}
+
+/* ========================================
+   TRANSITION UTILITIES
+   ======================================== */
+
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-normal {
+  transition: all var(--transition-normal);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+.transition-transform {
+  transition: transform var(--transition-normal);
+}
+
+.transition-opacity {
+  transition: opacity var(--transition-normal);
+}
+
+.transition-colors {
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* ========================================
+   TRANSFORM UTILITIES
+   ======================================== */
+
+.transform-hover:hover {
+  transform: translateY(-2px);
+}
+
+.transform-hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.transform-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* ========================================
+   NEW: CARD HOVER EFFECTS
+   ======================================== */
+
+/* Card lift with shadow enhancement */
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.3s ease,
+              border-color 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), 0 8px 24px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Card with gradient border glow on hover */
+.card-glow-hover {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.card-glow-hover::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+  background-size: 200% 200%;
+  border-radius: calc(var(--radius-lg) + 2px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 3s ease infinite;
+}
+
+.card-glow-hover:hover::before {
+  opacity: 1;
+}
+
+.card-glow-hover:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Card shine sweep effect */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.card-shine:hover::after {
+  transform: rotate(30deg) translateX(100%);
+}
+
+/* ========================================
+   NEW: BUTTON ENHANCEMENTS
+   ======================================== */
+
+/* Button with ripple effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+}
+
+.btn-ripple:active::after {
+  width: 300%;
+  height: 300%;
+  opacity: 0;
+  transition: 0s;
+}
+
+/* Button shine sweep */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-shine:hover::before {
+  left: 100%;
+}
+
+/* Button glow pulse on hover */
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+  animation: btnGlowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes btnGlowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+}
+
+/* Magnetic button effect */
+.btn-magnetic {
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ========================================
+   NEW: INTERACTIVE ELEMENT HOVER EFFECTS
+   ======================================== */
+
+/* Icon bounce on hover */
+.icon-bounce:hover .icon {
+  animation: iconBounce 0.5s ease;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Icon rotate on hover */
+.icon-rotate:hover .icon {
+  animation: iconRotate 0.5s ease;
+}
+
+@keyframes iconRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Link underline animation */
+.link-animated {
+  position: relative;
+  display: inline-block;
+}
+
+.link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.link-animated:hover::after {
+  width: 100%;
+}
+
+/* Image zoom on hover */
+.img-zoom {
+  overflow: hidden;
+}
+
+.img-zoom img {
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* List item hover highlight */
+.list-item-hover {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.list-item-hover:hover {
+  background-color: var(--bg-hover);
+  transform: translateX(4px);
+}
+
+/* ========================================
+   NEW: FOCUS ENHANCEMENTS
+   ======================================== */
+
+/* Animated focus ring */
+.focus-ring-animated:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary);
+  animation: focusPulse 2s ease-in-out infinite;
+}
+
+@keyframes focusPulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary); }
+  50% { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 6px rgba(99, 102, 241, 0.5); }
+}
+
+/* ========================================
+   NEW: MOBILE TOUCH FEEDBACK
+   ======================================== */
+
+/* Touch ripple for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .touch-feedback {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .touch-feedback::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .touch-feedback:active::after {
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    transition: 0s;
+  }
+  
+  /* Haptic feedback simulation */
+  .haptic:active {
+    animation: hapticPulse 0.1s ease;
+  }
+  
+  @keyframes hapticPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .hover-scale,
+  .hover-shine,
+  .hover-underline,
+  .hover-rotate,
+  .hover-bounce,
+  .hover-pulse,
+  .transform-hover,
+  .transform-hover-lift,
+  .transform-hover-scale,
+  .card-hover,
+  .card-glow-hover,
+  .card-shine,
+  .btn-ripple,
+  .btn-shine,
+  .btn-glow,
+  .btn-magnetic,
+  .icon-bounce,
+  .icon-rotate,
+  .link-animated,
+  .img-zoom,
+  .list-item-hover,
+  .focus-ring-animated,
+  .touch-feedback,
+  .haptic {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+  
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .transform-hover:hover,
+  .transform-hover-lift:hover,
+  .transform-hover-scale:hover,
+  .card-hover:hover,
+  .card-glow-hover:hover,
+  .img-zoom:hover img,
+  .list-item-hover:hover {
+    transform: none;
+  }
+  
+  .card-shine::after,
+  .btn-shine::before,
+  .card-glow-hover::before {
+    display: none;
+  }
+}

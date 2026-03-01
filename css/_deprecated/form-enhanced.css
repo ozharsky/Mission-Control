@@ -1,0 +1,605 @@
+/* ========================================
+   MISSION CONTROL V5 - FORM ENHANCEMENTS
+   Enhanced form inputs, validation, and interactions
+   ======================================== */
+
+/* ========================================
+   1. FORM GROUP BASE
+   ======================================== */
+
+.form-group {
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   2. FORM LABEL ENHANCEMENTS
+   ======================================== */
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.form-group:focus-within .form-label {
+  color: var(--accent-primary);
+}
+
+/* Required indicator */
+.form-label .required {
+  color: var(--accent-danger);
+  margin-left: 0.25rem;
+}
+
+/* Optional indicator */
+.form-label .optional {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+/* ========================================
+   3. FORM INPUT ENHANCEMENTS
+   ======================================== */
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  outline: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Focus state with enhanced animation */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    0 4px 12px rgba(99, 102, 241, 0.1);
+  transform: translateY(-1px);
+  background: var(--bg-secondary);
+}
+
+/* Hover state */
+.form-input:hover:not(:focus):not(:disabled),
+.form-select:hover:not(:focus):not(:disabled),
+.form-textarea:hover:not(:focus):not(:disabled) {
+  border-color: var(--border-color-hover);
+}
+
+/* Disabled state */
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+}
+
+/* Textarea specific */
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Auto-resizing textarea animation */
+.form-textarea[data-auto-resize] {
+  transition: height 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ========================================
+   4. FORM SELECT ENHANCEMENTS
+   ======================================== */
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+}
+
+/* ========================================
+   5. INPUT WITH ICON
+   ======================================== */
+
+.form-input-icon-wrapper {
+  position: relative;
+}
+
+.form-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.form-input-icon-wrapper .form-input {
+  padding-left: 2.75rem;
+}
+
+.form-input-icon-wrapper:focus-within .form-input-icon,
+.form-input-icon-wrapper .form-input:not(:placeholder-shown) + .form-input-icon {
+  color: var(--accent-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Right icon variant */
+.form-input-icon-right .form-input {
+  padding-left: 1rem;
+  padding-right: 2.75rem;
+}
+
+.form-input-icon-right .form-input-icon {
+  left: auto;
+  right: 1rem;
+}
+
+/* ========================================
+   6. INPUT WITH ACTION BUTTON
+   ======================================== */
+
+.form-input-action-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-action-wrapper .form-input {
+  flex: 1;
+  padding-right: 5rem;
+}
+
+.form-input-action {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-input-action:hover {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+/* ========================================
+   7. VALIDATION STATES
+   ======================================== */
+
+/* Error state */
+.form-group.has-error .form-input,
+.form-group.has-error .form-select,
+.form-group.has-error .form-textarea {
+  border-color: var(--accent-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  animation: inputShake 0.4s ease;
+}
+
+.form-group.has-error .form-label {
+  color: var(--accent-danger);
+}
+
+.form-group.has-error .form-input-icon {
+  color: var(--accent-danger);
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+/* Success state */
+.form-group.has-success .form-input,
+.form-group.has-success .form-select,
+.form-group.has-success .form-textarea {
+  border-color: var(--accent-success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-group.has-success .form-label {
+  color: var(--accent-success);
+}
+
+.form-group.has-success .form-input-icon {
+  color: var(--accent-success);
+}
+
+/* Validation messages */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--accent-danger);
+  margin-top: 0.5rem;
+  animation: fadeInDown 0.3s ease;
+}
+
+.form-success {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--accent-success);
+  margin-top: 0.5rem;
+  animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form hint/help text */
+.form-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* Character counter */
+.form-counter {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 0.375rem;
+  transition: color 0.2s ease;
+}
+
+.form-counter.warning {
+  color: var(--accent-warning);
+}
+
+.form-counter.error {
+  color: var(--accent-danger);
+}
+
+/* ========================================
+   8. CHECKBOX & RADIO ENHANCEMENTS
+   ======================================== */
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.625rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.form-check:hover {
+  background: var(--bg-hover);
+}
+
+.form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.form-check-input:checked {
+  transform: scale(1.1);
+}
+
+.form-check-label {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.form-check-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Custom checkbox style */
+.form-check-custom {
+  position: relative;
+}
+
+.form-check-custom .form-check-input {
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.form-check-custom .form-check-input:checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  transform: scale(1);
+}
+
+.form-check-custom .form-check-input:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+/* ========================================
+   9. SWITCH/TOGGLE ENHANCEMENTS
+   ======================================== */
+
+.form-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  cursor: pointer;
+}
+
+.form-switch-input {
+  appearance: none;
+  width: 48px;
+  height: 26px;
+  background: var(--bg-tertiary);
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.form-switch-input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.form-switch-input:checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.form-switch-input:checked::after {
+  transform: translateX(22px);
+}
+
+.form-switch-input:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.form-switch-label {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.form-switch-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   10. FORM SECTION/DIVIDER
+   ======================================== */
+
+.form-section {
+  margin: 1.5rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.form-section-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section-icon {
+  font-size: 1.125rem;
+}
+
+/* ========================================
+   11. INLINE FORM LAYOUT
+   ======================================== */
+
+.form-inline {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.form-inline .form-group {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 0;
+}
+
+/* ========================================
+   12. MOBILE FORM ENHANCEMENTS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 0.875rem 1rem;
+  }
+  
+  .form-label {
+    font-size: 0.9375rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .form-error,
+  .form-success,
+  .form-hint {
+    font-size: 0.875rem;
+  }
+  
+  .form-input-icon-wrapper .form-input {
+    padding-left: 2.75rem;
+  }
+  
+  .form-input-icon {
+    left: 0.875rem;
+  }
+  
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .form-inline .form-group {
+    min-width: auto;
+    margin-bottom: 0.75rem;
+  }
+  
+  .form-inline .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 0.75rem 0.875rem;
+  }
+  
+  .form-check {
+    padding: 0.5rem;
+  }
+  
+  .form-switch {
+    align-items: flex-start;
+  }
+  
+  .form-switch-label {
+    font-size: 0.875rem;
+  }
+}
+
+/* ========================================
+   13. ACCESSIBILITY
+   ======================================== */
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .form-input,
+  .form-select,
+  .form-textarea,
+  .form-switch-input,
+  .form-check-input {
+    transition: none;
+  }
+  
+  .form-group.has-error .form-input,
+  .form-group.has-error .form-select,
+  .form-group.has-error .form-textarea {
+    animation: none;
+  }
+  
+  .form-error,
+  .form-success {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .form-input,
+  .form-select,
+  .form-textarea {
+    border-width: 2px;
+  }
+  
+  .form-group:focus-within .form-label {
+    font-weight: 600;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}

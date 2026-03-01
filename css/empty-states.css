@@ -1,0 +1,264 @@
+/* Empty State Illustrations */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  min-height: 300px;
+}
+
+.empty-state-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  animation: emptyStateFloat 3s ease-in-out infinite;
+}
+
+@keyframes emptyStateFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.empty-state-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 400px;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.empty-state-action {
+  margin-top: 0.5rem;
+}
+
+/* Small empty state for cards/lists */
+.empty-state-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  min-height: 150px;
+}
+
+.empty-state-small .empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state-small .empty-state-title {
+  font-size: 1rem;
+}
+
+.empty-state-small .empty-state-text {
+  font-size: 0.8125rem;
+}
+
+/* SVG Illustration placeholders */
+.empty-state-illustration {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.5rem;
+  background: var(--bg-tertiary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-state-illustration::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+  opacity: 0.1;
+  animation: illustrationPulse 4s ease-in-out infinite;
+}
+
+@keyframes illustrationPulse {
+  0%, 100% { transform: scale(1); opacity: 0.1; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+}
+
+.empty-state-illustration svg {
+  width: 100px;
+  height: 100px;
+  fill: var(--text-muted);
+  z-index: 1;
+}
+
+/* Context-specific empty states */
+.empty-state-dashboard {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border);
+}
+
+.empty-state-projects {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--bg-secondary),
+    var(--bg-secondary) 10px,
+    var(--bg-tertiary) 10px,
+    var(--bg-tertiary) 20px
+  );
+  border-radius: var(--radius-lg);
+}
+
+.empty-state-priorities {
+  position: relative;
+}
+
+.empty-state-priorities::before {
+  content: '⭐';
+  position: absolute;
+  font-size: 10rem;
+  opacity: 0.05;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.empty-state-calendar {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.empty-state-calendar .empty-state-icon {
+  animation: calendarBounce 2s ease-in-out infinite;
+}
+
+@keyframes calendarBounce {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  25% { transform: translateY(-15px) rotate(-5deg); }
+  75% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* Loading state variation */
+.empty-state-loading .empty-state-icon {
+  animation: loadingSpin 1s linear infinite;
+}
+
+@keyframes loadingSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error state variation */
+.empty-state-error .empty-state-icon {
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* Search empty state */
+.empty-state-search {
+  padding: 2rem;
+}
+
+.empty-state-search .empty-state-icon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.empty-state-search .search-term {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+/* Error State - Used by lazy loader */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  min-height: 200px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.error-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.error-state-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 2rem 1rem;
+    min-height: 200px;
+    /* Safe area support for notched devices */
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  
+  .empty-state-icon {
+    font-size: 3.5rem;
+  }
+  
+  .empty-state-illustration {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .empty-state-illustration svg {
+    width: 75px;
+    height: 75px;
+  }
+  
+  /* Mobile touch feedback styles */
+  .empty-state-action .btn,
+  .empty-state-action button {
+    min-height: 44px; /* iOS recommended touch target */
+    min-width: 44px;
+  }
+  
+  /* Active state animations for touch */
+  .empty-state-action .btn:active,
+  .empty-state-action button:active {
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .empty-state-icon,
+    .empty-state-illustration::before {
+      animation: none;
+    }
+    
+    .empty-state-action .btn:active,
+    .empty-state-action button:active {
+      transform: none;
+    }
+  }
+}

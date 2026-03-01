@@ -1,0 +1,492 @@
+/* ========================================
+   MISSION CONTROL V5 - TOUCH FEEDBACK
+   Enhanced touch interactions for mobile
+   ======================================== */
+
+/* ========================================
+   RIPPLE EFFECT
+   ======================================== */
+
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: rippleEffect 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Dark ripple for light backgrounds */
+.ripple-dark {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   TOUCH FEEDBACK BUTTONS
+   ======================================== */
+
+.btn-touch-feedback {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.btn-touch-feedback::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-touch-feedback:active {
+  transform: scale(0.97);
+}
+
+.btn-touch-feedback:active::after {
+  width: 300%;
+  height: 300%;
+  opacity: 1;
+  transition: 0s;
+}
+
+/* ========================================
+   CARD TOUCH FEEDBACK
+   ======================================== */
+
+.card-touch {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-touch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--touch-x, 50%) var(--touch-y, 50%),
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-touch:active {
+  transform: scale(0.98);
+}
+
+.card-touch:active::before {
+  opacity: 1;
+}
+
+/* ========================================
+   LIST ITEM TOUCH FEEDBACK
+   ======================================== */
+
+.list-item-touch {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.list-item-touch::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0;
+  background: var(--bg-hover);
+  transform: translateY(-50%);
+  transition: height 0.2s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.list-item-touch:active {
+  transform: scale(0.995);
+}
+
+.list-item-touch:active::after {
+  height: 100%;
+}
+
+/* ========================================
+   HAPTIC FEEDBACK SIMULATION
+   ======================================== */
+
+.haptic-light:active {
+  animation: hapticLight 0.1s ease;
+}
+
+@keyframes hapticLight {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.haptic-medium:active {
+  animation: hapticMedium 0.15s ease;
+}
+
+@keyframes hapticMedium {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+.haptic-strong:active {
+  animation: hapticStrong 0.2s ease;
+}
+
+@keyframes hapticStrong {
+  0% { transform: scale(1) translateX(0); }
+  25% { transform: scale(0.95) translateX(-2px); }
+  50% { transform: scale(0.95) translateX(2px); }
+  100% { transform: scale(1) translateX(0); }
+}
+
+/* ========================================
+   SWIPE INDICATORS
+   ======================================== */
+
+.swipe-indicator {
+  position: relative;
+}
+
+.swipe-indicator::before,
+.swipe-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.swipe-indicator::before {
+  left: 8px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.swipe-indicator::after {
+  right: 8px;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.swipe-indicator.show-hints::before,
+.swipe-indicator.show-hints::after {
+  animation: swipeHint 2s ease-in-out infinite;
+}
+
+@keyframes swipeHint {
+  0%, 100% { opacity: 0; transform: translateY(-50%) rotate(45deg) scale(0.8); }
+  50% { opacity: 0.4; transform: translateY(-50%) rotate(45deg) scale(1); }
+}
+
+/* ========================================
+   PULL TO REFRESH ENHANCED
+   ======================================== */
+
+.pull-to-refresh-enhanced {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pull-to-refresh-enhanced.visible {
+  transform: translateY(0);
+}
+
+.pull-indicator-enhanced {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.pull-spinner-enhanced {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--bg-tertiary);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  transition: transform 0.1s ease;
+}
+
+.pull-to-refresh-enhanced.refreshing .pull-spinner-enhanced {
+  animation: pullSpinEnhanced 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pullSpinEnhanced {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pull-text-enhanced {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.pull-to-refresh-enhanced.ready .pull-text-enhanced {
+  color: var(--accent-primary);
+}
+
+/* Progress ring for pull indicator */
+.pull-progress-ring {
+  width: 28px;
+  height: 28px;
+  transform: rotate(-90deg);
+}
+
+.pull-progress-ring circle {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.pull-progress-ring .bg {
+  stroke: var(--bg-tertiary);
+}
+
+.pull-progress-ring .progress {
+  stroke: var(--accent-primary);
+  stroke-dasharray: 75.4;
+  stroke-dashoffset: 75.4;
+  transition: stroke-dashoffset 0.1s ease;
+}
+
+/* ========================================
+   BOTTOM SHEET ENHANCED
+   ======================================== */
+
+.bottom-sheet-enhanced {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.bottom-sheet-enhanced.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-handle-enhanced {
+  width: 36px;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  margin: 12px auto;
+  transition: background 0.2s ease;
+}
+
+.bottom-sheet-enhanced.open .bottom-sheet-handle-enhanced {
+  background: var(--text-muted);
+}
+
+/* Backdrop for bottom sheet */
+.bottom-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
+}
+
+.bottom-sheet-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ========================================
+   FLOATING ACTION BUTTON ENHANCED
+   ======================================== */
+
+.fab-enhanced {
+  position: fixed;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0));
+  right: 1.25rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  box-shadow: 
+    0 4px 16px rgba(99, 102, 241, 0.4),
+    0 8px 32px rgba(99, 102, 241, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fab-enhanced:hover {
+  transform: scale(1.1);
+  box-shadow: 
+    0 6px 24px rgba(99, 102, 241, 0.5),
+    0 12px 48px rgba(99, 102, 241, 0.3);
+}
+
+.fab-enhanced:active {
+  transform: scale(0.95);
+}
+
+.fab-enhanced.hidden {
+  transform: scale(0) rotate(180deg);
+  opacity: 0;
+}
+
+/* FAB Menu */
+.fab-menu {
+  position: fixed;
+  bottom: calc(150px + env(safe-area-inset-bottom, 0));
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 99;
+  pointer-events: none;
+}
+
+.fab-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.fab-menu.open .fab-menu-item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.fab-menu.open .fab-menu-item:nth-child(1) { transition-delay: 0ms; }
+.fab-menu.open .fab-menu-item:nth-child(2) { transition-delay: 50ms; }
+.fab-menu.open .fab-menu-item:nth-child(3) { transition-delay: 100ms; }
+.fab-menu.open .fab-menu-item:nth-child(4) { transition-delay: 150ms; }
+
+.fab-menu-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.fab-menu-btn:hover {
+  background: var(--bg-tertiary);
+  transform: scale(1.1);
+}
+
+.fab-menu-label {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple,
+  .btn-touch-feedback,
+  .card-touch,
+  .list-item-touch,
+  .haptic-light,
+  .haptic-medium,
+  .haptic-strong,
+  .swipe-indicator::before,
+  .swipe-indicator::after,
+  .pull-to-refresh-enhanced,
+  .pull-spinner-enhanced,
+  .bottom-sheet-enhanced,
+  .fab-enhanced,
+  .fab-menu-item {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

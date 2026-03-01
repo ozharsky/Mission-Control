@@ -1,0 +1,460 @@
+/* ========================================
+   MISSION CONTROL V5 - PAGE TRANSITIONS
+   Smooth page/section transition animations
+   ======================================== */
+
+/* Page Transition Container */
+.page-transition-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section Enter Animation */
+.section-enter {
+  animation: sectionEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes sectionEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Section Exit Animation */
+.section-exit {
+  animation: sectionExit 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes sectionExit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+}
+
+/* Fade Up Transition */
+.fade-up {
+  animation: fadeUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade Down Transition */
+.fade-down {
+  animation: fadeDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale In Transition */
+.scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scale Out Transition */
+.scale-out {
+  animation: scaleOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* Slide In Left */
+.slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In Right */
+.slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ========================================
+   STAGGER ANIMATIONS
+   ======================================== */
+
+/* Stagger Children - Fast */
+.stagger-fast > * {
+  opacity: 0;
+  animation: staggerIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stagger-fast > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fast > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-fast > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-fast > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-fast > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-fast > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-fast > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-fast > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-fast > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-fast > *:nth-child(10) { animation-delay: 450ms; }
+
+/* Stagger Children - Normal */
+.stagger-normal > * {
+  opacity: 0;
+  animation: staggerIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stagger-normal > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-normal > *:nth-child(2) { animation-delay: 75ms; }
+.stagger-normal > *:nth-child(3) { animation-delay: 150ms; }
+.stagger-normal > *:nth-child(4) { animation-delay: 225ms; }
+.stagger-normal > *:nth-child(5) { animation-delay: 300ms; }
+.stagger-normal > *:nth-child(6) { animation-delay: 375ms; }
+.stagger-normal > *:nth-child(7) { animation-delay: 450ms; }
+.stagger-normal > *:nth-child(8) { animation-delay: 525ms; }
+
+/* Stagger Children - Slow */
+.stagger-slow > * {
+  opacity: 0;
+  animation: staggerIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stagger-slow > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-slow > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-slow > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-slow > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-slow > *:nth-child(5) { animation-delay: 400ms; }
+.stagger-slow > *:nth-child(6) { animation-delay: 500ms; }
+
+@keyframes staggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger Scale */
+.stagger-scale > * {
+  opacity: 0;
+  animation: staggerScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.stagger-scale > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-scale > *:nth-child(2) { animation-delay: 75ms; }
+.stagger-scale > *:nth-child(3) { animation-delay: 150ms; }
+.stagger-scale > *:nth-child(4) { animation-delay: 225ms; }
+.stagger-scale > *:nth-child(5) { animation-delay: 300ms; }
+
+@keyframes staggerScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   CARD ENTRANCE ANIMATIONS
+   ======================================== */
+
+/* Card Flip In */
+.card-flip-in {
+  animation: cardFlipIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-style: preserve-3d;
+}
+
+@keyframes cardFlipIn {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateY(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1000px) rotateY(0);
+  }
+}
+
+/* Card Slide Up */
+.card-slide-up {
+  animation: cardSlideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+/* Card Pop In */
+.card-pop-in {
+  animation: cardPopIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes cardPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   LOADING ANIMATIONS
+   ======================================== */
+
+/* Shimmer Effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0%,
+    var(--bg-secondary) 50%,
+    var(--bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Pulse Glow */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+  }
+}
+
+/* Bounce */
+.bounce {
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Spin */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   ATTENTION ANIMATIONS
+   ======================================== */
+
+/* Shake */
+.shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Pulse Scale */
+.pulse-scale {
+  animation: pulseScale 2s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Wiggle */
+.wiggle {
+  animation: wiggle 0.3s ease;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+/* Flash */
+.flash {
+  animation: flash 0.5s ease;
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ========================================
+   HOVER MICRO-ANIMATIONS
+   ======================================== */
+
+/* Hover Lift Enhanced */
+.hover-lift-enhanced {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.3s ease;
+}
+
+.hover-lift-enhanced:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover Scale Enhanced */
+.hover-scale-enhanced {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hover-scale-enhanced:hover {
+  transform: scale(1.08);
+}
+
+/* Hover Glow Enhanced */
+.hover-glow-enhanced {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow-enhanced:hover {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+/* Hover Rotate */
+.hover-rotate:hover {
+  animation: hoverRotate 0.5s ease;
+}
+
+@keyframes hoverRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .section-enter,
+  .section-exit,
+  .fade-up,
+  .fade-down,
+  .scale-in,
+  .scale-out,
+  .slide-in-left,
+  .slide-in-right,
+  .stagger-fast > *,
+  .stagger-normal > *,
+  .stagger-slow > *,
+  .stagger-scale > *,
+  .card-flip-in,
+  .card-slide-up,
+  .card-pop-in,
+  .shimmer,
+  .pulse-glow,
+  .bounce,
+  .spin,
+  .shake,
+  .pulse-scale,
+  .wiggle,
+  .flash,
+  .hover-lift-enhanced,
+  .hover-scale-enhanced,
+  .hover-glow-enhanced,
+  .hover-rotate {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

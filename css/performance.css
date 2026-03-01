@@ -1,0 +1,437 @@
+/* Performance Optimizations - Critical CSS */
+
+/* Content visibility for off-screen sections */
+.section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+.section:has([style*="display: block"]) {
+  content-visibility: visible;
+}
+
+/* GPU acceleration for animated elements */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Containment for performance isolation */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-style {
+  contain: style;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* Lazy loading placeholder styles */
+.lazy-load {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--bg-elevated) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.lazy-load.loaded {
+  animation: none;
+  background: transparent;
+}
+
+/* Lazy loading states */
+[data-lazy-initialized] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[data-lazy-initialized].lazy-loaded,
+[data-lazy-initialized].lazy-error {
+  opacity: 1;
+}
+
+[data-lazy-initialized].lazy-loading {
+  opacity: 0.5;
+}
+
+/* Image lazy loading placeholder */
+img[data-src] {
+  background: var(--bg-tertiary);
+  min-height: 100px;
+}
+
+/* Optimize paint for frequently updated elements */
+.metrics-grid,
+.kanban-board,
+.priority-list,
+.project-list {
+  contain: layout style;
+}
+
+/* Prevent layout shift during loading */
+.aspect-ratio-box {
+  position: relative;
+  width: 100%;
+}
+
+.aspect-ratio-box::before {
+  content: '';
+  display: block;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+}
+
+.aspect-ratio-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Optimize scrolling performance */
+.scroll-container {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* Passive event listener hint for touch */
+.touch-scroll {
+  touch-action: pan-y;
+}
+
+/* Reduce repaints on hover */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Optimize font rendering */
+.optimize-text {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Critical above-fold styles - inlined for fast first paint */
+.critical {
+  contain: layout style paint;
+}
+
+/* Debounce rapid updates */
+.debounce-updates {
+  contain: strict;
+}
+
+/* Memory-efficient image handling */
+img {
+  max-width: 100%;
+  height: auto;
+  content-visibility: auto;
+}
+
+img[loading="lazy"] {
+  background-color: var(--bg-tertiary);
+}
+
+/* Card containment for better rendering performance */
+.card,
+.metric-card,
+.insights-card,
+.kanban-column,
+.priority-card {
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100px;
+}
+
+/* Active cards should be fully visible */
+.card:active,
+.card:hover,
+.card:focus-within {
+  content-visibility: visible;
+}
+
+/* Navigation containment */
+#mainNav,
+.nav-item,
+.nav-link {
+  contain: layout style;
+}
+
+/* Modal containment */
+.modal-overlay,
+.modal-container {
+  contain: layout style paint;
+}
+
+/* Toast containment */
+.toast-container,
+.toast {
+  contain: layout style paint;
+}
+
+/* Form containment */
+.form-group,
+.input-wrapper {
+  contain: layout style;
+}
+
+/* Table containment for large datasets */
+.table-container,
+.data-table {
+  contain: layout;
+}
+
+/* Chart containment */
+canvas.chart {
+  contain: layout style paint;
+}
+
+/* Optimize animations for low-power devices */
+@media (prefers-reduced-motion: reduce) {
+  .section,
+  .card,
+  .btn,
+  .modal,
+  .toast,
+  .dropdown-menu,
+  .lazy-load,
+  [data-lazy-initialized] {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  
+  .lazy-load {
+    background: var(--bg-tertiary);
+  }
+  
+  [data-lazy-initialized] {
+    opacity: 1;
+  }
+  
+  /* Disable content-visibility when reduced motion is preferred */
+  .card,
+  .metric-card,
+  .insights-card,
+  .kanban-column,
+  .priority-card {
+    content-visibility: visible;
+  }
+}
+
+/* Dark mode optimization - prevent flash */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+  }
+}
+
+/* Print optimization */
+@media print {
+  .section,
+  .card,
+  .metric-card,
+  .insights-card,
+  .kanban-column,
+  .priority-card {
+    content-visibility: visible !important;
+    contain: none !important;
+  }
+}
+
+/* Additional containment for common components */
+.form-section,
+.settings-group,
+.modal-body,
+.modal-header,
+.modal-footer {
+  contain: layout style;
+}
+
+/* Contain complex interactive components */
+.kanban-card,
+.priority-item,
+.project-card,
+.event-card,
+.lead-card {
+  contain: layout style paint;
+}
+
+/* Optimize list rendering */
+.list-container,
+.data-list,
+.item-list {
+  contain: layout;
+}
+
+/* Tab containment */
+.tab-panel,
+.tab-content {
+  contain: layout style;
+}
+
+/* Chart and visualization containment */
+.chart-container,
+.metrics-chart,
+.dashboard-chart {
+  contain: layout style paint;
+}
+
+/* Optimize dropdowns and menus */
+.dropdown-menu,
+.context-menu,
+.select-options {
+  contain: layout style;
+}
+
+/* Sidebar and navigation containment */
+.sidebar,
+.side-panel,
+.drawer {
+  contain: layout style;
+}
+
+/* Prevent layout shift in dynamic content areas */
+.dynamic-content,
+.async-content,
+[data-loading="true"] {
+  contain: layout;
+  min-height: 100px;
+}
+
+/* Optimize table rendering for large datasets */
+.data-table tbody,
+.data-table tr {
+  contain: layout;
+}
+
+/* Timeline and activity feed containment */
+.timeline,
+.activity-feed,
+.feed-list {
+  contain: layout;
+}
+
+/* Optimize badge and tag rendering */
+.badge,
+.tag,
+.label {
+  contain: layout style;
+}
+
+/* Status indicator containment */
+.status-badge,
+.status-dot,
+.status-pill {
+  contain: layout style paint;
+}
+
+/* Optimize avatar and image containers */
+.avatar,
+.thumbnail,
+.image-wrapper {
+  contain: layout style;
+  aspect-ratio: 1;
+}
+
+/* Progress bar containment */
+.progress-bar,
+.progress-track,
+.progress-fill {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+/* Skeleton loading containment */
+.skeleton,
+.skeleton-text,
+.skeleton-circle {
+  contain: layout style paint;
+}
+
+/* Optimize notification and toast containers */
+.notification,
+.toast-item,
+.alert {
+  contain: layout style paint;
+}
+
+/* Tooltip containment */
+.tooltip,
+.popover {
+  contain: layout style paint;
+}
+
+/* Optimize drag and drop areas */
+.dropzone,
+.drag-container,
+.sortable-list {
+  contain: layout;
+}
+
+/* Virtual scroll container optimization */
+.virtual-scroll-container,
+.virtual-list {
+  contain: layout style;
+  content-visibility: auto;
+}
+
+/* Optimize search and filter inputs */
+.search-input,
+.filter-input {
+  contain: layout style;
+}
+
+/* Command palette containment */
+.command-palette,
+.command-list,
+.command-item {
+  contain: layout style;
+}
+
+/* Optimize calendar components */
+.calendar-grid,
+.calendar-day,
+.calendar-event {
+  contain: layout style;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .form-section,
+  .settings-group,
+  .kanban-card,
+  .priority-item,
+  .project-card,
+  .chart-container,
+  .progress-bar,
+  .skeleton,
+  .virtual-scroll-container {
+    contain: layout style;
+    content-visibility: visible;
+    will-change: auto;
+  }
+}

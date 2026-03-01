@@ -1,0 +1,221 @@
+/* ========================================
+   MISSION CONTROL V5 - FOCUS STYLES
+   Enhanced focus states for accessibility
+   ======================================== */
+
+/* ========================================
+   BASE FOCUS STYLES
+   ======================================== */
+
+/* Remove default outline, use custom focus styles */
+:focus {
+  outline: none;
+}
+
+/* Visible focus indicator */
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-sm);
+}
+
+/* Focus within for containers */
+:focus-within {
+  --focus-ring-color: var(--accent-primary);
+}
+
+/* ========================================
+   BUTTON FOCUS STATES
+   ======================================== */
+
+.btn:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 
+    0 0 0 4px rgba(99, 102, 241, 0.15),
+    0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.btn-primary:focus-visible {
+  outline-color: white;
+  box-shadow: 
+    0 0 0 4px rgba(99, 102, 241, 0.3),
+    0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-danger:focus-visible {
+  outline-color: var(--accent-danger);
+  box-shadow: 
+    0 0 0 4px rgba(239, 68, 68, 0.15),
+    0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn-success:focus-visible {
+  outline-color: var(--accent-success);
+  box-shadow: 
+    0 0 0 4px rgba(16, 185, 129, 0.15),
+    0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+/* ========================================
+   INPUT FOCUS STATES
+   ======================================== */
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.15),
+    0 2px 8px rgba(99, 102, 241, 0.1);
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   LINK FOCUS STATES
+   ======================================== */
+
+a:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ========================================
+   CARD FOCUS STATES
+   ======================================== */
+
+.card:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  box-shadow: 
+    0 0 0 4px rgba(99, 102, 241, 0.15),
+    0 8px 24px rgba(99, 102, 241, 0.1);
+}
+
+/* ========================================
+   NAVIGATION FOCUS STATES
+   ======================================== */
+
+.nav-item:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: -2px;
+  border-radius: var(--radius-md);
+}
+
+/* ========================================
+   ANIMATED FOCUS RING
+   ======================================== */
+
+.focus-ring-animated:focus-visible {
+  animation: focusPulse 2s ease-in-out infinite;
+}
+
+@keyframes focusPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary);
+  }
+  50% {
+    box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 6px rgba(99, 102, 241, 0.5);
+  }
+}
+
+/* ========================================
+   HIGH CONTRAST MODE
+   ======================================== */
+
+@media (prefers-contrast: high) {
+  :focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+    box-shadow: none;
+  }
+  
+  .btn:focus-visible,
+  button:focus-visible {
+    outline-width: 3px;
+  }
+  
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 1px;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-ring-animated:focus-visible {
+    animation: none;
+  }
+}
+
+/* ========================================
+   SKIP LINK
+   ======================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-primary);
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* ========================================
+   FOCUS TRAP INDICATOR
+   ======================================== */
+
+.focus-trap-active {
+  position: relative;
+}
+
+.focus-trap-active::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px dashed var(--accent-primary);
+  border-radius: calc(var(--radius-lg) + 4px);
+  pointer-events: none;
+  opacity: 0.5;
+  animation: focusTrapPulse 2s ease-in-out infinite;
+}
+
+@keyframes focusTrapPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-trap-active::before {
+    animation: none;
+    opacity: 0.5;
+  }
+}

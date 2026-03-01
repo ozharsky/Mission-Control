@@ -1,0 +1,768 @@
+/* ========================================
+   MOBILE FIXES - v85
+   Consolidated mobile improvements
+   ======================================== */
+
+/* ========================================
+   CRITICAL MOBILE FIXES
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* Ensure all interactive elements have minimum 44px touch targets */
+  .btn,
+  .btn-sm,
+  .btn-lg,
+  .nav-item,
+  .bottom-tab,
+  .filter-btn,
+  .priority-menu-btn,
+  .note-action-btn,
+  .project-complete-btn,
+  .priority-complete-btn,
+  .card-action-btn,
+  .lead-action-btn,
+  .event-action-btn,
+  .modal-close,
+  .modal-action,
+  .form-input,
+  .form-select,
+  .form-textarea,
+  .search-input,
+  .dashboard-card-action,
+  .quick-link,
+  .doc-card,
+  .recent-doc-item,
+  .priority-list-item,
+  .project-list-item,
+  .list-item,
+  .recommendation-item,
+  .bulk-checkbox,
+  .priority-checkbox,
+  .view-toggle .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Smaller touch targets for compact elements (still accessible) */
+  .filter-btn,
+  .view-toggle .btn {
+    min-height: 40px;
+    min-width: 40px;
+  }
+
+  /* Form inputs - prevent zoom on iOS */
+  .form-input,
+  .form-select,
+  .form-textarea,
+  .search-input,
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    font-size: 16px !important;
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Checkboxes and radios */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 24px;
+    min-height: 24px;
+  }
+
+  /* Fix overlapping filter bars - ensure horizontal scroll */
+  .filter-bar,
+  .priority-filters,
+  .project-filters,
+  .calendar-filters,
+  .docs-filters {
+    display: flex;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    margin-bottom: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .filter-bar::-webkit-scrollbar,
+  .priority-filters::-webkit-scrollbar,
+  .project-filters::-webkit-scrollbar,
+  .calendar-filters::-webkit-scrollbar,
+  .docs-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Fix priority toolbar layout */
+  .priority-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.75rem;
+  }
+
+  .priority-toolbar .filter-bar {
+    order: 2;
+  }
+
+  .priority-toolbar .view-toggle {
+    order: 1;
+    width: 100%;
+    display: flex;
+  }
+
+  .priority-toolbar .view-toggle .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Fix welcome bar on mobile */
+  .welcome-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .welcome-content {
+    width: 100%;
+  }
+
+  .welcome-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .welcome-actions .btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .welcome-time {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  /* Fix modal on mobile - full width bottom sheet style */
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: 0;
+    animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes modalSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-overlay.closing .modal {
+    animation: modalSlideDown 0.25s ease forwards;
+  }
+
+  @keyframes modalSlideDown {
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  /* Modal handle indicator */
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+  }
+
+  .modal-header {
+    padding-top: 1.5rem;
+  }
+
+  .modal-body {
+    max-height: calc(90vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Fix cards on mobile */
+  .card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .card-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Fix dashboard stats grid */
+  .dashboard-stats-grid,
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-card,
+  .metric-card {
+    padding: 1rem;
+    min-width: 0;
+  }
+
+  .stat-value,
+  .metric-value {
+    font-size: 1.5rem;
+    word-break: break-word;
+  }
+
+  /* Fix kanban on mobile */
+  .kanban {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .kanban-column {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .kanban-column-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-tertiary);
+    padding: 0.75rem;
+  }
+
+  /* Fix list items */
+  .list-item,
+  .priority-list-item,
+  .project-list-item {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .list-item-content,
+  .priority-content,
+  .project-content {
+    min-width: 0;
+  }
+
+  .list-item-title,
+  .priority-text,
+  .project-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Fix form actions */
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  /* Fix toast container */
+  .toast-container {
+    top: auto;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0));
+    left: 0.75rem;
+    right: 0.75rem;
+    max-width: none;
+  }
+
+  /* Fix bulk bar */
+  .bulk-bar {
+    bottom: calc(70px + env(safe-area-inset-bottom, 0));
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    transform: translateY(150%);
+  }
+
+  .bulk-bar.visible {
+    transform: translateY(0);
+  }
+
+  /* Fix bottom tabs */
+  .bottom-tabs {
+    height: calc(70px + env(safe-area-inset-bottom, 0));
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-tab {
+    padding: 0.375rem 0.25rem;
+  }
+
+  /* Fix floating menu button - REMOVED: Conflicts with mobile-bottom-buttons.css */
+  /* .mobile-menu-btn styles now centralized in mobile-bottom-buttons.css */
+
+  /* Fix content padding */
+  .content {
+    padding: 0.75rem;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0));
+  }
+
+  /* Fix docs grid */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .doc-card {
+    padding: 1rem;
+  }
+
+  /* Fix quick links grid */
+  .quick-links-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .quick-link {
+    padding: 0.875rem;
+  }
+
+  /* Fix calendar */
+  .calendar-grid {
+    gap: 0.125rem;
+  }
+
+  .calendar-day {
+    min-height: 50px;
+    padding: 0.125rem;
+    font-size: 0.75rem;
+  }
+
+  /* Fix insights grid */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .insight-stat {
+    padding: 0.75rem;
+  }
+
+  /* Fix quick stats */
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .quick-stat {
+    padding: 0.75rem 0.5rem;
+    min-width: 0;
+  }
+
+  .quick-stat-value {
+    font-size: 1.125rem;
+    word-break: break-word;
+  }
+
+  /* Fix recommendations */
+  .recommendation-item {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .recommendation-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .recommendation-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Fix navigation */
+  .nav {
+    width: 85%;
+    max-width: 320px;
+  }
+
+  /* Fix scroll to top button */
+  .scroll-to-top {
+    bottom: calc(90px + env(safe-area-inset-bottom, 0));
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Hide elements on mobile */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* ========================================
+   SMALL PHONE FIXES (380px and below)
+   ======================================== */
+
+@media (max-width: 380px) {
+  .content {
+    padding: 0.625rem;
+    padding-bottom: calc(85px + env(safe-area-inset-bottom, 0));
+  }
+
+  .welcome-greeting {
+    font-size: 1.125rem;
+  }
+
+  .welcome-bar {
+    padding: 0.625rem;
+  }
+
+  .card {
+    padding: 0.875rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .card-title {
+    font-size: 0.9375rem;
+  }
+
+  .dashboard-stats-grid,
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .stat-card,
+  .metric-card {
+    padding: 0.75rem;
+  }
+
+  .stat-value,
+  .metric-value {
+    font-size: 1.25rem;
+  }
+
+  .bottom-tabs {
+    height: calc(60px + env(safe-area-inset-bottom, 0));
+  }
+
+  .bottom-tab {
+    padding: 0.25rem 0.125rem;
+  }
+
+  .bottom-tab-icon {
+    font-size: 1.125rem;
+  }
+
+  .bottom-tab-label {
+    font-size: 0.5625rem;
+  }
+
+  /* .mobile-menu-btn styles removed - now in mobile-bottom-buttons.css */
+
+  .filter-btn {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .modal {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+}
+
+/* ========================================
+   LANDSCAPE MOBILE FIXES
+   ======================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .welcome-bar {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .welcome-actions {
+    width: auto;
+    flex-wrap: nowrap;
+  }
+
+  .dashboard-stats-grid,
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .kanban {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .kanban-column {
+    min-width: 280px;
+    max-width: 280px;
+  }
+
+  .bottom-tabs {
+    height: 56px;
+    padding-bottom: 0;
+  }
+
+  .bottom-tab {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .bottom-tab-icon {
+    font-size: 1.125rem;
+  }
+
+  .bottom-tab-label {
+    font-size: 0.875rem;
+  }
+
+  .modal {
+    max-height: 85vh;
+  }
+
+  .modal-body {
+    max-height: calc(85vh - 120px);
+  }
+}
+
+/* ========================================
+   TABLET FIXES (769px - 1024px)
+   ======================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .content {
+    padding: 1.25rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .docs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav {
+    width: 240px;
+  }
+}
+
+/* ========================================
+   TOUCH DEVICE ENHANCEMENTS
+   ======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .card:hover,
+  .card-interactive:hover,
+  .btn:hover,
+  .nav-item:hover,
+  .filter-btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Add active state feedback */
+  .card:active,
+  .card-interactive:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .btn:active {
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+  }
+
+  /* Touch ripple effect */
+  .touch-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .touch-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  }
+
+  .touch-ripple:active::after {
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    transition: 0s;
+  }
+
+  /* Haptic feedback simulation */
+  .haptic:active {
+    animation: hapticPulse 0.1s ease;
+  }
+
+  @keyframes hapticPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+  }
+}
+
+/* ========================================
+   REDUCED MOTION FOR MOBILE
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  @media (max-width: 768px) {
+    .modal,
+    .toast,
+    .card,
+    .btn,
+    .bottom-tab,
+    .mobile-menu-btn {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ========================================
+   SAFE AREA SUPPORT
+   ======================================== */
+
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .content {
+      padding-left: max(0.75rem, env(safe-area-inset-left));
+      padding-right: max(0.75rem, env(safe-area-inset-right));
+      padding-bottom: calc(90px + max(env(safe-area-inset-bottom), 0px));
+    }
+
+    .bottom-tabs {
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      padding-left: env(safe-area-inset-left, 0);
+      padding-right: env(safe-area-inset-right, 0);
+    }
+
+    .modal-footer {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+    }
+
+    .toast-container {
+      bottom: calc(80px + env(safe-area-inset-bottom, 0));
+    }
+
+    /* .mobile-menu-btn positioning removed - now in mobile-bottom-buttons.css */
+
+    .scroll-to-top {
+      bottom: calc(90px + env(safe-area-inset-bottom, 0));
+    }
+  }
+
+  @media (max-width: 380px) {
+    .content {
+      padding-left: max(0.625rem, env(safe-area-inset-left));
+      padding-right: max(0.625rem, env(safe-area-inset-right));
+    }
+  }
+}

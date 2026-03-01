@@ -1,0 +1,134 @@
+/* Mobile Card */
+.m-card {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.m-card:active {
+  transform: scale(0.99);
+  background: var(--bg-tertiary);
+}
+
+.m-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.m-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.m-card-meta {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Mobile List Item */
+.m-list-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  min-height: 56px;
+}
+
+.m-list-item-checkbox {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.m-list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.m-list-item-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-list-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+/* Mobile Bottom Sheet */
+.m-bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border-radius: 16px 16px 0 0;
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 300;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.m-bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.m-bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+}
+
+/* Mobile FAB (Floating Action Button) */
+.m-fab {
+  position: fixed;
+  bottom: calc(80px + 1rem + env(safe-area-inset-bottom));
+  right: 1rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  z-index: 200;
+}
+
+.m-fab:active {
+  transform: scale(0.95);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .m-card {
+    padding: 0.875rem;
+    margin-bottom: 0.625rem;
+  }
+  
+  .m-list-item {
+    padding: 0.625rem;
+    min-height: 52px;
+  }
+}

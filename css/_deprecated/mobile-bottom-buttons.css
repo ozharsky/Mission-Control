@@ -1,0 +1,422 @@
+/* ========================================
+   MOBILE BOTTOM BUTTONS FIX - v96
+   AUTHORITATIVE SOURCE for mobile menu button styles
+   This file MUST be loaded LAST in index.html
+   
+   Fixed: Menu button now properly visible at bottom right
+   - Uses !important to override any conflicting styles
+   - Positioned above bottom tabs (92px from bottom)
+   - z-index: 200 to stay above all content
+   - 60px size with gradient background
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* ========================================
+     BOTTOM TABS - FULL WIDTH LAYOUT
+     ======================================== */
+  
+  .bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 80px;
+    height: calc(80px + env(safe-area-inset-bottom, 0));
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 150;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+  }
+  
+  .bottom-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.25rem;
+    color: var(--text-muted);
+    flex: 1;
+    min-width: 48px;
+    max-width: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    height: 100%;
+    position: relative;
+    /* Ensure touch target is at least 48px */
+    min-height: 48px;
+    /* Remove default button styling */
+    -webkit-appearance: none;
+    appearance: none;
+    /* Improve touch response */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .bottom-tab:active {
+    transform: scale(0.92);
+    color: var(--accent-primary);
+  }
+  
+  .bottom-tab:active .bottom-tab-icon {
+    transform: scale(0.9);
+  }
+  
+  .bottom-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 32px;
+    height: 4px;
+    background: var(--accent-primary);
+    border-radius: 0 0 4px 4px;
+    transition: transform 0.2s ease;
+  }
+  
+  .bottom-tab.active::before {
+    transform: translateX(-50%) scaleX(1);
+  }
+  
+  .bottom-tab.active {
+    color: var(--accent-primary);
+  }
+  
+  .bottom-tab-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+    /* Ensure icon touch target */
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .bottom-tab.active .bottom-tab-icon {
+    transform: translateY(-2px);
+  }
+  
+  .bottom-tab-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    line-height: 1;
+    /* Ensure text is readable */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  /* ========================================
+     FLOATING MENU BUTTON - BOTTOM RIGHT
+     ======================================== */
+  
+  .mobile-menu-btn {
+    position: fixed !important;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0)) !important;
+    right: 1rem !important;
+    left: auto !important;
+    top: auto !important;
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) !important;
+    border: 3px solid var(--bg-secondary) !important;
+    border-radius: 50% !important;
+    color: white !important;
+    font-size: 1.75rem !important;
+    font-weight: bold !important;
+    box-shadow: 
+      0 6px 20px rgba(99, 102, 241, 0.6),
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      0 0 0 2px rgba(255, 255, 255, 0.1) inset !important;
+    z-index: 200 !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    /* Ensure minimum touch target */
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  .mobile-menu-btn:hover,
+  .mobile-menu-btn:active {
+    transform: scale(1.08);
+    box-shadow: 
+      0 8px 24px rgba(99, 102, 241, 0.7),
+      0 3px 10px rgba(0, 0, 0, 0.4),
+      0 0 0 2px rgba(255, 255, 255, 0.15) inset;
+  }
+  
+  .mobile-menu-btn.active {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    transform: rotate(180deg);
+    box-shadow: 
+      0 6px 20px rgba(239, 68, 68, 0.6),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .mobile-menu-btn .menu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+  }
+  
+  /* ========================================
+     BULK ACTION BAR - ABOVE BOTTOM TABS
+     ======================================== */
+  
+  .bulk-bar {
+    position: fixed;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0));
+    left: 0.5rem;
+    right: 0.5rem;
+    width: auto;
+    transform: translateY(100px);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 199;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .bulk-bar.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .bulk-bar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  
+  .bulk-count {
+    font-weight: 600;
+    color: var(--accent-primary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  
+  .bulk-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .bulk-actions .btn {
+    min-height: 36px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+  
+  /* ========================================
+     TOAST CONTAINER - ABOVE BOTTOM TABS
+     ======================================== */
+  
+  .toast-container {
+    position: fixed;
+    top: auto;
+    bottom: calc(90px + env(safe-area-inset-bottom, 0));
+    left: 0.75rem;
+    right: 0.75rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: none;
+    pointer-events: none;
+  }
+  
+  .toast {
+    pointer-events: auto;
+    min-width: auto;
+    max-width: none;
+  }
+  
+  /* ========================================
+     CONTENT PADDING FOR BOTTOM ELEMENTS
+     ======================================== */
+  
+  .content {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0));
+  }
+  
+  /* ========================================
+     NAVIGATION OVERLAY
+     ======================================== */
+  
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 199;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+  }
+  
+  .nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* ========================================
+     SLIDE-OUT NAVIGATION
+     ======================================== */
+  
+  .nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg-secondary);
+    transform: translateX(-110%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+  }
+  
+  .nav.open {
+    transform: translateX(0);
+  }
+}
+
+/* ========================================
+   SMALL PHONE BOTTOM BUTTONS (375px - 414px)
+   ======================================== */
+
+@media (max-width: 414px) {
+  .bottom-tabs {
+    height: 75px;
+    height: calc(75px + env(safe-area-inset-bottom, 0));
+  }
+  
+  .bottom-tab {
+    padding: 0.375rem 0.125rem;
+    gap: 0.375rem;
+    min-width: 48px;
+  }
+  
+  .bottom-tab-icon {
+    font-size: 1.625rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .bottom-tab-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  
+  .mobile-menu-btn {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    font-size: 1.625rem;
+    bottom: calc(87px + env(safe-area-inset-bottom, 0));
+    right: 0.875rem;
+  }
+  
+  .bulk-bar {
+    bottom: calc(75px + env(safe-area-inset-bottom, 0));
+    left: 0.375rem;
+    right: 0.375rem;
+    padding: 0.625rem 0.75rem;
+  }
+  
+  .toast-container {
+    bottom: calc(85px + env(safe-area-inset-bottom, 0));
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
+/* ========================================
+   EXTRA SMALL PHONES (< 375px)
+   ======================================== */
+
+@media (max-width: 374px) {
+  .bottom-tabs {
+    height: 70px;
+    height: calc(70px + env(safe-area-inset-bottom, 0));
+  }
+  
+  .bottom-tab {
+    padding: 0.25rem 0.125rem;
+    gap: 0.25rem;
+    min-width: 44px;
+  }
+  
+  .bottom-tab-icon {
+    font-size: 1.5rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .bottom-tab-label {
+    font-size: 0.65rem;
+  }
+  
+  .mobile-menu-btn {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    font-size: 1.5rem;
+    bottom: calc(82px + env(safe-area-inset-bottom, 0));
+    right: 0.75rem;
+  }
+  
+  .bulk-bar {
+    bottom: calc(70px + env(safe-area-inset-bottom, 0));
+  }
+  
+  .toast-container {
+    bottom: calc(80px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+/* ========================================
+   TABLET ADJUSTMENTS (769px - 1024px)
+   ======================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-menu-btn,
+  .bottom-tabs {
+    display: none !important;
+  }
+}
