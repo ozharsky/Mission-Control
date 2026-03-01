@@ -10,14 +10,16 @@
    ======================================== */
 
 @media (max-width: 768px) {
-  /* Welcome Bar Mobile Fixes */
+  /* Welcome Bar Mobile Fixes - consolidated from dashboard-mobile.css */
   .welcome-bar {
     flex-direction: column;
     gap: 0.75rem;
     margin-bottom: 1rem;
+    padding: 0.875rem 1rem;
   }
   
   .welcome-content {
+    flex: 1;
     min-width: 0;
     width: 100%;
   }
@@ -57,11 +59,22 @@
   .clock-display {
     font-size: 1.125rem;
     font-weight: 600;
+    color: var(--text-primary);
   }
   
   .weather-display {
     font-size: 0.8125rem;
     margin-top: 0;
+    color: var(--text-muted);
+  }
+  
+  .welcome-actions .btn {
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+  }
+  
+  .welcome-actions .btn-primary span:first-child {
+    font-size: 1.125rem;
   }
   
   /* Dashboard Stats Grid - 2 columns on mobile */
@@ -85,7 +98,7 @@
     font-size: 0.75rem;
   }
   
-  /* Quick actions row */
+  /* Quick actions row - uses m-btn-grid classes from mobile-components.css */
   .quick-actions-mobile,
   .quick-actions {
     display: flex;
@@ -100,40 +113,6 @@
   .quick-actions-mobile::-webkit-scrollbar,
   .quick-actions::-webkit-scrollbar {
     display: none;
-  }
-  
-  .quick-action-btn {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.375rem;
-    padding: 0.625rem 0.75rem;
-    min-width: 68px;
-    min-height: 68px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    color: var(--text-secondary);
-    font-size: 0.625rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    touch-action: manipulation;
-  }
-  
-  .quick-action-btn span:first-child {
-    font-size: 1.25rem;
-  }
-  
-  .quick-action-btn.primary {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
-    border-color: transparent;
-  }
-  
-  .quick-action-btn:active {
-    transform: scale(0.95);
   }
   
   /* Dashboard cards */
@@ -167,13 +146,24 @@
   .dashboard-card-action {
     font-size: 0.75rem;
     color: var(--accent-primary);
-    background: none;
-    border: none;
-    padding: 0.375rem 0.5rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.375rem 0.75rem;
     cursor: pointer;
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
+    transition: all 0.2s ease;
+  }
+  
+  .dashboard-card-action:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
+  }
+  
+  .dashboard-card-action:active {
+    transform: scale(0.98);
   }
   
   .dashboard-card-body {
@@ -787,30 +777,6 @@
     flex: 1;
     justify-content: center;
     min-height: 40px;
-  }
-  
-  /* Welcome bar mobile adjustments */
-  .welcome-bar {
-    padding: 0.875rem 1rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .welcome-bar .welcome-greeting {
-    font-size: 1.125rem;
-  }
-  
-  .welcome-bar .welcome-status {
-    flex-wrap: wrap;
-    gap: 0.375rem;
-  }
-  
-  .welcome-bar .welcome-actions .btn {
-    min-height: 40px;
-    padding: 0.5rem 1rem;
-  }
-  
-  .welcome-bar .welcome-actions .btn-primary span:first-child {
-    font-size: 1.125rem;
   }
   
   /* Hide kanban on mobile (we use grouped list instead) */
@@ -1642,20 +1608,7 @@
     font-size: 1.25rem;
   }
   
-  /* Quick actions */
-  .quick-action-btn {
-    min-width: 60px;
-    min-height: 60px;
-    padding: 0.5rem 0.625rem;
-  }
-  
-  .quick-action-btn span:first-child {
-    font-size: 1.125rem;
-  }
-  
-  .quick-action-btn .quick-action-label {
-    font-size: 0.5625rem;
-  }
+  /* Quick actions - uses m-btn-grid classes from mobile-components.css */
   
   /* Revenue card */
   .dashboard-card-revenue .dashboard-card-body {
