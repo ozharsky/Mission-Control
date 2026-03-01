@@ -23,7 +23,7 @@ export const CONFIG = {
   // SimplyPrint API (via Vercel proxy)
   get simplyprint() {
     return {
-      proxyUrl: localStorage.getItem('mc_printer_proxy') || ''
+      proxyUrl: localStorage.getItem('mc_printer_proxy') || 'https://mission-control-fawn-eight.vercel.app/api/printers'
     }
   }
 }

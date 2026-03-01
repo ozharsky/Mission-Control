@@ -1,0 +1,68 @@
+// Vercel Serverless API for SimplyPrint Proxy
+// Handles CORS and forwards requests to SimplyPrint API
+
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', 'https://ozharsky.github.io');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  const { action, printer_id } = req.query;
+  
+  // Get SimplyPrint credentials from environment variables
+  const apiKey = process.env.SIMPLYPRINT_API_KEY;
+  const companyId = process.env.SIMPLYPRINT_COMPANY_ID;
+  
+  if (!apiKey || !companyId) {
+    return res.status(500).json({ 
+      error: 'SimplyPrint not configured',
+      message: 'API key or Company ID missing'
+    });
+  }
+  
+  try {
+    let simplyPrintUrl;
+    
+    switch (action) {
+      case 'get_printers':
+        simplyPrintUrl = `https://api.simplyprint.io/v1/printers?company_id=${companyId}`;
+        break;
+      case 'get_status':
+        if (!printer_id) {
+          return res.status(400).json({ error: 'printer_id required' });
+        }
+        simplyPrintUrl = `https://api.simplyprint.io/v1/printers/${printer_id}/status?company_id=${companyId}`;
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid action' });
+    }
+    
+    // Forward request to SimplyPrint
+    const response = await fetch(simplyPrintUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`SimplyPrint API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return res.status(200).json(data);
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to fetch from SimplyPrint',
+      message: error.message
+    });
+  }
+}
