@@ -223,6 +223,10 @@ export function createInventorySection(containerId) {
   // Apply touch feedback after render
   function applyTouchFeedback() {
     container.querySelectorAll('.m-touch').forEach(addTouchFeedback)
+    // Initialize Lucide icons
+    if (window.lucide) {
+      window.lucide.createIcons()
+    }
   }
 
   // Global functions
