@@ -1971,6 +1971,51 @@
 }
 
 /* ----------------------------------------
+   6.5 Quick Action Buttons (Grid Layout)
+   ---------------------------------------- */
+
+.m-btn-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  min-height: 80px;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.m-btn-grid-primary {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+}
+
+.m-btn-grid-primary:hover {
+  background: var(--accent-primary-hover);
+}
+
+.m-btn-grid-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.m-btn-grid-secondary:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-color-hover, rgba(255, 255, 255, 0.1));
+}
+
+.m-btn-grid-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ----------------------------------------
    7. Layout (.m-stack-*, .m-grid)
    ---------------------------------------- */
 

@@ -179,9 +179,9 @@ export function createDashboardSection(containerId) {
         <div class="section-card-content">
           <div class="quick-actions-grid">
             ${actions.map(action => `
-              <button class="${action.primary ? 'm-btn-primary' : 'm-btn-secondary'} m-touch" 
+              <button class="${action.primary ? 'm-btn-grid m-btn-grid-primary' : 'm-btn-grid m-btn-grid-secondary'} m-touch" 
                       onclick="${action.onClick}">
-                <i data-lucide="${action.icon}" class="lucide-icon quick-action-icon"></i>
+                <i data-lucide="${action.icon}" class="lucide-icon m-btn-grid-icon"></i>
                 <span>${action.label}</span>
               </button>
             `).join('')}
