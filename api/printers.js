@@ -59,12 +59,16 @@ export default async function handler(req, res) {
       }
     });
     
+    console.log('[Vercel API] SimplyPrint response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`SimplyPrint API error: ${response.status}`);
+      const errorText = await response.text();
+      console.log('[Vercel API] SimplyPrint error:', errorText);
+      throw new Error(`SimplyPrint API error: ${response.status} - ${errorText}`);
     }
     
     const data = await response.json();
-    console.log('[Vercel API] SimplyPrint response:', JSON.stringify(data).substring(0, 200));
+    console.log('[Vercel API] SimplyPrint raw response:', JSON.stringify(data));
     
     // Transform SimplyPrint data to expected format
     let printers = [];
