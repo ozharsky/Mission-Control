@@ -93,11 +93,12 @@
   top: 56px;
   left: 0;
   right: 0;
+  bottom: 64px; /* Above bottom tabs */
   background: var(--bg-secondary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   z-index: 45;
-  max-height: 70vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation: slideDown 0.3s ease;
 }
 
