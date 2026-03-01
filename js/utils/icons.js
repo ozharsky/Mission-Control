@@ -77,4 +77,5 @@ export const icons = {
   alarm: () => icon('alarm-clock'),
   hourglass: () => icon('hourglass'),
   arrowRight: () => icon('arrow-right'),
-  eye: () => icon('eye'),
+  eye: () => icon('eye')
+};
