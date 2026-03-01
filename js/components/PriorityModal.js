@@ -2,12 +2,13 @@ import { store } from '../state/store.js'
 import { toast } from './Toast.js'
 import { logActivity } from '../utils/taskUtils.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icons } from '../utils/icons.js'
 
 // Priority templates with rich preview data
 const PRIORITY_TEMPLATES = {
   'etsy-listing': {
-    label: '🏪 Etsy Listing',
-    icon: '🏪',
+    label: 'Etsy Listing',
+    icon: 'store',
     description: 'Create a new product listing on Etsy',
     preview: ['Write SEO title', 'Upload product photos', 'Set price & inventory', 'Add tags'],
     text: 'Create Etsy listing for new product',
@@ -17,8 +18,8 @@ const PRIORITY_TEMPLATES = {
     color: '#f59e0b'
   },
   'photo-shoot': {
-    label: '📸 Photo Shoot',
-    icon: '📸',
+    label: 'Photo Shoot',
+    icon: 'camera',
     description: 'Product photography session',
     preview: ['Set up lighting', 'Take product shots', 'Edit photos', 'Export for web'],
     text: 'Product photography session',
@@ -28,8 +29,8 @@ const PRIORITY_TEMPLATES = {
     color: '#06b6d4'
   },
   'wholesale-lead': {
-    label: '🤝 Wholesale Lead',
-    icon: '🤝',
+    label: 'Wholesale Lead',
+    icon: 'users',
     description: 'Contact and follow up with wholesale prospects',
     preview: ['Research company', 'Draft outreach email', 'Send proposal', 'Schedule follow-up'],
     text: 'Contact wholesale prospect',
@@ -39,8 +40,8 @@ const PRIORITY_TEMPLATES = {
     color: '#8b5cf6'
   },
   'inventory-check': {
-    label: '📦 Inventory Check',
-    icon: '📦',
+    label: 'Inventory Check',
+    icon: 'package',
     description: 'Count and update stock levels',
     preview: ['Count physical stock', 'Update SKU levels', 'Check reorder points', 'Update system'],
     text: 'Check and update inventory',
@@ -50,8 +51,8 @@ const PRIORITY_TEMPLATES = {
     color: '#10b981'
   },
   'seo-optimization': {
-    label: '🔍 SEO Optimization',
-    icon: '🔍',
+    label: 'SEO Optimization',
+    icon: 'search',
     description: 'Improve Etsy search rankings',
     preview: ['Research keywords', 'Update titles', 'Optimize tags', 'Check analytics'],
     text: 'Optimize Etsy SEO',
@@ -61,8 +62,8 @@ const PRIORITY_TEMPLATES = {
     color: '#ec4899'
   },
   'custom': {
-    label: '✏️ Custom Task',
-    icon: '✏️',
+    label: 'Custom Task',
+    icon: 'pencil',
     description: 'Create a task from scratch',
     preview: ['Define your own task', 'Set custom parameters', 'Add any tags'],
     text: '',
@@ -96,8 +97,8 @@ export function openPriorityModal() {
   modal.innerHTML = `
     <div class="modal" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
-        <div class="modal-title">➕ New Priority</div>
-        <button class="modal-close" onclick="closePriorityModal()">✕</button>
+        <div class="modal-title">${icons.plus()} New Priority</div>
+        <button class="modal-close m-touch" onclick="closePriorityModal()">${icons.x()}</button>
       </div>
       
       <div class="modal-body">
@@ -110,8 +111,8 @@ export function openPriorityModal() {
                    data-template="${key}"
                    onclick="selectTemplate('${key}')"
                    style="--template-color: ${tmpl.color}">
-                <div class="template-icon">${tmpl.icon}</div>
-                <div class="template-name">${tmpl.label.replace(/^[^\s]+\s/, '')}</div>
+                <div class="template-icon">${icons[tmpl.icon]()}</div>
+                <div class="template-name">${tmpl.label}</div>
                 <div class="template-preview">
                   ${tmpl.preview.map(p => `<span class="preview-item">• ${p}</span>`).join('')}
                 </div>
@@ -169,8 +170,8 @@ export function openPriorityModal() {
           <div class="form-group">
             <label class="form-label">Status</label>
             <select class="form-input" id="priorityStatus">
-              <option value="later">📥 Later</option>
-              <option value="now">⚡ Now</option>
+              <option value="later">Later</option>
+              <option value="now">Now</option>
             </select>
           </div>
         </div>
@@ -227,19 +228,19 @@ export function openPriorityModal() {
             <label class="form-label">Assignee</label>
             <select class="form-input" id="priorityAssignee">
               <option value="">Unassigned</option>
-              <option value="KimiClaw">🤖 KimiClaw</option>
-              <option value="Oleg">👤 Oleg</option>
+              <option value="KimiClaw">KimiClaw</option>
+              <option value="Oleg">Oleg</option>
             </select>
           </div>
           
           <div class="form-group">
             <label class="form-label">Board</label>
             <select class="form-input" id="priorityBoard">
-              <option value="all">🏢 All</option>
-              <option value="etsy">🛒 Etsy</option>
-              <option value="photography">📸 Photo</option>
-              <option value="wholesale">🏪 B2B</option>
-              <option value="3dprint">🖨️ 3D Print</option>
+              <option value="all">All</option>
+              <option value="etsy">Etsy</option>
+              <option value="photography">Photo</option>
+              <option value="wholesale">B2B</option>
+              <option value="3dprint">3D Print</option>
             </select>
           </div>
         </div>
@@ -255,23 +256,23 @@ export function openPriorityModal() {
         
         <!-- Auto-save Indicator -->
         <div class="autosave-indicator" id="autosaveIndicator">
-          <span class="autosave-icon">💾</span>
+          <span class="autosave-icon">${icons.save()}</span>
           <span class="autosave-text">Draft saved</span>
         </div>
         
         ${saved ? `
           <div class="draft-loaded-notice">
-            <span>📋 Draft loaded from ${formatTime(saved.timestamp)}</span>
+            <span>${icons.clipboard()} Draft loaded from ${formatTime(saved.timestamp)}</span>
             <button type="button" class="btn btn-sm btn-text" onclick="clearDraft()">Clear</button>
           </div>
         ` : ''}
       </div>
       
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closePriorityModal()">Cancel</button>
-        <button class="btn btn-primary" id="savePriorityBtn" onclick="savePriority()">
-          <span class="btn-text">✅ Create Priority</span>
-          <span class="btn-spinner" style="display: none;">⏳</span>
+        <button class="btn btn-secondary m-touch" onclick="closePriorityModal()">Cancel</button>
+        <button class="btn btn-primary m-touch" id="savePriorityBtn" onclick="savePriority()">
+          <span class="btn-text">${icons.check()} Create Priority</span>
+          <span class="btn-spinner" style="display: none;">${icons.refresh()}</span>
         </button>
       </div>
     </div>
