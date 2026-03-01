@@ -129,7 +129,7 @@ export function createDocsSection(containerId) {
           >
         </div>
         <div class="filter-bar docs-filters">
-          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}"
+          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''}"
             onclick="setDocFilter('all')"
           >
             <span>All</span>
@@ -137,7 +137,7 @@ export function createDocsSection(containerId) {
           </button>
           ${Object.entries(CATEGORIES).map(([cat, config]) =>
             categoryCounts[cat] ? `
-              <button class="filter-btn ${currentFilter === cat ? 'active' : ''}"
+              <button class="m-btn-secondary ${currentFilter === cat ? 'active' : ''}"
                 onclick="setDocFilter('${cat}')"
               >
                 <span>${icons[config.icon]()} ${cat}</span>
@@ -262,7 +262,7 @@ export function createDocsSection(containerId) {
         <div class="modal upload-modal" onclick="event.stopPropagation()">
           <div class="modal-header">
             <div class="modal-title m-title">${icons.upload()} Upload Documents</div>
-            <button class="modal-close m-touch" onclick="closeUploadModal()">${icons.x()}</button>
+            <button class="m-btn-secondary m-touch" onclick="closeUploadModal()">${icons.x()}</button>
           </div>
           <div class="modal-body upload-modal-body">
             <!-- Category Selector -->

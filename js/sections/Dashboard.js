@@ -179,7 +179,7 @@ export function createDashboardSection(containerId) {
         <div class="section-card-content">
           <div class="quick-actions-grid">
             ${actions.map(action => `
-              <button class="quick-action-btn ${action.primary ? 'primary' : ''} m-touch" 
+              <button class="${action.primary ? 'm-btn-primary' : 'm-btn-secondary'} m-touch" 
                       onclick="${action.onClick}">
                 <i data-lucide="${action.icon}" class="lucide-icon quick-action-icon"></i>
                 <span>${action.label}</span>
@@ -458,7 +458,7 @@ export function createDashboardSection(containerId) {
             <i data-lucide="trending-up" class="lucide-icon"></i>
             Revenue Trend
           </div>
-          <button class="m-touch dashboard-card-action" onclick="showSection('revenue')">View <i data-lucide="chevron-right" class="lucide-icon"></i></button>
+          <button class="m-btn-secondary m-touch" onclick="showSection('revenue')">${icons.eye()} View</button>
         </div>
         <div class="dashboard-card-body">
           <div class="m-stack revenue-main">
@@ -486,7 +486,7 @@ export function createDashboardSection(containerId) {
             <i data-lucide="star" class="lucide-icon"></i>
             Top Priorities
           </div>
-          <button class="m-touch dashboard-card-action" onclick="showSection('priorities')">View All <i data-lucide="chevron-right" class="lucide-icon"></i></button>
+          <button class="m-btn-secondary m-touch" onclick="showSection('priorities')">${icons.eye()} View All</button>
         </div>
         
         ${topPriorities.length === 0 ? `

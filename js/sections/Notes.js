@@ -265,12 +265,12 @@ export function createNotesSection(containerId) {
         <div class="note-footer">
           <span class="note-date m-caption">${formatDate(note.createdAt)}</span>          
           <div class="note-actions-row" onclick="event.stopPropagation()">            
-            <button class="note-action-btn m-touch" onclick="togglePinNote(${note.id})"
+            <button class="m-btn-secondary m-touch" onclick="togglePinNote(${note.id})"
               title="${note.pinned ? 'Unpin' : 'Pin'}"
             >
               ${note.pinned ? icons.pin() : icons.mapPin()}
             </button>            
-            <button class="note-action-btn delete m-touch" onclick="deleteNote(${note.id})"
+            <button class="m-btn-danger m-touch" onclick="deleteNote(${note.id})"
               title="Delete"
             >
               ${icons.delete()}

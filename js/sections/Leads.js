@@ -127,14 +127,14 @@ export function createLeadsSection(containerId) {
         </div>
         
         <div class="filter-bar lead-filters">
-          <button class="filter-btn ${currentStatus === 'all' ? 'active' : ''} m-touch" onclick="setLeadStatus('all')"
+          <button class="m-btn-secondary ${currentStatus === 'all' ? 'active' : ''} m-touch" onclick="setLeadStatus('all')"
           title="Show all leads">
           <span>All</span>
           <span class="filter-count m-badge-secondary">${allLeads.length}</span>
         </button>
         
         ${Object.entries(STATUS_CONFIG).map(([key, config]) => `
-          <button class="filter-btn ${currentStatus === key ? 'active' : ''} m-touch"
+          <button class="m-btn-secondary ${currentStatus === key ? 'active' : ''} m-touch"
             onclick="setLeadStatus('${key}')"
             title="${config.label} leads"
           >

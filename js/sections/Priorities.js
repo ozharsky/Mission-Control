@@ -118,46 +118,46 @@ export function createPrioritiesSection(containerId) {
       <!-- View Toggle & Filters -->
       <div class="priority-toolbar m-toolbar">
         <div class="filter-bar priority-filters m-scroll-x">
-          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" onclick="setPriorityFilter('all')"
+          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" onclick="setPriorityFilter('all')"
             title="Show all priorities">
             <span>All</span>
             <span class="filter-count m-badge">${activeCount}</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'active' ? 'active' : ''} m-touch" onclick="setPriorityFilter('active')"
+          <button class="m-btn-secondary ${currentFilter === 'active' ? 'active' : ''} m-touch" onclick="setPriorityFilter('active')"
             title="Active priorities">
             <span>Active</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'urgent' ? 'active' : ''} m-touch" onclick="setPriorityFilter('urgent')"
+          <button class="m-btn-secondary ${currentFilter === 'urgent' ? 'active' : ''} m-touch" onclick="setPriorityFilter('urgent')"
             title="Urgent & high priority">
             <span>${icons.flame()} Urgent</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'due-soon' ? 'active' : ''} m-touch" onclick="setPriorityFilter('due-soon')"
+          <button class="m-btn-secondary ${currentFilter === 'due-soon' ? 'active' : ''} m-touch" onclick="setPriorityFilter('due-soon')"
             title="Due within 3 days">
             <span>${icons.clock()} Due Soon</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'blocked' ? 'active' : ''} m-touch" onclick="setPriorityFilter('blocked')"
+          <button class="m-btn-secondary ${currentFilter === 'blocked' ? 'active' : ''} m-touch" onclick="setPriorityFilter('blocked')"
             title="Blocked by dependencies">
             <span>${icons.lock()} Blocked</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''} m-touch" onclick="setPriorityFilter('completed')"
+          <button class="m-btn-secondary ${currentFilter === 'completed' ? 'active' : ''} m-touch" onclick="setPriorityFilter('completed')"
             title="Completed priorities">
             <span>${icons.check()} Done</span>
           </button>
           
           <div class="filter-divider"></div>
           
-          <button class="filter-btn assignee-btn ${currentAssignee === 'KimiClaw' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary assignee-btn ${currentAssignee === 'KimiClaw' ? 'active' : ''} m-touch" 
             onclick="setPriorityAssignee('KimiClaw')"
             title="Assigned to KimiClaw">
             <span>${icons.bot()} Kimi</span>
           </button>
-          <button class="filter-btn assignee-btn ${currentAssignee === 'Oleg' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary assignee-btn ${currentAssignee === 'Oleg' ? 'active' : ''} m-touch" 
             onclick="setPriorityAssignee('Oleg')"
             title="Assigned to Oleg">
             <span>${icons.user()} Oleg</span>
           </button>
           ${currentAssignee ? `
-            <button class="filter-btn m-touch" onclick="setPriorityAssignee(null)" title="Clear assignee filter">
+            <button class="m-btn-secondary m-touch" onclick="setPriorityAssignee(null)" title="Clear assignee filter">
               <span>${icons.x()}</span>
             </button>
           ` : ''}
@@ -503,12 +503,9 @@ export function createPrioritiesSection(containerId) {
         </div>
         
         <div class="m-list-item-actions mobile-priority-actions">
-          <button class="m-touch mobile-priority-menu-btn" onclick="event.stopPropagation(); openEditPriorityModal(${priority.id})"
+          <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); openEditPriorityModal(${priority.id})"
                   title="Edit priority">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-              <path d="M7.5 15l7.5-7.5-2.5-2.5L5 12.5v2.5h2.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13.5 5.5l2.5-2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            ${icons.edit()}
           </button>
         </div>
       </div>

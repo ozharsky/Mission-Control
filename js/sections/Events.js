@@ -114,23 +114,23 @@ export function createEventsSection(containerId) {
           >
         </div>
         <div class="filter-bar event-filters">
-          <button class="filter-btn ${currentFilter === 'upcoming' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'upcoming' ? 'active' : ''} m-touch" 
             onclick="setEventFilter('upcoming')">
             <span>${icons.calendar()} Upcoming</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'confirmed' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'confirmed' ? 'active' : ''} m-touch" 
             onclick="setEventFilter('confirmed')">
             <span>${icons.check()} Confirmed</span>
           </button>
-        <button class="filter-btn ${currentFilter === 'tentative' ? 'active' : ''} m-touch" 
+        <button class="m-btn-secondary ${currentFilter === 'tentative' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('tentative')">
           <span>${icons.help()} Tentative</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'completed' ? 'active' : ''} m-touch" 
+        <button class="m-btn-secondary ${currentFilter === 'completed' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('completed')">
           <span>${icons.check()} Past</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" 
+        <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" 
           onclick="setEventFilter('all')">
           <span>All</span>
         </button>

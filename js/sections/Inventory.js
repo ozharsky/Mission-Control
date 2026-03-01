@@ -75,7 +75,7 @@ export function createInventorySection(containerId) {
           ${lastUpdate ? `
             <span class="m-caption last-update hide-mobile">Updated ${formatTimeAgo(lastUpdate)}</span>
           ` : ''}
-          <button class="m-touch m-btn m-btn-secondary" onclick="refreshPrinters()" id="refreshPrintersBtn">
+          <button class="m-btn-secondary m-touch" onclick="refreshPrinters()" id="refreshPrintersBtn">
             <i data-lucide="refresh-cw" class="lucide-icon"></i>
             Refresh
           </button>

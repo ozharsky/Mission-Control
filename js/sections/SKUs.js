@@ -128,24 +128,24 @@ export function createSKUsSection(containerId) {
       <!-- Filters & Search -->
       <div class="sku-toolbar">
         <div class="filter-bar sku-filters">
-          <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('all')"
           >
             <span>All</span>
             <span class="filter-count m-badge-secondary">${stats.total}</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'low' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'low' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('low')"
           >
             <span>${icons.alert()} Low</span>
             <span class="filter-count m-badge-danger">${stats.low}</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'medium' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'medium' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('medium')"
           >
             <span>${icons.chart()} Medium</span>
           </button>
-          <button class="filter-btn ${currentFilter === 'good' ? 'active' : ''} m-touch" 
+          <button class="m-btn-secondary ${currentFilter === 'good' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('good')"
           >
             <span>${icons.check()} Good</span>

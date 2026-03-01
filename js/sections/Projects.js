@@ -114,20 +114,20 @@ export function createProjectsSection(containerId) {
       
       <!-- Category Filters -->
       <div class="filter-bar project-filters m-scroll-x">
-        <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''} m-touch" onclick="setProjectFilter('all')">
+        <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" onclick="setProjectFilter('all')">
           <span>All</span>
           <span class="filter-count m-badge">${totalActive + done.length}</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'etsy' ? 'active' : ''} m-touch" onclick="setProjectFilter('etsy')">
+        <button class="m-btn-secondary ${currentFilter === 'etsy' ? 'active' : ''} m-touch" onclick="setProjectFilter('etsy')">
           <span>${icons.cart()} Etsy</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'photo' ? 'active' : ''} m-touch" onclick="setProjectFilter('photo')">
+        <button class="m-btn-secondary ${currentFilter === 'photo' ? 'active' : ''} m-touch" onclick="setProjectFilter('photo')">
           <span>${icons.camera()} Photo</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'b2b' ? 'active' : ''} m-touch" onclick="setProjectFilter('b2b')">
+        <button class="m-btn-secondary ${currentFilter === 'b2b' ? 'active' : ''} m-touch" onclick="setProjectFilter('b2b')">
           <span>${icons.store()} B2B</span>
         </button>
-        <button class="filter-btn ${currentFilter === 'high' ? 'active' : ''} m-touch" onclick="setProjectFilter('high')">
+        <button class="m-btn-secondary ${currentFilter === 'high' ? 'active' : ''} m-touch" onclick="setProjectFilter('high')">
           <span>${icons.flame()} High Priority</span>
         </button>
       </div>
