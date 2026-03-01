@@ -77,18 +77,37 @@ export default async function handler(req, res) {
       });
     }
     
-    // Transform SimplyPrint data to expected format
-    // SimplyPrint returns { status: true, data: [...] }
+    // Transform SimplyPrint data to frontend format
+    // SimplyPrint returns { status: true, data: [{ printer: { name, state, temps, ... }, job: {...} }] }
     let printers = [];
     if (data.status && Array.isArray(data.data)) {
-      printers = data.data;
-    } else if (Array.isArray(data)) {
-      printers = data;
-    } else if (data.printers) {
-      printers = data.printers;
+      printers = data.data.map((item, index) => {
+        const p = item.printer || {};
+        const job = item.job || {};
+        
+        return {
+          id: item.id || index + 1,
+          name: p.name || `Printer ${index + 1}`,
+          status: p.state === 'printing' ? 'printing' : 
+                  p.state === 'paused' ? 'paused' :
+                  p.state === 'error' ? 'error' :
+                  p.online ? 'operational' : 'offline',
+          temp: p.temps?.current?.tool?.[0] || 0,
+          targetTemp: p.temps?.target?.tool?.[0] || 0,
+          bedTemp: p.temps?.current?.bed || 0,
+          targetBedTemp: p.temps?.target?.bed || 0,
+          progress: job.percentage || 0,
+          job: job.state ? {
+            name: job.file || 'Unknown',
+            timeLeft: job.time ? Math.max(0, job.time - (job.time * (job.percentage || 0) / 100)) : 0
+          } : null,
+          hasAMS: false,
+          filaments: []
+        };
+      });
     }
     
-    console.log('[Vercel API] Transformed printers count:', printers.length);
+    console.log('[Vercel API] Transformed printers:', printers.length);
     
     return res.status(200).json({ printers });
     
