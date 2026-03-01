@@ -60,9 +60,12 @@ export default async function handler(req, res) {
     // Try different SimplyPrint endpoints
     const endpoints = [
       `https://api.simplyprint.io/${companyId}/printers`,
-      `https://api.simplyprint.io/${companyId}/printers/list`,
-      `https://api.simplyprint.io/v1/${companyId}/printers`,
-      `https://api.simplyprint.io/public/${companyId}/printers`
+      `https://api.simplyprint.io/${companyId}/printer`,
+      `https://api.simplyprint.io/printers?company_id=${companyId}`,
+      `https://simplyprint.io/api/${companyId}/printers`,
+      `https://api.simplyprint.io/v2/${companyId}/printers`,
+      `https://api.simplyprint.io/${companyId}/devices`,
+      `https://api.simplyprint.io/devices?company_id=${companyId}`
     ];
     
     let response = null;
