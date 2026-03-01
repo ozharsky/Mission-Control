@@ -382,7 +382,7 @@ export function createRevenueSection(containerId) {
             Import your Etsy Orders CSV to see revenue trends and insights.<br>
             <strong>Go to:</strong> Etsy Shop Manager → Orders & Shipping → Download CSV
           </div>
-          <button class="m-btn-primary m-touch-lg" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
+          <button class="m-btn-primary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
         </div>
       `}
     `

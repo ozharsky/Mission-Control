@@ -227,7 +227,7 @@ export function createLeadsSection(containerId) {
           <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); updateLeadStatus(${lead.id}, 'contacted')"
             ${lead.status === 'contacted' ? 'disabled' : ''}
           >${icons.mail()} Contact</button>
-          <button class="m-btn-secondary m-touch danger" onclick="event.stopPropagation(); deleteLead(${lead.id})"
+          <button class="m-btn-danger m-touch" onclick="event.stopPropagation(); deleteLead(${lead.id})"
           >${icons.delete()} Delete</button>
         </div>
       </div>

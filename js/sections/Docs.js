@@ -129,7 +129,7 @@ export function createDocsSection(containerId) {
           >
         </div>
         <div class="filter-bar docs-filters">
-          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''}"
+          <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch"
             onclick="setDocFilter('all')"
           >
             <span>All</span>
@@ -137,7 +137,7 @@ export function createDocsSection(containerId) {
           </button>
           ${Object.entries(CATEGORIES).map(([cat, config]) =>
             categoryCounts[cat] ? `
-              <button class="m-btn-secondary ${currentFilter === cat ? 'active' : ''}"
+              <button class="m-btn-secondary ${currentFilter === cat ? 'active' : ''} m-touch"
                 onclick="setDocFilter('${cat}')"
               >
                 <span>${icons[config.icon]()} ${cat}</span>

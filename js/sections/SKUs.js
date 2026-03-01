@@ -219,7 +219,7 @@ export function createSKUsSection(containerId) {
         <div class="sku-actions">
           <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); openSKUModal(${sku.id})"
           >${icons.edit()} Edit</button>
-          <button class="m-btn-secondary m-touch danger" onclick="event.stopPropagation(); deleteSKU(${sku.id})"
+          <button class="m-btn-danger m-touch" onclick="event.stopPropagation(); deleteSKU(${sku.id})"
           >${icons.delete()} Delete</button>
         </div>
       </div>

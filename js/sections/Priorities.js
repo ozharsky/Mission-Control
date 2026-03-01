@@ -378,7 +378,7 @@ export function createPrioritiesSection(containerId) {
         </div>
         
         ${!priority.completed ? `
-          <button class="m-btn-secondary" onclick="event.stopPropagation(); quickComplete(${priority.id})"
+          <button class="m-btn-secondary m-touch" onclick="event.stopPropagation(); quickComplete(${priority.id})"
           >${icons.check()}</button>
         ` : `<span style="color: var(--accent-success);">${icons.check()}</span>`}
       </div>

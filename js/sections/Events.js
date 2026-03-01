@@ -235,7 +235,7 @@ export function createEventsSection(containerId) {
                 onclick="event.stopPropagation(); updateEventStatus(${event.id}, 'completed')"
               >${icons.check()} Complete</button>
             ` : ''}
-            <button class="m-btn-secondary m-touch danger"
+            <button class="m-btn-danger m-touch"
               onclick="event.stopPropagation(); deleteEvent(${event.id})"
             >${icons.delete()} Delete</button>
           </div>
