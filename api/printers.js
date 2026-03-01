@@ -105,6 +105,15 @@ export default async function handler(req, res) {
     const data = await response.json();
     console.log('[Vercel API] SimplyPrint raw response:', JSON.stringify(data));
     
+    // Return the raw response for debugging
+    if (req.query.debug === 'raw') {
+      return res.status(200).json({ 
+        simplyPrintResponse: data,
+        endpointUsed: simplyPrintUrl,
+        companyId: companyId.substring(0, 5) + '...'
+      });
+    }
+    
     // Transform SimplyPrint data to expected format
     let printers = [];
     if (Array.isArray(data)) {
