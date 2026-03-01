@@ -8,7 +8,7 @@ import { loadingStates } from './LoadingStates.js'
 export const dataManager = {
   // Export all data to JSON file
   async exportAll() {
-    const loader = loadingStates.showFullScreen('Preparing export...')
+    const loader = loadingStates.showOverlay('body', { text: 'Preparing export...' })
     
     try {
       const state = store.getState()
@@ -89,7 +89,7 @@ export const dataManager = {
   
   // Import data from JSON file
   async importFile(file) {
-    const loader = loadingStates.showFullScreen('Reading file...')
+    const loader = loadingStates.showOverlay('body', { text: 'Reading file...' })
     
     try {
       // Validate file size (max 50MB)
@@ -294,7 +294,7 @@ export const dataManager = {
     
     document.getElementById('importDialog')?.remove()
     
-    const loader = loadingStates.showFullScreen('Importing data...')
+    const loader = loadingStates.showOverlay('body', { text: 'Importing data...' })
     loader.showProgress()
     
     try {
@@ -392,7 +392,7 @@ export const dataManager = {
       return
     }
     
-    const loader = loadingStates.showFullScreen('Clearing data...')
+    const loader = loadingStates.showOverlay('body', { text: 'Clearing data...' })
     
     try {
       // Clear all store data

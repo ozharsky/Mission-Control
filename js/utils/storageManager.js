@@ -84,7 +84,7 @@ class StorageManager {
     
     try {
       // Show loading state
-      const loadingOverlay = loadingStates.showFullScreen('Uploading file...')
+      const loadingOverlay = loadingStates.showOverlay('body', { text: 'Uploading file...' })
       
       // Import Firebase Storage functions dynamically
       const { ref, uploadBytes, getDownloadURL } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js')
