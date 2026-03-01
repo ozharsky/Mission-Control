@@ -24,6 +24,13 @@ export const printerAPI = {
       }
       
       const data = await res.json()
+      
+      // Check if API returned an error
+      if (data.error) {
+        console.warn('[Printers] API returned error:', data.error)
+        return getMockPrinters()
+      }
+      
       return data.printers || getMockPrinters()
     } catch (e) {
       console.warn('[Printers] API unavailable (CORS/network error):', e.message)
