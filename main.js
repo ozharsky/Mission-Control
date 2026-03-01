@@ -8,7 +8,7 @@ import { animationController } from './js/components/ui/Animations.js'
 import { lazyLoader } from './js/utils/lazyLoader-v2.js'
 
 // Cache-busting version - increment when deploying updates
-const APP_VERSION = 'v104'
+const APP_VERSION = 'v105'
 
 // Initialize namespace first (replaces global window pollution)
 import './js/namespace.js'
