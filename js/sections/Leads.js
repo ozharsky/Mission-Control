@@ -182,7 +182,7 @@ export function createLeadsSection(containerId) {
             >${statusConfig.icon} ${statusConfig.label}</span>
             
             ${lead.board && lead.board !== 'all' ? `
-              <span class="lead-board m-caption">${getBoardEmoji(lead.board)} ${lead.board}</span>
+              <span class="lead-board m-caption">${getBoardIcon(lead.board)} ${lead.board}</span>
             ` : ''}
           </div>
           
@@ -259,15 +259,15 @@ export function createLeadsSection(containerId) {
   return { render }
 }
 
-function getBoardEmoji(board) {
-  const emojis = {
+function getBoardIcon(board) {
+  const boardIcons = {
     'etsy': icons.cart(),
     'photography': icons.camera(),
     'wholesale': icons.store(),
     '3dprint': icons.printer(),
     'all': icons.building()
   }
-  return emojis[board] || icons.clipboard()
+  return boardIcons[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {

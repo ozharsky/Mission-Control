@@ -186,7 +186,7 @@ export function createEventsSection(containerId) {
               >${statusConfig.icon} ${statusConfig.label}</span>
               
               ${event.board && event.board !== 'all' ? `
-                <span class="event-board m-caption">${getBoardEmoji(event.board)} ${event.board}</span>
+                <span class="event-board m-caption">${getBoardIcon(event.board)} ${event.board}</span>
               ` : ''}
             </div>
           </div>
@@ -270,15 +270,15 @@ export function createEventsSection(containerId) {
   return { render }
 }
 
-function getBoardEmoji(board) {
-  const emojis = {
+function getBoardIcon(board) {
+  const boardIcons = {
     'etsy': icons.cart(),
     'photography': icons.camera(),
     'wholesale': icons.store(),
     '3dprint': icons.printer(),
     'all': icons.building()
   }
-  return emojis[board] || icons.clipboard()
+  return boardIcons[board] || icons.clipboard()
 }
 
 function escapeHtml(text) {
