@@ -1,6 +1,6 @@
 /* ========================================
    MOBILE VISUAL UTILITIES - Consistent Mobile Classes
-   Version: v102
+   Version: v104
    
    Usage:
    - .m-card: Card container for mobile
@@ -24,6 +24,210 @@
    - .m-stat: Stat card
    ======================================== */
 
+/* ========================================
+   UNIFIED TYPOGRAPHY SYSTEM
+   ========================================
+   
+   This system ensures consistent typography
+   across all mobile components. Use these
+   classes instead of ad-hoc font-size values.
+   
+   Hierarchy:
+   - Display: Page/section headers
+   - Headings: Card titles, section headers
+   - Body: Primary content text
+   - UI: Buttons, labels, metadata
+   - Caption: Secondary/supporting text
+   ======================================== */
+
+/* Display Typography - Major page/section headers */
+.m-display-xl {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.m-display-lg {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.m-display {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+/* Heading Typography - Card titles, section headers */
+.m-heading-xl {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.m-heading-lg {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.m-heading {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.m-heading-sm {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+/* Body Typography - Primary content */
+.m-body-xl {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.m-body-lg {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.m-body {
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.m-body-sm {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* UI Typography - Buttons, labels, interactive elements */
+.m-ui-xl {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.m-ui-lg {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.m-ui {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.m-ui-sm {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+/* Caption Typography - Metadata, hints, secondary info */
+.m-caption-lg {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.m-caption {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.m-caption-sm {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* Numeric Typography - Stats, currency, tabular data */
+.m-numeric-xl {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.m-numeric-lg {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.m-numeric {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.m-numeric-sm {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Legacy Typography Classes (kept for backward compatibility) */
+.m-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.m-body-legacy {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.m-caption-legacy {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
 @media (max-width: 768px) {
   /* Card Container */
   .m-card {
@@ -44,24 +248,17 @@
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* Typography */
+  /* Typography - Using Unified System */
   .m-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    line-height: 1.3;
+    composes: m-heading-lg;
   }
   
   .m-body {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
+    composes: m-body;
   }
   
   .m-caption {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.4;
+    composes: m-caption;
   }
   
   /* Buttons - React App Design System Match */
@@ -450,8 +647,7 @@
   }
 }
 
-/* ========================================
-   SMALL PHONE OPTIMIZATIONS (max-width: 380px)
+/* SMALL PHONE OPTIMIZATIONS (max-width: 380px)
    ======================================== */
 
 @media (max-width: 380px) {
@@ -460,15 +656,45 @@
     margin-bottom: 0.625rem;
   }
   
+  /* Typography Scale Down */
+  .m-display-xl { font-size: 1.5rem; }
+  .m-display-lg { font-size: 1.375rem; }
+  .m-display { font-size: 1.125rem; }
+  
+  .m-heading-xl { font-size: 1rem; }
+  .m-heading-lg { font-size: 0.9375rem; }
+  .m-heading { font-size: 0.875rem; }
+  .m-heading-sm { font-size: 0.8125rem; }
+  
+  .m-body-xl { font-size: 0.9375rem; }
+  .m-body-lg { font-size: 0.875rem; }
+  .m-body { font-size: 0.8125rem; }
+  .m-body-sm { font-size: 0.75rem; }
+  
+  .m-ui-xl { font-size: 0.9375rem; }
+  .m-ui-lg { font-size: 0.875rem; }
+  .m-ui { font-size: 0.8125rem; }
+  .m-ui-sm { font-size: 0.75rem; }
+  
+  .m-caption-lg { font-size: 0.75rem; }
+  .m-caption { font-size: 0.6875rem; }
+  .m-caption-sm { font-size: 0.625rem; }
+  
+  .m-numeric-xl { font-size: 1.5rem; }
+  .m-numeric-lg { font-size: 1.25rem; }
+  .m-numeric { font-size: 1.125rem; }
+  .m-numeric-sm { font-size: 0.9375rem; }
+  
+  /* Legacy classes */
   .m-title {
     font-size: 0.9375rem;
   }
   
-  .m-body {
+  .m-body-legacy {
     font-size: 0.8125rem;
   }
   
-  .m-caption {
+  .m-caption-legacy {
     font-size: 0.6875rem;
   }
   
