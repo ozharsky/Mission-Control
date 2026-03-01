@@ -1,7 +1,7 @@
 // Service Worker for Mission Control V5
 // Provides offline support and caching
 
-const CACHE_NAME = 'mission-control-v5-cache-v105'
+const CACHE_NAME = 'mission-control-v5-cache-v106'
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -19,6 +19,8 @@ const STATIC_ASSETS = [
   './js/utils/lazyLoader-v2.js',
   './js/components/MobileNav.js',
   './js/components/ui/MetricCard.js',
+  './js/components/ui/Button.js',
+  './js/components/ui/Badge.js',
   './css/variables.css',
   './css/base.css',
   './css/components.css',

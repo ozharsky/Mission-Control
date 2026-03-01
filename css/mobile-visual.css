@@ -64,7 +64,7 @@
     line-height: 1.4;
   }
   
-  /* Buttons */
+  /* Buttons - React App Design System Match */
   .m-btn {
     display: inline-flex;
     align-items: center;
@@ -80,17 +80,138 @@
     cursor: pointer;
     transition: all 0.2s;
     min-height: 44px;
+    white-space: nowrap;
   }
   
+  .m-btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* Primary Button - Solid fill with accent color */
   .m-btn-primary {
     background: var(--accent-primary);
     color: white;
     border-color: var(--accent-primary);
   }
   
+  .m-btn-primary:hover {
+    background: var(--accent-primary-hover);
+    border-color: var(--accent-primary-hover);
+  }
+  
   .m-btn-primary:active {
     transform: scale(0.98);
     opacity: 0.9;
+  }
+  
+  /* Secondary Button - Subtle background */
+  .m-btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+  
+  .m-btn-secondary:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border-color-hover);
+  }
+  
+  .m-btn-secondary:active {
+    transform: scale(0.98);
+  }
+  
+  /* Ghost Button - Transparent background */
+  .m-btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: transparent;
+  }
+  
+  .m-btn-ghost:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+  
+  .m-btn-ghost:active {
+    transform: scale(0.98);
+    background: var(--bg-active);
+  }
+  
+  /* Destructive Button - Red/Danger actions */
+  .m-btn-destructive {
+    background: var(--accent-danger);
+    color: white;
+    border-color: var(--accent-danger);
+  }
+  
+  .m-btn-destructive:hover {
+    background: var(--accent-danger-hover);
+    border-color: var(--accent-danger-hover);
+  }
+  
+  .m-btn-destructive:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  /* Outline Button - Bordered style */
+  .m-btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+  
+  .m-btn-outline:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
+  }
+  
+  .m-btn-outline:active {
+    transform: scale(0.98);
+  }
+  
+  /* Button Sizes */
+  .m-btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    min-height: 36px;
+  }
+  
+  .m-btn-lg {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+  
+  /* Icon-only Button */
+  .m-btn-icon {
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .m-btn-icon.m-btn-sm {
+    padding: 0.375rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  /* Disabled State */
+  .m-btn:disabled,
+  .m-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  /* Button Group */
+  .m-btn-group {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+  
+  .m-btn-group .m-btn {
+    margin: 0;
   }
   
   /* Form Inputs */
@@ -111,19 +232,100 @@
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
   
-  /* Badges */
+  /* Badges - React App Design System Match */
   .m-badge {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.25rem;
-    padding: 0.2rem 0.5rem;
+    padding: 0.25rem 0.625rem;
     background: var(--bg-tertiary);
-    border-radius: var(--radius-sm);
-    font-size: 0.6875rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-secondary);
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     white-space: nowrap;
+    line-height: 1;
+  }
+  
+  /* Badge Variants */
+  .m-badge-primary {
+    background: var(--accent-primary);
+    color: white;
+  }
+  
+  .m-badge-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+  }
+  
+  .m-badge-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+  }
+  
+  .m-badge-warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-warning);
+  }
+  
+  .m-badge-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+  }
+  
+  .m-badge-info {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-info);
+  }
+  
+  .m-badge-outline {
+    background: transparent;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+  }
+  
+  /* Priority Badges */
+  .m-badge-priority-high {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+  }
+  
+  .m-badge-priority-medium {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-warning);
+  }
+  
+  .m-badge-priority-low {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+  }
+  
+  /* Status Badges */
+  .m-badge-status-active {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--accent-primary);
+  }
+  
+  .m-badge-status-done {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-success);
+  }
+  
+  .m-badge-status-blocked {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+  }
+  
+  /* Count Badge - Small circular indicator */
+  .m-badge-count {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
   }
   
   /* Tags */
@@ -270,9 +472,19 @@
     font-size: 0.6875rem;
   }
   
-  .m-btn {
+  .m-btn,
+  .m-btn-primary,
+  .m-btn-secondary,
+  .m-btn-ghost,
+  .m-btn-destructive,
+  .m-btn-outline {
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
+  }
+  
+  .m-btn-lg {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
   }
   
   .m-grid-2 {
