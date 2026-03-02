@@ -80,6 +80,7 @@ setupGlobalErrorHandler()
 window.errorBoundary = errorBoundary
 window.offlineIndicator = offlineIndicator
 window.syncStatus = syncStatus
+window.toast = toast
 
 // Detect low-power devices and adjust animations
 const isLowPower = isLowPowerDevice()
@@ -143,14 +144,56 @@ async function init() {
     // Initialize navigation based on viewport
     if (window.innerWidth < 1024) {
       // Mobile: use new mobile nav
-      const mobileNavContainer = document.getElementById('mobileNavContainer')
-      if (mobileNavContainer) {
+      const bottomNav = document.getElementById('bottomNav')
+      if (bottomNav) {
         const mobileNav = createMobileNav()
-        mobileNavContainer.appendChild(mobileNav)
+        // Insert mobile nav before bottomNav and hide bottomNav
+        if (bottomNav.parentNode) {
+          bottomNav.parentNode.insertBefore(mobileNav, bottomNav)
+          bottomNav.style.display = 'none'
+        }
       }
     } else {
       // Desktop: use existing sidebar nav
-      createNavigation()
+      const sidebarNav = document.getElementById('sidebarNav')
+      if (sidebarNav) {
+        // Clear existing content
+        sidebarNav.innerHTML = ''
+        
+        // Create navigation items
+        const navItems = [
+          { id: 'dashboard', label: 'Dashboard', icon: 'home', active: true },
+          { id: 'projects', label: 'Projects', icon: 'folder-kanban' },
+          { id: 'priorities', label: 'Priorities', icon: 'star' },
+          { id: 'revenue', label: 'Revenue', icon: 'dollar-sign' },
+          { id: 'inventory', label: 'Printers', icon: 'printer' },
+          { id: 'calendar', label: 'Calendar', icon: 'calendar' },
+          { id: 'events', label: 'Events', icon: 'calendar-days' },
+          { id: 'notes', label: 'Notes', icon: 'file-text' },
+          { id: 'skus', label: 'SKUs', icon: 'package' },
+          { id: 'leads', label: 'Leads', icon: 'users' },
+          { id: 'timeline', label: 'Timeline', icon: 'clock' },
+          { id: 'review', label: 'Review', icon: 'clipboard-check' },
+          { id: 'docs', label: 'Docs', icon: 'folder' },
+          { id: 'settings', label: 'Settings', icon: 'settings' }
+        ]
+        
+        // Create navigation using Navigation component
+        const { Navigation } = await import('./js/components/Navigation.js')
+        const nav = Navigation({
+          items: navItems,
+          mode: 'sidebar',
+          onNavigate: (itemId) => {
+            if (window.showSection) {
+              window.showSection(itemId)
+            }
+          }
+        })
+        
+        if (nav) {
+          sidebarNav.appendChild(nav)
+        }
+      }
     }
   } catch (err) {
     console.error('Navigation failed:', err)
@@ -385,6 +428,55 @@ async function showSection(sectionId) {
 
 // Expose showSection globally for navigation
 window.showSection = showSection
+
+// Global navigation update function
+window.updateNavigation = function(sectionId) {
+  // Update sidebar nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const itemId = item.getAttribute('data-nav-id')
+    if (itemId === sectionId) {
+      item.classList.add('nav-item--active')
+      item.setAttribute('aria-current', 'page')
+    } else {
+      item.classList.remove('nav-item--active')
+      item.setAttribute('aria-current', 'false')
+    }
+  })
+  
+  // Update bottom nav items
+  document.querySelectorAll('.bottom-nav__item').forEach(item => {
+    const itemId = item.getAttribute('data-nav-id')
+    if (itemId === sectionId) {
+      item.classList.add('bottom-nav__item--active')
+      item.setAttribute('aria-current', 'page')
+    } else {
+      item.classList.remove('bottom-nav__item--active')
+      item.setAttribute('aria-current', 'false')
+    }
+  })
+  
+  // Update page title
+  const pageTitle = document.getElementById('pageTitle')
+  if (pageTitle) {
+    const titleMap = {
+      dashboard: 'Dashboard',
+      projects: 'Projects',
+      priorities: 'Priorities',
+      revenue: 'Revenue',
+      leads: 'Leads',
+      events: 'Events',
+      calendar: 'Calendar',
+      inventory: 'Printers',
+      skus: 'SKUs',
+      timeline: 'Timeline',
+      review: 'Review',
+      docs: 'Docs',
+      notes: 'Notes',
+      settings: 'Settings'
+    }
+    pageTitle.textContent = titleMap[sectionId] || 'Mission Control'
+  }
+}
 
 // Initialize app with error boundary
 if (document.readyState === 'loading') {

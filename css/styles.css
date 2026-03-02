@@ -2132,3 +2132,890 @@ a:focus-visible {
 .spinning {
   animation: spin 1s linear infinite;
 }
+
+/* ============================================
+   ANIMATION KEYFRAMES & UTILITIES
+   ============================================ */
+
+/* Fade Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Slide Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* Scale Animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Shimmer Animation for Skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Ripple Effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Shake Animation (for errors) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+/* Progress Bar Indeterminate Animation */
+@keyframes progressIndeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Page Transition Keyframes */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* ============================================
+   TRANSITION UTILITIES
+   ============================================ */
+
+.transition-all {
+  transition: all var(--transition-base);
+}
+
+.transition-colors {
+  transition: color var(--transition-base),
+              background-color var(--transition-base),
+              border-color var(--transition-base);
+}
+
+.transition-transform {
+  transition: transform var(--transition-base);
+}
+
+.transition-opacity {
+  transition: opacity var(--transition-base);
+}
+
+.transition-shadow {
+  transition: box-shadow var(--transition-base);
+}
+
+.transition-none {
+  transition: none !important;
+}
+
+/* Duration Utilities */
+.duration-fast {
+  transition-duration: 100ms;
+}
+
+.duration-normal {
+  transition-duration: 150ms;
+}
+
+.duration-slow {
+  transition-duration: 200ms;
+}
+
+.duration-page {
+  transition-duration: 400ms;
+}
+
+/* Easing Utilities */
+.ease-linear {
+  transition-timing-function: linear;
+}
+
+.ease-in {
+  transition-timing-function: ease-in;
+}
+
+.ease-out {
+  transition-timing-function: ease-out;
+}
+
+.ease-in-out {
+  transition-timing-function: ease-in-out;
+}
+
+.ease-spring {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
+
+.animate-fade-in {
+  animation: fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideInUp 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideInDown 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale-out {
+  animation: scaleOut 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 400ms ease-in-out;
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Animation Duration Utilities */
+.animate-fast {
+  animation-duration: 150ms;
+}
+
+.animate-normal {
+  animation-duration: 300ms;
+}
+
+.animate-slow {
+  animation-duration: 500ms;
+}
+
+/* Animation Delay Utilities */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Animation Fill Mode */
+.animate-forwards {
+  animation-fill-mode: forwards;
+}
+
+.animate-backwards {
+  animation-fill-mode: backwards;
+}
+
+.animate-both {
+  animation-fill-mode: both;
+}
+
+/* ============================================
+   ENHANCED COMPONENT STYLES
+   ============================================ */
+
+/* Card Hover Effects */
+.card {
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 150ms ease;
+}
+
+.card:hover {
+  border-color: var(--color-border-hover);
+}
+
+.card--hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card--clickable {
+  cursor: pointer;
+}
+
+.card--clickable:active {
+  transform: scale(0.98);
+}
+
+/* Button Enhancements */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 100ms ease,
+              background-color 150ms ease,
+              border-color 150ms ease,
+              box-shadow 150ms ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn--ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn--ripple:active::after {
+  animation: ripple 400ms ease-out;
+}
+
+.btn--loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Input Focus Animation */
+.form-input,
+.form-select,
+.form-textarea {
+  transition: border-color 150ms ease,
+              box-shadow 150ms ease,
+              transform 100ms ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  transform: translateY(-1px);
+}
+
+.form-input--error {
+  animation: shake 400ms ease-in-out;
+  border-color: var(--color-danger) !important;
+}
+
+/* Navigation Item Animation */
+.nav-item {
+  position: relative;
+  transition: background-color 150ms ease,
+              color 150ms ease;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 3px;
+  height: 60%;
+  background-color: var(--color-primary);
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item--active::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+/* Bottom Nav Animation */
+.bottom-nav__item {
+  transition: color 150ms ease,
+              transform 100ms ease;
+}
+
+.bottom-nav__item:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   SKELETON LOADING STYLES
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-hover) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton--text {
+  height: 1em;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton--text:last-child {
+  width: 80%;
+}
+
+.skeleton--title {
+  height: 1.5em;
+  width: 60%;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton--circle {
+  border-radius: 50%;
+}
+
+.skeleton--card {
+  height: 200px;
+  border-radius: var(--radius-lg);
+}
+
+.skeleton--image {
+  height: 150px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton--button {
+  height: 44px;
+  width: 120px;
+  border-radius: var(--radius-md);
+}
+
+.skeleton--pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Skeleton List Item Styles */
+.skeleton-list-item {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  animation: fadeIn 300ms ease forwards;
+}
+
+.skeleton-list-item__default {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.skeleton-list-item__compact {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.skeleton-list-item__detailed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Skeleton Card */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-card .card__header,
+.skeleton-card .card__body,
+.skeleton-card .card__footer {
+  pointer-events: none;
+}
+
+/* ============================================
+   LOADING SPINNER
+   ============================================ */
+
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner__circle {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner--sm .loading-spinner__circle {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+
+.loading-spinner--lg .loading-spinner__circle {
+  width: 40px;
+  height: 40px;
+  border-width: 3px;
+}
+
+.loading-spinner--primary .loading-spinner__circle {
+  border-top-color: var(--color-primary);
+}
+
+.loading-spinner--success .loading-spinner__circle {
+  border-top-color: var(--color-success);
+}
+
+.loading-spinner--danger .loading-spinner__circle {
+  border-top-color: var(--color-danger);
+}
+
+.loading-spinner--neutral .loading-spinner__circle {
+  border-top-color: var(--color-text-muted);
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+
+.progress-bar {
+  position: relative;
+  height: 8px;
+  background-color: var(--color-surface-hover);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-full);
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-bar--indeterminate .progress-bar__fill {
+  width: 50%;
+  animation: progressIndeterminate 1.5s ease-in-out infinite;
+}
+
+.progress-bar--sm {
+  height: 4px;
+}
+
+.progress-bar--lg {
+  height: 12px;
+}
+
+/* ============================================
+   STAGGER LIST ANIMATIONS
+   ============================================ */
+
+.stagger-list {
+  --stagger-delay: 50ms;
+}
+
+.stagger-list > * {
+  opacity: 0;
+  animation: slideInUp 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.stagger-list > *:nth-child(1) { animation-delay: calc(var(--stagger-delay) * 0); }
+.stagger-list > *:nth-child(2) { animation-delay: calc(var(--stagger-delay) * 1); }
+.stagger-list > *:nth-child(3) { animation-delay: calc(var(--stagger-delay) * 2); }
+.stagger-list > *:nth-child(4) { animation-delay: calc(var(--stagger-delay) * 3); }
+.stagger-list > *:nth-child(5) { animation-delay: calc(var(--stagger-delay) * 4); }
+.stagger-list > *:nth-child(6) { animation-delay: calc(var(--stagger-delay) * 5); }
+.stagger-list > *:nth-child(7) { animation-delay: calc(var(--stagger-delay) * 6); }
+.stagger-list > *:nth-child(8) { animation-delay: calc(var(--stagger-delay) * 7); }
+.stagger-list > *:nth-child(9) { animation-delay: calc(var(--stagger-delay) * 8); }
+.stagger-list > *:nth-child(10) { animation-delay: calc(var(--stagger-delay) * 9); }
+
+/* ============================================
+   MODAL ANIMATIONS
+   ============================================ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 900;
+}
+
+.modal-backdrop--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+.modal--open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   PAGE TRANSITIONS
+   ============================================ */
+
+.page-transition-enter {
+  animation: pageEnter 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.page-transition-exit {
+  animation: pageExit 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ============================================
+   FADE IN SECTIONS (Scroll Reveal)
+   ============================================ */
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-in-section--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   LOADING OVERLAY
+   ============================================ */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 15, 26, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  z-index: 9999;
+  animation: fadeIn 200ms ease;
+}
+
+.loading-overlay__message {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  margin: 0;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .skeleton {
+    animation: none;
+    background: var(--color-surface-hover);
+  }
+  
+  .loading-spinner__circle {
+    animation: none;
+    border-top-color: var(--color-primary);
+  }
+  
+  .progress-bar--indeterminate .progress-bar__fill {
+    animation: none;
+    width: 100%;
+  }
+  
+  .btn--ripple::after {
+    display: none;
+  }
+  
+  .card--hover-lift:hover,
+  .card--hover-scale:hover {
+    transform: none;
+  }
+  
+  .page-transition-enter,
+  .page-transition-exit,
+  .stagger-list > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .fade-in-section {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .modal-backdrop,
+  .modal {
+    transition: none;
+  }
+}
+
+/* ============================================
+   HOVER & INTERACTION UTILITIES
+   ============================================ */
+
+/* Link Hover Animation */
+.link-hover {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: currentColor;
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}
+
+/* Icon Button Hover */
+.icon-btn {
+  transition: transform 150ms ease,
+              background-color 150ms ease;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+/* Hover Lift Utility */
+.hover-lift {
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hover Scale Utility */
+.hover-scale {
+  transition: transform 150ms ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   CONTENT LOADING STATES
+   ============================================ */
+
+.is-loading {
+  pointer-events: none;
+}
+
+.is-loading > * {
+  pointer-events: none;
+}

@@ -1,624 +1,458 @@
 /**
- * Enhanced Loading States
- * Skeleton screens, progress indicators, and loading overlays
+ * LoadingStates.js - Loading state components for Mission Control V5
+ * Provides skeleton loaders, spinners, and progress indicators
  */
 
-class LoadingStates {
-  constructor() {
-    this.activeLoaders = new Map()
-    this.skeletons = new Map()
+/**
+ * SkeletonCard - Card placeholder with shimmer effect
+ * @param {Object} options - Configuration options
+ * @param {string} options.className - Additional CSS classes
+ * @param {boolean} options.hasImage - Whether to show image placeholder
+ * @param {boolean} options.hasFooter - Whether to show footer placeholder
+ * @returns {HTMLElement} Skeleton card element
+ */
+export function SkeletonCard(options = {}) {
+  const { className = '', hasImage = true, hasFooter = true } = options;
+  
+  const card = document.createElement('div');
+  card.className = `card skeleton-card ${className}`;
+  
+  let html = '';
+  
+  // Header
+  html += `
+    <div class="card__header">
+      <div class="skeleton skeleton--title" style="width: 60%; height: 24px;"></div>
+      <div class="skeleton skeleton--circle" style="width: 24px; height: 24px;"></div>
+    </div>
+  `;
+  
+  // Body
+  html += '<div class="card__body">';
+  
+  if (hasImage) {
+    html += '<div class="skeleton skeleton--image" style="width: 100%; height: 150px; margin-bottom: 16px;"></div>';
   }
-
-  /**
-   * Show a skeleton loading screen
-   * @param {string} containerId - Container element ID
-   * @param {Object} options - Options
-   */
-  showSkeleton(containerId, options = {}) {
-    const container = document.getElementById(containerId)
-    if (!container) {
-      console.warn(`Container #${containerId} not found`)
-      return
-    }
-
-    const { 
-      type = 'card', 
-      count = 1,
-      preserveContent = false 
-    } = options
-
-    // Store original content if preserving
-    if (preserveContent && !this.skeletons.has(containerId)) {
-      this.skeletons.set(containerId, container.innerHTML)
-    }
-
-    const skeletonHTML = this.getSkeletonHTML(type, count)
-    container.innerHTML = skeletonHTML
-    container.setAttribute('data-loading', 'true')
-
-    return {
-      hide: () => this.hideSkeleton(containerId, preserveContent)
-    }
-  }
-
-  /**
-   * Hide skeleton and restore content
-   * @param {string} containerId - Container element ID
-   * @param {boolean} restoreContent - Whether to restore original content
-   */
-  hideSkeleton(containerId, restoreContent = false) {
-    const container = document.getElementById(containerId)
-    if (!container) return
-
-    container.removeAttribute('data-loading')
-
-    if (restoreContent && this.skeletons.has(containerId)) {
-      container.innerHTML = this.skeletons.get(containerId)
-      this.skeletons.delete(containerId)
-    }
-  }
-
-  /**
-   * Get skeleton HTML based on type
-   * @param {string} type - Skeleton type
-   * @param {number} count - Number of skeletons
-   * @returns {string} Skeleton HTML
-   */
-  getSkeletonHTML(type, count) {
-    const skeletons = {
-      card: `
-        <div class="skeleton-card">
-          <div class="skeleton skeleton-title"></div>
-          <div class="skeleton skeleton-text"></div>
-          <div class="skeleton skeleton-text short"></div>
-        </div>
-      `,
-      list: `
-        <div class="skeleton-list">
-          <div class="skeleton skeleton-item">
-            <div class="skeleton skeleton-avatar"></div>
-            <div class="skeleton skeleton-content">
-              <div class="skeleton skeleton-line"></div>
-              <div class="skeleton skeleton-line short"></div>
-            </div>
-          </div>
-        </div>
-      `,
-      table: `
-        <div class="skeleton-table">
-          <div class="skeleton skeleton-row header">
-            <div class="skeleton skeleton-cell"></div>
-            <div class="skeleton skeleton-cell"></div>
-            <div class="skeleton skeleton-cell"></div>
-          </div>
-          <div class="skeleton skeleton-row">
-            <div class="skeleton skeleton-cell"></div>
-            <div class="skeleton skeleton-cell"></div>
-            <div class="skeleton skeleton-cell"></div>
-          </div>
-        </div>
-      `,
-      stats: `
-        <div class="skeleton-stats">
-          <div class="skeleton skeleton-stat">
-            <div class="skeleton skeleton-circle"></div>
-            <div class="skeleton skeleton-value"></div>
-          </div>
-        </div>
-      `,
-      dashboard: `
-        <div class="skeleton-dashboard">
-          <div class="skeleton skeleton-header"></div>
-          <div class="skeleton skeleton-metrics">
-            <div class="skeleton skeleton-metric"></div>
-            <div class="skeleton skeleton-metric"></div>
-            <div class="skeleton skeleton-metric"></div>
-            <div class="skeleton skeleton-metric"></div>
-          </div>
-          <div class="skeleton skeleton-content"></div>
-        </div>
-      `
-    }
-
-    const template = skeletons[type] || skeletons.card
-    return Array(count).fill(template).join('')
-  }
-
-  /**
-   * Show a loading overlay
-   * @param {string} targetId - Target element ID (or 'body' for full page)
-   * @param {Object} options - Options
-   * @returns {Object} Loader controller
-   */
-  showOverlay(targetId = 'body', options = {}) {
-    const { 
-      message = 'Loading...', 
-      spinner = true,
-      blur = true,
-      progress = null 
-    } = options
-
-    const target = targetId === 'body' ? document.body : document.getElementById(targetId)
-    if (!target) {
-      console.warn(`Target #${targetId} not found`)
-      return { hide: () => {} }
-    }
-
-    const id = `loader-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    
-    const overlay = document.createElement('div')
-    overlay.id = id
-    overlay.className = `loading-overlay ${blur ? 'with-blur' : ''}`
-    overlay.setAttribute('role', 'status')
-    overlay.setAttribute('aria-live', 'polite')
-    overlay.innerHTML = `
-      <div class="loading-content">
-        ${spinner ? `<div class="loading-spinner" aria-hidden="true">
-          <svg viewBox="0 0 50 50">
-            <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="4">
-              <animate attributeName="stroke-dasharray" values="1,150;90,150;90,150" dur="1.5s" repeatCount="indefinite"/>
-              <animate attributeName="stroke-dashoffset" values="0;-35;-124" dur="1.5s" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </div>` : ''}
-        <div class="loading-message">${message}</div>
-        ${progress !== null ? `
-          <div class="loading-progress-container" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
-            <div class="loading-progress-bar" style="width: ${progress}%"></div>
-          </div>
-          <div class="loading-progress-text">${progress}%</div>
-        ` : ''}
+  
+  html += `
+    <div class="skeleton skeleton--text" style="width: 100%;"></div>
+    <div class="skeleton skeleton--text" style="width: 90%;"></div>
+    <div class="skeleton skeleton--text" style="width: 75%;"></div>
+  `;
+  
+  html += '</div>';
+  
+  // Footer
+  if (hasFooter) {
+    html += `
+      <div class="card__footer">
+        <div class="skeleton skeleton--button" style="width: 80px; height: 36px;"></div>
+        <div class="skeleton skeleton--button" style="width: 100px; height: 36px;"></div>
       </div>
-    `
-
-    // Position relative to target
-    if (target !== document.body) {
-      target.style.position = 'relative'
-    }
-
-    target.appendChild(overlay)
-    this.activeLoaders.set(id, { overlay, target })
-
-    return {
-      id,
-      updateProgress: (percent) => this.updateProgress(id, percent),
-      updateMessage: (newMessage) => this.updateMessage(id, newMessage),
-      hide: () => this.hideOverlay(id)
-    }
+    `;
   }
+  
+  card.innerHTML = html;
+  return card;
+}
 
-  /**
-   * Update loader progress
-   * @param {string} id - Loader ID
-   * @param {number} percent - Progress percentage
-   */
-  updateProgress(id, percent) {
-    const loader = this.activeLoaders.get(id)
-    if (!loader) return
-
-    const progressBar = loader.overlay.querySelector('.loading-progress-bar')
-    const progressText = loader.overlay.querySelector('.loading-progress-text')
-    const progressContainer = loader.overlay.querySelector('.loading-progress-container')
-
-    if (progressBar) {
-      progressBar.style.width = `${Math.min(100, Math.max(0, percent))}%`
-    }
-    if (progressText) {
-      progressText.textContent = `${Math.round(percent)}%`
-    }
-    if (progressContainer) {
-      progressContainer.setAttribute('aria-valuenow', Math.round(percent))
-    }
-  }
-
-  /**
-   * Update loader message
-   * @param {string} id - Loader ID
-   * @param {string} message - New message
-   */
-  updateMessage(id, message) {
-    const loader = this.activeLoaders.get(id)
-    if (!loader) return
-
-    const messageEl = loader.overlay.querySelector('.loading-message')
-    if (messageEl) {
-      messageEl.textContent = message
-    }
-  }
-
-  /**
-   * Hide loading overlay
-   * @param {string} id - Loader ID
-   */
-  hideOverlay(id) {
-    const loader = this.activeLoaders.get(id)
-    if (!loader) return
-
-    loader.overlay.classList.add('hiding')
+/**
+ * SkeletonList - List of skeleton items
+ * @param {Object} options - Configuration options
+ * @param {number} options.count - Number of items to render
+ * @param {string} options.className - Additional CSS classes
+ * @param {string} options.itemType - Type of list item ('default', 'compact', 'detailed')
+ * @returns {HTMLElement} Skeleton list element
+ */
+export function SkeletonList(options = {}) {
+  const { count = 5, className = '', itemType = 'default' } = options;
+  
+  const list = document.createElement('div');
+  list.className = `skeleton-list ${className}`;
+  
+  for (let i = 0; i < count; i++) {
+    const item = document.createElement('div');
+    item.className = 'skeleton-list-item';
+    item.style.animationDelay = `${i * 50}ms`;
     
-    setTimeout(() => {
-      if (loader.overlay.parentNode) {
-        loader.overlay.remove()
-      }
-      this.activeLoaders.delete(id)
-    }, 300)
-  }
-
-  /**
-   * Show an inline loader
-   * @param {HTMLElement} element - Element to show loader in
-   * @param {Object} options - Options
-   * @returns {Object} Loader controller
-   */
-  showInline(element, options = {}) {
-    if (!element) return { hide: () => {} }
-
-    const { size = 'small', replaceContent = false } = options
-    
-    const originalContent = replaceContent ? element.innerHTML : null
-    
-    const loader = document.createElement('span')
-    loader.className = `inline-loader ${size}`
-    loader.setAttribute('aria-hidden', 'true')
-    loader.innerHTML = `
-      <span class="inline-loader-dot"></span>
-      <span class="inline-loader-dot"></span>
-      <span class="inline-loader-dot"></span>
-    `
-
-    if (replaceContent) {
-      element.innerHTML = ''
+    if (itemType === 'compact') {
+      item.innerHTML = `
+        <div class="skeleton-list-item__compact">
+          <div class="skeleton skeleton--circle" style="width: 32px; height: 32px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton--text" style="width: 70%; height: 14px; margin-bottom: 4px;"></div>
+            <div class="skeleton skeleton--text" style="width: 40%; height: 12px;"></div>
+          </div>
+        </div>
+      `;
+    } else if (itemType === 'detailed') {
+      item.innerHTML = `
+        <div class="skeleton-list-item__detailed">
+          <div class="skeleton skeleton--title" style="width: 80%; height: 18px; margin-bottom: 8px;"></div>
+          <div class="skeleton skeleton--text" style="width: 100%; height: 14px; margin-bottom: 4px;"></div>
+          <div class="skeleton skeleton--text" style="width: 60%; height: 14px; margin-bottom: 8px;"></div>
+          <div style="display: flex; gap: 8px;">
+            <div class="skeleton" style="width: 60px; height: 20px; border-radius: 9999px;"></div>
+            <div class="skeleton" style="width: 80px; height: 20px; border-radius: 9999px;"></div>
+          </div>
+        </div>
+      `;
+    } else {
+      // Default
+      item.innerHTML = `
+        <div class="skeleton-list-item__default">
+          <div class="skeleton skeleton--circle" style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton--text" style="width: 60%; height: 16px; margin-bottom: 8px;"></div>
+            <div class="skeleton skeleton--text" style="width: 80%; height: 14px;"></div>
+          </div>
+          <div class="skeleton" style="width: 60px; height: 24px; border-radius: 4px; flex-shrink: 0;"></div>
+        </div>
+      `;
     }
     
-    element.appendChild(loader)
-    element.setAttribute('data-loading', 'true')
-
-    return {
-      hide: () => {
-        loader.remove()
-        element.removeAttribute('data-loading')
-        if (originalContent) {
-          element.innerHTML = originalContent
-        }
-      }
-    }
+    list.appendChild(item);
   }
+  
+  return list;
+}
 
-  /**
-   * Add skeleton styles
-   */
-  addStyles() {
-    if (document.getElementById('loading-states-styles')) return
+/**
+ * SkeletonText - Text line placeholder
+ * @param {Object} options - Configuration options
+ * @param {number} options.lines - Number of lines
+ * @param {string} options.className - Additional CSS classes
+ * @param {Array<number>} options.widths - Array of widths for each line (percentage)
+ * @returns {HTMLElement} Skeleton text element
+ */
+export function SkeletonText(options = {}) {
+  const { lines = 3, className = '', widths = [] } = options;
+  
+  const container = document.createElement('div');
+  container.className = `skeleton-text ${className}`;
+  
+  for (let i = 0; i < lines; i++) {
+    const line = document.createElement('div');
+    line.className = 'skeleton skeleton--text';
+    
+    // Use provided width or default pattern
+    const width = widths[i] || (i === lines - 1 ? 75 : 100);
+    line.style.width = `${width}%`;
+    line.style.height = '1em';
+    line.style.marginBottom = i < lines - 1 ? '0.5em' : '0';
+    
+    container.appendChild(line);
+  }
+  
+  return container;
+}
 
-    const styles = document.createElement('style')
-    styles.id = 'loading-states-styles'
-    styles.textContent = `
-      /* Skeleton Base */
-      .skeleton {
-        background: linear-gradient(
-          90deg,
-          var(--bg-tertiary) 25%,
-          var(--bg-elevated) 50%,
-          var(--bg-tertiary) 75%
-        );
-        background-size: 200% 100%;
-        animation: skeleton-shimmer 1.5s infinite;
-        border-radius: var(--radius-sm);
-      }
+/**
+ * LoadingSpinner - Circular loading spinner
+ * @param {Object} options - Configuration options
+ * @param {string} options.size - Size variant ('sm', 'md', 'lg')
+ * @param {string} options.variant - Color variant ('primary', 'success', 'danger', 'neutral')
+ * @param {string} options.className - Additional CSS classes
+ * @returns {HTMLElement} Loading spinner element
+ */
+export function LoadingSpinner(options = {}) {
+  const { size = 'md', variant = 'primary', className = '' } = options;
+  
+  const spinner = document.createElement('div');
+  spinner.className = `loading-spinner loading-spinner--${size} loading-spinner--${variant} ${className}`;
+  spinner.setAttribute('role', 'status');
+  spinner.setAttribute('aria-label', 'Loading');
+  
+  const circle = document.createElement('div');
+  circle.className = 'loading-spinner__circle';
+  
+  spinner.appendChild(circle);
+  
+  return spinner;
+}
 
-      @keyframes skeleton-shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
+/**
+ * ProgressBar - Linear progress indicator
+ * @param {Object} options - Configuration options
+ * @param {number} options.progress - Progress value (0-100)
+ * @param {string} options.size - Size variant ('sm', 'md', 'lg')
+ * @param {boolean} options.indeterminate - Whether to show indeterminate animation
+ * @param {string} options.className - Additional CSS classes
+ * @returns {HTMLElement} Progress bar element
+ */
+export function ProgressBar(options = {}) {
+  const { progress = 0, size = 'md', indeterminate = false, className = '' } = options;
+  
+  const container = document.createElement('div');
+  container.className = `progress-bar progress-bar--${size} ${indeterminate ? 'progress-bar--indeterminate' : ''} ${className}`;
+  container.setAttribute('role', 'progressbar');
+  container.setAttribute('aria-valuemin', '0');
+  container.setAttribute('aria-valuemax', '100');
+  container.setAttribute('aria-valuenow', indeterminate ? '' : progress.toString());
+  
+  const fill = document.createElement('div');
+  fill.className = 'progress-bar__fill';
+  fill.style.width = indeterminate ? '50%' : `${progress}%`;
+  
+  container.appendChild(fill);
+  
+  return container;
+}
 
-      /* Skeleton Card */
-      .skeleton-card {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        padding: 1.25rem;
-        margin-bottom: 1rem;
-      }
+/**
+ * Update progress bar value
+ * @param {HTMLElement} progressBar - Progress bar element
+ * @param {number} value - New progress value (0-100)
+ */
+export function updateProgressBar(progressBar, value) {
+  if (!progressBar) return;
+  
+  const fill = progressBar.querySelector('.progress-bar__fill');
+  if (fill) {
+    fill.style.width = `${Math.max(0, Math.min(100, value))}%`;
+  }
+  
+  progressBar.setAttribute('aria-valuenow', value.toString());
+}
 
-      .skeleton-title {
-        height: 1.5rem;
-        width: 60%;
-        margin-bottom: 1rem;
-      }
+/**
+ * SkeletonGrid - Grid of skeleton cards
+ * @param {Object} options - Configuration options
+ * @param {number} options.columns - Number of columns
+ * @param {number} options.rows - Number of rows
+ * @param {string} options.className - Additional CSS classes
+ * @returns {HTMLElement} Skeleton grid element
+ */
+export function SkeletonGrid(options = {}) {
+  const { columns = 3, rows = 2, className = '' } = options;
+  
+  const grid = document.createElement('div');
+  grid.className = `skeleton-grid grid grid--${columns} ${className}`;
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+  grid.style.gap = 'var(--space-4)';
+  
+  for (let i = 0; i < columns * rows; i++) {
+    const card = SkeletonCard({ hasImage: true, hasFooter: false });
+    card.style.animationDelay = `${i * 50}ms`;
+    grid.appendChild(card);
+  }
+  
+  return grid;
+}
 
-      .skeleton-text {
-        height: 1rem;
-        margin-bottom: 0.5rem;
-      }
+/**
+ * SkeletonTable - Table placeholder with rows
+ * @param {Object} options - Configuration options
+ * @param {number} options.rows - Number of rows
+ * @param {number} options.columns - Number of columns
+ * @param {boolean} options.hasHeader - Whether to show header row
+ * @param {string} options.className - Additional CSS classes
+ * @returns {HTMLElement} Skeleton table element
+ */
+export function SkeletonTable(options = {}) {
+  const { rows = 5, columns = 4, hasHeader = true, className = '' } = options;
+  
+  const table = document.createElement('div');
+  table.className = `skeleton-table ${className}`;
+  table.style.width = '100%';
+  
+  let html = '';
+  
+  // Header
+  if (hasHeader) {
+    html += '<div class="skeleton-table-header" style="display: grid; grid-template-columns: repeat(' + columns + ', 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--color-border);">';
+    for (let i = 0; i < columns; i++) {
+      html += `<div class="skeleton" style="height: 16px; width: ${60 + Math.random() * 30}%;"></div>`;
+    }
+    html += '</div>';
+  }
+  
+  // Rows
+  html += '<div class="skeleton-table-body">';
+  for (let i = 0; i < rows; i++) {
+    html += `<div class="skeleton-table-row" style="display: grid; grid-template-columns: repeat(${columns}, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--color-border); animation-delay: ${i * 50}ms;">`;
+    for (let j = 0; j < columns; j++) {
+      html += `<div class="skeleton" style="height: 14px; width: ${50 + Math.random() * 40}%;"></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  
+  table.innerHTML = html;
+  return table;
+}
 
-      .skeleton-text.short {
-        width: 40%;
-      }
+/**
+ * LoadingOverlay - Full-screen loading overlay
+ * @param {Object} options - Configuration options
+ * @param {string} options.message - Loading message
+ * @param {string} options.className - Additional CSS classes
+ * @returns {HTMLElement} Loading overlay element
+ */
+export function LoadingOverlay(options = {}) {
+  const { message = 'Loading...', className = '' } = options;
+  
+  const overlay = document.createElement('div');
+  overlay.className = `loading-overlay ${className}`;
+  overlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 15, 26, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 9999;
+    animation: fadeIn 200ms ease;
+  `;
+  
+  const spinner = LoadingSpinner({ size: 'lg', variant: 'primary' });
+  
+  const text = document.createElement('p');
+  text.className = 'loading-overlay__message';
+  text.textContent = message;
+  text.style.cssText = `
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin: 0;
+  `;
+  
+  overlay.appendChild(spinner);
+  overlay.appendChild(text);
+  
+  return overlay;
+}
 
-      /* Skeleton List */
-      .skeleton-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
+/**
+ * InlineLoader - Inline loading indicator for buttons/forms
+ * @param {Object} options - Configuration options
+ * @param {string} options.text - Loading text
+ * @param {string} options.size - Size variant ('sm', 'md')
+ * @returns {HTMLElement} Inline loader element
+ */
+export function InlineLoader(options = {}) {
+  const { text = 'Loading...', size = 'md' } = options;
+  
+  const loader = document.createElement('span');
+  loader.className = `inline-loader inline-loader--${size}`;
+  loader.style.cssText = `
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: inherit;
+  `;
+  
+  const spinner = LoadingSpinner({ size: size === 'sm' ? 'sm' : 'md', variant: 'neutral' });
+  spinner.style.cssText = `
+    width: ${size === 'sm' ? '14px' : '18px'};
+    height: ${size === 'sm' ? '14px' : '18px'};
+  `;
+  
+  const textSpan = document.createElement('span');
+  textSpan.textContent = text;
+  
+  loader.appendChild(spinner);
+  loader.appendChild(textSpan);
+  
+  return loader;
+}
 
-      .skeleton-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-      }
+/**
+ * ContentLoader - Wrapper that shows skeleton while loading
+ * @param {HTMLElement} container - Container element
+ * @param {string} type - Loader type ('card', 'list', 'text', 'grid')
+ * @param {Object} options - Loader options
+ */
+export function showContentLoader(container, type = 'card', options = {}) {
+  if (!container) return;
+  
+  // Store original content
+  container.dataset.originalContent = container.innerHTML;
+  
+  let loader;
+  switch (type) {
+    case 'list':
+      loader = SkeletonList(options);
+      break;
+    case 'text':
+      loader = SkeletonText(options);
+      break;
+    case 'grid':
+      loader = SkeletonGrid(options);
+      break;
+    case 'table':
+      loader = SkeletonTable(options);
+      break;
+    case 'card':
+    default:
+      loader = SkeletonCard(options);
+      break;
+  }
+  
+  container.innerHTML = '';
+  container.appendChild(loader);
+  container.classList.add('is-loading');
+}
 
-      .skeleton-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-
-      .skeleton-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .skeleton-line {
-        height: 0.875rem;
-      }
-
-      .skeleton-line.short {
-        width: 60%;
-      }
-
-      /* Skeleton Table */
-      .skeleton-table {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .skeleton-row {
-        display: flex;
-        gap: 1rem;
-        padding: 0.875rem;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-      }
-
-      .skeleton-row.header {
-        background: var(--bg-tertiary);
-      }
-
-      .skeleton-cell {
-        flex: 1;
-        height: 1rem;
-      }
-
-      /* Skeleton Stats */
-      .skeleton-stats {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
-
-      .skeleton-stat {
-        flex: 1;
-        min-width: 120px;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-md);
-      }
-
-      .skeleton-circle {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-      }
-
-      .skeleton-value {
-        flex: 1;
-        height: 1.5rem;
-      }
-
-      /* Skeleton Dashboard */
-      .skeleton-dashboard {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .skeleton-header {
-        height: 2rem;
-        width: 200px;
-      }
-
-      .skeleton-metrics {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-      }
-
-      .skeleton-metric {
-        height: 100px;
-        border-radius: var(--radius-md);
-      }
-
-      .skeleton-content {
-        height: 300px;
-        border-radius: var(--radius-md);
-      }
-
-      /* Loading Overlay */
-      .loading-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(10, 10, 15, 0.9);
-        backdrop-filter: blur(8px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        animation: loading-fade-in 0.3s ease;
-      }
-
-      .loading-overlay.with-blur {
-        backdrop-filter: blur(8px);
-      }
-
-      @keyframes loading-fade-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-
-      .loading-overlay.hiding {
-        animation: loading-fade-out 0.3s ease forwards;
-      }
-
-      @keyframes loading-fade-out {
-        to { opacity: 0; }
-      }
-
-      .loading-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        padding: 2rem;
-        text-align: center;
-      }
-
-      .loading-spinner {
-        width: 48px;
-        height: 48px;
-        color: var(--accent-primary);
-        animation: loading-spin 1s linear infinite;
-      }
-
-      @keyframes loading-spin {
-        to { transform: rotate(360deg); }
-      }
-
-      .loading-spinner svg {
-        width: 100%;
-        height: 100%;
-      }
-
-      .loading-message {
-        color: var(--text-secondary);
-        font-size: 0.9375rem;
-      }
-
-      .loading-progress-container {
-        width: 200px;
-        height: 4px;
-        background: var(--bg-tertiary);
-        border-radius: var(--radius-full);
-        overflow: hidden;
-        margin-top: 0.5rem;
-      }
-
-      .loading-progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-        border-radius: var(--radius-full);
-        transition: width 0.3s ease;
-      }
-
-      .loading-progress-text {
-        font-size: 0.875rem;
-        color: var(--text-muted);
-        margin-top: 0.5rem;
-      }
-
-      /* Inline Loader */
-      .inline-loader {
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        margin-left: 0.5rem;
-      }
-
-      .inline-loader.small .inline-loader-dot {
-        width: 6px;
-        height: 6px;
-      }
-
-      .inline-loader.medium .inline-loader-dot {
-        width: 8px;
-        height: 8px;
-      }
-
-      .inline-loader.large .inline-loader-dot {
-        width: 12px;
-        height: 12px;
-      }
-
-      .inline-loader-dot {
-        background: var(--accent-primary);
-        border-radius: 50%;
-        animation: inline-loader-bounce 1.4s ease-in-out infinite both;
-      }
-
-      .inline-loader-dot:nth-child(1) {
-        animation-delay: -0.32s;
-      }
-
-      .inline-loader-dot:nth-child(2) {
-        animation-delay: -0.16s;
-      }
-
-      @keyframes inline-loader-bounce {
-        0%, 80%, 100% { transform: scale(0); }
-        40% { transform: scale(1); }
-      }
-
-      /* Reduced Motion */
-      @media (prefers-reduced-motion: reduce) {
-        .skeleton {
-          animation: none;
-          background: var(--bg-tertiary);
-        }
-
-        .loading-spinner {
-          animation: none;
-        }
-
-        .loading-overlay {
-          animation: none;
-        }
-
-        .inline-loader-dot {
-          animation: none;
-          opacity: 0.5;
-        }
-      }
-
-      /* Mobile Adjustments */
-      @media (max-width: 768px) {
-        .loading-overlay {
-          position: fixed;
-        }
-
-        .skeleton-metrics {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-    `
-    document.head.appendChild(styles)
+/**
+ * Hide content loader and restore original content
+ * @param {HTMLElement} container - Container element
+ */
+export function hideContentLoader(container) {
+  if (!container) return;
+  
+  container.classList.remove('is-loading');
+  
+  if (container.dataset.originalContent) {
+    container.innerHTML = container.dataset.originalContent;
+    delete container.dataset.originalContent;
   }
 }
 
-// Create singleton instance
-export const loadingStates = new LoadingStates()
+/**
+ * Button loading state
+ * @param {HTMLButtonElement} button - Button element
+ * @param {boolean} isLoading - Whether button is loading
+ * @param {string} loadingText - Text to show while loading
+ */
+export function setButtonLoading(button, isLoading, loadingText = '') {
+  if (!button) return;
+  
+  if (isLoading) {
+    button.dataset.originalText = button.innerHTML;
+    button.disabled = true;
+    button.classList.add('btn--loading');
+    
+    if (loadingText) {
+      button.innerHTML = `<span class="btn__loader"></span>${loadingText}`;
+    }
+  } else {
+    button.disabled = false;
+    button.classList.remove('btn--loading');
+    
+    if (button.dataset.originalText) {
+      button.innerHTML = button.dataset.originalText;
+      delete button.dataset.originalText;
+    }
+  }
+}
 
-// Expose globally
-window.loadingStates = loadingStates
-
-// Auto-add styles on import
-loadingStates.addStyles()
+// Export all components
+export default {
+  SkeletonCard,
+  SkeletonList,
+  SkeletonText,
+  SkeletonGrid,
+  SkeletonTable,
+  LoadingSpinner,
+  ProgressBar,
+  updateProgressBar,
+  LoadingOverlay,
+  InlineLoader,
+  showContentLoader,
+  hideContentLoader,
+  setButtonLoading
+};
