@@ -274,7 +274,7 @@ export function createRevenueSection(containerId) {
         <div class="section-header__badges">
           ${trend.direction !== 'flat' ? `
             <span class="badge badge--${trend.direction === 'up' ? 'success' : 'danger'}">
-              <i data-lucide="trend-${trend.direction === 'up' ? 'up' : 'down'}"></i>
+              <i data-lucide="trending-${trend.direction === 'up' ? 'up' : 'down'}"></i>
               ${trend.percent.toFixed(0)}% vs last quarter
             </span>
           ` : ''}

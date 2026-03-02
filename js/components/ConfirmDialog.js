@@ -1,10 +1,11 @@
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 export function confirmDialog(options = {}) {
   const {
     title = 'Are you sure?',
     message = 'This action cannot be undone.',
-    icon = '⚠️',
+    icon: iconName = 'alert-triangle',
     confirmText = 'Confirm',
     cancelText = 'Cancel',
     danger = false,
@@ -21,12 +22,12 @@ export function confirmDialog(options = {}) {
     modal.setAttribute('aria-describedby', 'confirm-dialog-message')
     modal.innerHTML = `
       <div class="modal confirm-dialog scale-in" onclick="event.stopPropagation()">
-        <div class="confirm-dialog-icon ${danger ? 'danger' : ''}">${icon}</div>
+        <div class="confirm-dialog-icon ${danger ? 'danger' : ''}">${icon(iconName, 'confirm-dialog-lucide-icon')}</div>
         <div class="confirm-dialog-title" id="confirm-dialog-title">${title}</div>
         <div class="confirm-dialog-message" id="confirm-dialog-message">${message}</div>
         <div class="confirm-dialog-actions">
-          <button class="btn btn-secondary" id="confirmCancel" aria-label="${cancelText}">${cancelText}</button>
-          <button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" id="confirmOk" aria-label="${confirmText}">${confirmText}</button>
+          <button class="btn btn-secondary m-touch" id="confirmCancel" aria-label="${cancelText}">${cancelText}</button>
+          <button class="btn ${danger ? 'btn-danger' : 'btn-primary'} m-touch" id="confirmOk" aria-label="${confirmText}">${confirmText}</button>
         </div>
       </div>
     `
@@ -106,17 +107,17 @@ export function confirmDelete(itemName = 'this item') {
   return confirmDialog({
     title: 'Delete?',
     message: `Are you sure you want to delete "${itemName}"? This cannot be undone.`,
-    icon: '🗑️',
+    icon: 'trash-2',
     confirmText: 'Delete',
     danger: true
   })
 }
 
-export function confirmAction(title, message, icon = '⚠️') {
+export function confirmAction(title, message, iconName = 'alert-triangle') {
   return confirmDialog({
     title,
     message,
-    icon,
+    icon: iconName,
     confirmText: 'Continue'
   })
 }
