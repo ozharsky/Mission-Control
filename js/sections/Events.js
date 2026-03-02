@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { openEventModal } from '../components/EventModal.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
@@ -236,7 +236,7 @@ export function createEventsSection(containerId) {
     
     const events = store.get('events').filter(e => e.id !== id)
     store.set('events', events)
-    toast.success('Event deleted')
+    Toast.success('Event deleted')
   }
   
   // Expose functions globally
@@ -253,13 +253,13 @@ export function createEventsSection(containerId) {
       store.set('events', events)
       
       const statusConfig = STATUS_CONFIG[newStatus]
-      toast.success(`Marked as ${statusConfig.label}`, event.name)
+      Toast.success(`Marked as ${statusConfig.label}`, event.name)
     }
   }
   
   window.clearBoardFilter = () => {
     store.set('currentBoard', 'all')
-    toast.success('Showing all boards')
+    Toast.success('Showing all boards')
   }
   
   store.subscribe((state, path) => {

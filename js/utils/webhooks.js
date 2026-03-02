@@ -1,7 +1,7 @@
 // Webhook system for external integrations
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class WebhookManager {
   constructor() {
@@ -51,7 +51,7 @@ class WebhookManager {
     this.webhooks.push(webhook)
     this.saveWebhooks()
     
-    toast.success('Webhook created', webhook.name)
+    Toast.success('Webhook created', webhook.name)
     return webhook
   }
   
@@ -198,18 +198,18 @@ class WebhookManager {
       data: { message: 'This is a test webhook' }
     }
     
-    toast.info('Testing webhook...')
+    Toast.info('Testing webhook...')
     
     try {
       await this.send(webhook, testPayload)
       
       if (webhook.lastError) {
-        toast.error('Webhook test failed', webhook.lastError)
+        Toast.error('Webhook test failed', webhook.lastError)
       } else {
-        toast.success('Webhook test successful!')
+        Toast.success('Webhook test successful!')
       }
     } catch (err) {
-      toast.error('Webhook test failed', err.message)
+      Toast.error('Webhook test failed', err.message)
     }
   }
   

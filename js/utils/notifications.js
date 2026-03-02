@@ -1,6 +1,6 @@
 // Browser notifications and reminders
 
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 // Check if mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768
@@ -42,7 +42,7 @@ class NotificationManager {
     }
     
     if (!('Notification' in window)) {
-      toast.error('Notifications not supported', 'Your browser does not support notifications')
+      Toast.error('Notifications not supported', 'Your browser does not support notifications')
       return false
     }
     
@@ -50,10 +50,10 @@ class NotificationManager {
     this.permission = result
     
     if (result === 'granted') {
-      toast.success('Notifications enabled')
+      Toast.success('Notifications enabled')
       this.send('Mission Control', 'Notifications are now enabled!')
     } else {
-      toast.warning('Notifications blocked', 'Please enable in browser settings')
+      Toast.warning('Notifications blocked', 'Please enable in browser settings')
     }
     
     return result === 'granted'

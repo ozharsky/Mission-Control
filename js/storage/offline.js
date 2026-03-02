@@ -2,7 +2,7 @@
 // Handles offline changes and syncs when back online
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 const QUEUE_KEY = 'mc-offline-queue'
 const SYNC_INTERVAL = 30000 // 30 seconds
@@ -47,14 +47,14 @@ class OfflineManager {
   handleOnline() {
     this.isOnline = true
     console.log('🌐 Back online')
-    toast.success('Back online', 'Syncing changes...')
+    Toast.success('Back online', 'Syncing changes...')
     this.processQueue()
   }
   
   handleOffline() {
     this.isOnline = false
     console.log('📴 Gone offline')
-    toast.info('Offline mode', 'Changes will sync when back online')
+    Toast.info('Offline mode', 'Changes will sync when back online')
   }
   
   // Add operation to queue
@@ -112,7 +112,7 @@ class OfflineManager {
     
     if (failed.length > 0) {
       console.error(`❌ Failed to sync ${failed.length} operations`)
-      toast.error('Sync failed', `${failed.length} changes could not be synced`)
+      Toast.error('Sync failed', `${failed.length} changes could not be synced`)
     }
     
     this.syncInProgress = false

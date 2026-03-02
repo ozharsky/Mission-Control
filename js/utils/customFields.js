@@ -1,7 +1,7 @@
 // Custom fields system for extending tasks
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class CustomFieldsManager {
   constructor() {
@@ -45,7 +45,7 @@ class CustomFieldsManager {
     this.fields.push(field)
     this.saveFields()
     
-    toast.success('Custom field created', field.name)
+    Toast.success('Custom field created', field.name)
     return field
   }
   

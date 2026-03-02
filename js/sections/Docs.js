@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { storageManager } from '../utils/storageManager.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
 import { icons } from '../utils/icons.js'
@@ -373,7 +373,7 @@ export function createDocsSection(containerId) {
       // Open the file in a new tab
       window.open(doc.url, '_blank')
     } else if (doc) {
-      toast.info(doc.name, `${doc.category} • ${doc.type}`)
+      Toast.info(doc.name, `${doc.category} • ${doc.type}`)
     }
   }
 

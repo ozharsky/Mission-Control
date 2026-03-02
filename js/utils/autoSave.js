@@ -1,7 +1,7 @@
 // Auto-save functionality for forms
 // Saves form data to localStorage periodically
 
-import { toast } from './components/Toast.js'
+import { Toast } from './components/Toast.js'
 
 class AutoSave {
   constructor(options = {}) {
@@ -90,7 +90,7 @@ class AutoSave {
       }
       
       if (showToast) {
-        toast.success('Auto-saved', 'Form data saved', 2000)
+        Toast.success('Auto-saved', 'Form data saved', 2000)
       }
     } catch (e) {
       console.error('Auto-save failed:', e)
@@ -129,7 +129,7 @@ class AutoSave {
       
       if (showToast) {
         const timeAgo = this.formatTimeAgo(timestamp)
-        toast.info('Restored', `Form restored from ${timeAgo}`, 3000)
+        Toast.info('Restored', `Form restored from ${timeAgo}`, 3000)
       }
       
       return true

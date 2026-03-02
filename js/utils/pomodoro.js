@@ -1,7 +1,7 @@
 // Pomodoro timer and time tracking
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class PomodoroTimer {
   constructor() {
@@ -45,7 +45,7 @@ class PomodoroTimer {
     this.currentTask = task
     this.isRunning = true
     
-    toast.info(this.isBreak ? 'Break started' : 'Focus time!', 
+    Toast.info(this.isBreak ? 'Break started' : 'Focus time!', 
                this.formatTime(this.timeLeft))
     
     this.interval = setInterval(() => {
@@ -65,7 +65,7 @@ class PomodoroTimer {
     clearInterval(this.interval)
     this.saveState()
     
-    toast.info('Timer paused')
+    Toast.info('Timer paused')
   }
   
   /**
@@ -104,7 +104,7 @@ class PomodoroTimer {
       this.isBreak = false
       this.timeLeft = this.workTime
       this.playSound('break-end')
-      toast.success('Break over!', 'Time to focus')
+      Toast.success('Break over!', 'Time to focus')
     } else {
       // Work session complete
       this.sessionsCompleted++
@@ -118,10 +118,10 @@ class PomodoroTimer {
       // Determine break length
       if (this.sessionsCompleted % this.sessionsBeforeLongBreak === 0) {
         this.timeLeft = this.longBreakTime
-        toast.success('Long break!', 'Great work! Take 15 minutes.')
+        Toast.success('Long break!', 'Great work! Take 15 minutes.')
       } else {
         this.timeLeft = this.breakTime
-        toast.success('Break time!', 'Take 5 minutes to recharge.')
+        Toast.success('Break time!', 'Take 5 minutes to recharge.')
       }
       
       this.playSound('session-complete')

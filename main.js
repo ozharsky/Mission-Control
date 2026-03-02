@@ -52,7 +52,7 @@ import { store } from './js/state/store.js'
 import { storageAdapter } from './js/state/local.js'
 import { syncStorage } from './js/storage/sync.js'
 import { keyboard } from './js/components/Keyboard.js'
-import { toast } from './js/components/Toast.js'
+import { Toast } from './js/components/Toast.js'
 import { bulk } from './js/components/Bulk.js'
 import { createNavigation } from './js/components/Navigation.js'
 import { createMobileNav } from './js/components/MobileNav.js'
@@ -349,7 +349,7 @@ async function init() {
   }, 100)
   
   // Show welcome toast
-  toast.success('Mission Control V5', 'App loaded successfully!', 3000)
+  Toast.success('Mission Control V5', 'App loaded successfully!', 3000)
 }
 
 function createSectionContainers() {

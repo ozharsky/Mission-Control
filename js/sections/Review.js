@@ -1,7 +1,7 @@
 // Review Section - Fixed to use actual store data
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { icons } from '../utils/icons.js'
 
 let currentPeriod = 7
@@ -370,7 +370,7 @@ export function createReviewSection(containerId) {
   window.setReviewPeriod = (period) => {
     currentPeriod = period
     render()
-    toast.success('Period updated', `Showing last ${period} days`)
+    Toast.success('Period updated', `Showing last ${period} days`)
   }
   
   store.subscribe((state, path) => {

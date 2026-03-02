@@ -314,10 +314,10 @@ export function validateWithToast(data, schemaName) {
   
   if (!result.valid) {
     const firstError = Object.values(result.errors)[0]
-    toast.error('Validation Error', firstError)
+    Toast.error('Validation Error', firstError)
   }
   
   return result
 }
 
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'

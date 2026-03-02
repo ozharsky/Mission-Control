@@ -1,7 +1,7 @@
 // Session Timeout Manager
 // Auto-lock app after period of inactivity
 
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class SessionManager {
   constructor(options = {}) {
@@ -102,7 +102,7 @@ class SessionManager {
   }
   
   defaultWarningHandler(minutesRemaining) {
-    toast.warning(
+    Toast.warning(
       'Session Timeout',
       `App will lock in ${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''} due to inactivity`,
       5000

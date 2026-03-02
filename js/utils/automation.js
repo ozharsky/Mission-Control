@@ -1,7 +1,7 @@
 // Automation rules engine
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class AutomationEngine {
   constructor() {
@@ -32,7 +32,7 @@ class AutomationEngine {
     this.rules.push(newRule)
     this.saveRules()
     
-    toast.success('Automation created', `Rule: ${rule.name}`)
+    Toast.success('Automation created', `Rule: ${rule.name}`)
     return newRule
   }
   
@@ -185,7 +185,7 @@ class AutomationEngine {
         break
         
       case 'send_notification':
-        toast.info(params.title || 'Automation', params.message)
+        Toast.info(params.title || 'Automation', params.message)
         break
         
       case 'create_priority':

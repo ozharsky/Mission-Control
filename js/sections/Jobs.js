@@ -2,7 +2,7 @@
 // Shows active and completed print jobs from SimplyPrint
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { icons } from '../utils/icons.js'
 import { addTouchFeedback } from '../utils/mobileInteractions.js'
 
@@ -138,12 +138,12 @@ export function createJobsSection(containerId) {
       if (res.ok) {
         const data = await res.json()
         store.set('printJobs', data.jobs || [])
-        toast.success('Jobs refreshed')
+        Toast.success('Jobs refreshed')
       } else {
-        toast.error('Failed to fetch jobs')
+        Toast.error('Failed to fetch jobs')
       }
     } catch (err) {
-      toast.error('Refresh failed', err.message)
+      Toast.error('Refresh failed', err.message)
     } finally {
       if (btn) {
         btn.disabled = false
@@ -153,7 +153,7 @@ export function createJobsSection(containerId) {
   }
 
   window.viewJobPreview = (jobId) => {
-    toast.info('Preview', `Viewing job ${jobId}`)
+    Toast.info('Preview', `Viewing job ${jobId}`)
   }
 
   // Subscribe to store changes

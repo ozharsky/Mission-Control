@@ -1,6 +1,6 @@
 import { store } from '../state/store.js'
 import { parseSKUCSV, readFile, exportToCSV } from '../utils/csv.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { filterByBoard } from '../components/BoardSelector.js'
 import { openSKUModal, deleteSKU } from '../components/SKUModal.js'
 import { icons } from '../utils/icons.js'
@@ -223,22 +223,22 @@ export function createSKUsSection(containerId) {
     if (!file) return
     
     try {
-      toast.info('Reading file...', file.name)
+      Toast.info('Reading file...', file.name)
       const text = await readFile(file)
       const rows = parseSKUCSV(text)
       
       if (rows.length === 0) {
-        toast.error('No valid SKUs found', 'Expected: SKU Code, Product Name, Stock')
+        Toast.error('No valid SKUs found', 'Expected: SKU Code, Product Name, Stock')
         return
       }
       
       // Replace all SKUs (not merge)
       store.set('skus', rows)
-      toast.success('SKUs imported', `${rows.length} items loaded`)
+      Toast.success('SKUs imported', `${rows.length} items loaded`)
       
     } catch (err) {
       console.error('SKU import error:', err)
-      toast.error('Import failed', err.message)
+      Toast.error('Import failed', err.message)
     }
     
     input.value = ''
@@ -253,7 +253,7 @@ export function createSKUsSection(containerId) {
       store.set('skus', skus)
       
       if (oldStock !== sku.stock) {
-        toast.success(`Stock updated`, `${code}: ${sku.stock} units`)
+        Toast.success(`Stock updated`, `${code}: ${sku.stock} units`)
       }
     }
   }
@@ -279,18 +279,18 @@ export function createSKUsSection(containerId) {
     a.download = 'sku-template.csv'
     a.click()
     URL.revokeObjectURL(url)
-    toast.success('Template downloaded')
+    Toast.success('Template downloaded')
   }
   
   window.exportSKUs = () => {
     const skus = store.get('skus')
     if (skus.length === 0) {
-      toast.warning('No SKUs to export')
+      Toast.warning('No SKUs to export')
       return
     }
     
     exportToCSV(skus, 'skus-export.csv')
-    toast.success('SKUs exported')
+    Toast.success('SKUs exported')
   }
   
   store.subscribe((state, path) => {

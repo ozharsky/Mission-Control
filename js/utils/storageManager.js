@@ -1,6 +1,6 @@
 // Firebase Storage Integration for Mission Control V5
 import { getFirebase } from '../firebase.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { loadingStates } from '../components/LoadingStates.js'
 
 class StorageManager {
@@ -70,13 +70,13 @@ class StorageManager {
   async uploadFile(file, path = 'documents') {
     // Check if storage is available
     if (!this.isAvailable()) {
-      toast.error('Storage not configured', 'Please configure Firebase in Settings first')
+      Toast.error('Storage not configured', 'Please configure Firebase in Settings first')
       return null
     }
 
     const validation = this.validateFile(file)
     if (!validation.valid) {
-      toast.error('Upload failed', validation.error)
+      Toast.error('Upload failed', validation.error)
       return null
     }
 
@@ -111,12 +111,12 @@ class StorageManager {
         uploadedAt: new Date().toISOString()
       }
       
-      toast.success('File uploaded', file.name)
+      Toast.success('File uploaded', file.name)
       return fileData
       
     } catch (error) {
       console.error('Upload error:', error)
-      toast.error('Upload failed', error.message)
+      Toast.error('Upload failed', error.message)
       return null
     } finally {
       // Hide loading state
@@ -144,7 +144,7 @@ class StorageManager {
    */
   async deleteFile(filePath) {
     if (!this.isAvailable()) {
-      toast.error('Storage not configured')
+      Toast.error('Storage not configured')
       return false
     }
 
@@ -152,11 +152,11 @@ class StorageManager {
       const { ref, deleteObject } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js')
       const fileRef = ref(this.storage, filePath)
       await deleteObject(fileRef)
-      toast.success('File deleted')
+      Toast.success('File deleted')
       return true
     } catch (error) {
       console.error('Delete error:', error)
-      toast.error('Delete failed', error.message)
+      Toast.error('Delete failed', error.message)
       return false
     }
   }
@@ -321,7 +321,7 @@ class StorageManager {
     const validFiles = files.filter(file => {
       const validation = this.validateFile(file)
       if (!validation.valid) {
-        toast.warning('Skipped file', `${file.name}: ${validation.error}`)
+        Toast.warning('Skipped file', `${file.name}: ${validation.error}`)
       }
       return validation.valid
     })

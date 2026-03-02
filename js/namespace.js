@@ -2,7 +2,7 @@
 // Replaces window pollution with single mc namespace
 
 import { store } from './state/store.js'
-import { toast } from './components/Toast.js'
+import { Toast } from './components/Toast.js'
 import { keyboard } from './components/Keyboard.js'
 import { bulk } from './components/Bulk.js'
 import { undoManager } from './state/undo.js'

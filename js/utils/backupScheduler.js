@@ -1,7 +1,7 @@
 // Automated backup scheduler
 
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { dataExport } from './dataTransfer.js'
 
 class BackupScheduler {
@@ -128,11 +128,11 @@ class BackupScheduler {
       // Cleanup old backups
       this.cleanupOldBackups()
       
-      toast.success('Backup complete', `Saved to ${this.settings.destinations.join(', ')}`)
+      Toast.success('Backup complete', `Saved to ${this.settings.destinations.join(', ')}`)
       
     } catch (err) {
       console.error('Backup failed:', err)
-      toast.error('Backup failed', err.message)
+      Toast.error('Backup failed', err.message)
     }
   }
   

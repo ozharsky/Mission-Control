@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { icons } from '../utils/icons.js'
 
 let expandedPhases = new Set()
@@ -186,7 +186,7 @@ export function createTimelineSection(containerId) {
           phase.status = 'pending'
         }
         
-        toast.success(
+        Toast.success(
           milestone.completed ? 'Milestone completed' : 'Milestone reopened',
           milestone.text
         )

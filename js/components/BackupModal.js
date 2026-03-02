@@ -1,6 +1,6 @@
 import { store } from '../state/store.js'
 import { exportToJSON, readFile } from '../utils/csv.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { migrateV3ToV4 } from '../utils/migrate.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
 
@@ -93,13 +93,13 @@ export function createBackupModal() {
       // Replace all data
       store.replace(processedData)
       
-      toast.success('Backup restored', isV3 ? 'V3 data migrated to V4' : 'All data imported')
+      Toast.success('Backup restored', isV3 ? 'V3 data migrated to V4' : 'All data imported')
       document.getElementById('backupModal').remove()
       unlockBodyScroll()
       
     } catch (err) {
       console.error('Import error:', err)
-      toast.error('Import failed', err.message)
+      Toast.error('Import failed', err.message)
     }
     
     fileInput.value = ''
@@ -110,7 +110,7 @@ export function createBackupModal() {
     export() {
       const data = store.getState()
       exportToJSON(data, `mission-control-backup-${new Date().toISOString().split('T')[0]}.json`)
-      toast.success('Backup downloaded')
+      Toast.success('Backup downloaded')
     }
   }
 }

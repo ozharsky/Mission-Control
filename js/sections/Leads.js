@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
 import { openLeadModal } from '../components/LeadModal.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
@@ -224,7 +224,7 @@ export function createLeadsSection(containerId) {
     
     const leads = store.get('leads').filter(l => l.id !== id)
     store.set('leads', leads)
-    toast.success('Lead deleted')
+    Toast.success('Lead deleted')
   }
   
   window.updateLeadStatus = (id, newStatus) => {
@@ -237,7 +237,7 @@ export function createLeadsSection(containerId) {
       store.set('leads', leads)
       
       const statusConfig = STATUS_CONFIG[newStatus]
-      toast.success(`Moved to ${statusConfig.label}`, lead.name)
+      Toast.success(`Moved to ${statusConfig.label}`, lead.name)
     }
   }
   
@@ -248,7 +248,7 @@ export function createLeadsSection(containerId) {
   
   window.clearBoardFilter = () => {
     store.set('currentBoard', 'all')
-    toast.success('Showing all boards')
+    Toast.success('Showing all boards')
   }
   
   store.subscribe((state, path) => {

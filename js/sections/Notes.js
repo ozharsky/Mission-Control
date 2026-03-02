@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 import { filterByBoard } from '../components/BoardSelector.js'
 import { confirmDelete } from '../components/ConfirmDialog.js'
 import { parseMarkdown, hasMarkdown, stripMarkdown } from '../utils/markdown.js'
@@ -297,7 +297,7 @@ export function createNotesSection(containerId) {
     const text = document.getElementById('newNoteText').value.trim()
     
     if (!text) {
-      toast.error('Please enter note text')
+      Toast.error('Please enter note text')
       return
     }
     
@@ -314,7 +314,7 @@ export function createNotesSection(containerId) {
     
     store.set('notes', notes)
     cancelNewNote()
-    toast.success('Note added')
+    Toast.success('Note added')
   }
   
   window.insertEditMarkdown = (id, before, after) => {
@@ -362,7 +362,7 @@ export function createNotesSection(containerId) {
     const text = document.getElementById(`editNoteText-${id}`).value.trim()
     
     if (!text) {
-      toast.error('Note text cannot be empty')
+      Toast.error('Note text cannot be empty')
       return
     }
     
@@ -375,7 +375,7 @@ export function createNotesSection(containerId) {
       store.set('notes', notes)
       editingNoteId = null
       render()
-      toast.success('Note updated')
+      Toast.success('Note updated')
     }
   }
   
@@ -385,7 +385,7 @@ export function createNotesSection(containerId) {
     if (note) {
       note.pinned = !note.pinned
       store.set('notes', notes)
-      toast.success(note.pinned ? 'Note pinned' : 'Note unpinned')
+      Toast.success(note.pinned ? 'Note pinned' : 'Note unpinned')
     }
   }
   
@@ -397,7 +397,7 @@ export function createNotesSection(containerId) {
     const notes = store.get('notes')
     const filtered = notes.filter(n => n.id !== id)
     store.set('notes', filtered)
-    toast.success('Note deleted')
+    Toast.success('Note deleted')
   }
   
   window.setNoteFilter = (filter) => {

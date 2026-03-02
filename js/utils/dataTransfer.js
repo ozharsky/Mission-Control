@@ -1,6 +1,6 @@
 // Advanced data import/export
 
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 /**
  * Export data in multiple formats
@@ -25,7 +25,7 @@ export const dataExport = {
     } = options
     
     if (items.length === 0) {
-      toast.warning('No data to export')
+      Toast.warning('No data to export')
       return false
     }
     
@@ -90,7 +90,7 @@ export const dataExport = {
     // Open print dialog for PDF generation
     const printWindow = window.open('', '_blank')
     if (!printWindow) {
-      toast.error('Popup blocked', 'Please allow popups to export PDF')
+      Toast.error('Popup blocked', 'Please allow popups to export PDF')
       return false
     }
     
@@ -265,7 +265,7 @@ export const cloudSync = {
     // This would require Google Drive API integration
     // For now, just download the file
     dataExport.toJSON(data, filename)
-    toast.info('Downloaded', 'Google Drive integration coming soon')
+    Toast.info('Downloaded', 'Google Drive integration coming soon')
   },
   
   /**
@@ -277,7 +277,7 @@ export const cloudSync = {
     const url = `${window.location.origin}?import=${compressed}`
     
     navigator.clipboard.writeText(url).then(() => {
-      toast.success('Link copied', 'Share link copied to clipboard')
+      Toast.success('Link copied', 'Share link copied to clipboard')
     })
     
     return url
