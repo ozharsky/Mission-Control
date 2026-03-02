@@ -2,22 +2,23 @@
 import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
 import { sanitizeInput, sanitizeNumber } from '../utils/sanitize.js'
+import { icon } from '../utils/icons.js'
 
 const STATUS_OPTIONS = [
-  { value: 'new', label: '🆕 New', color: '#6366f1' },
-  { value: 'contacted', label: '📧 Contacted', color: '#f59e0b' },
-  { value: 'qualified', label: '✅ Qualified', color: '#10b981' },
-  { value: 'proposal', label: '📄 Proposal', color: '#8b5cf6' },
-  { value: 'closed', label: '🔒 Closed', color: '#64748b' },
-  { value: 'lost', label: '❌ Lost', color: '#ef4444' }
+  { value: 'new', label: 'New', color: '#6366f1', icon: 'sparkles' },
+  { value: 'contacted', label: 'Contacted', color: '#f59e0b', icon: 'mail' },
+  { value: 'qualified', label: 'Qualified', color: '#10b981', icon: 'check-circle' },
+  { value: 'proposal', label: 'Proposal', color: '#8b5cf6', icon: 'file-text' },
+  { value: 'closed', label: 'Closed', color: '#64748b', icon: 'lock' },
+  { value: 'lost', label: 'Lost', color: '#ef4444', icon: 'x-circle' }
 ]
 
 const BOARD_OPTIONS = [
-  { value: 'all', label: '📋 All Boards' },
-  { value: 'etsy', label: '🛒 Etsy' },
-  { value: 'photography', label: '📸 Photography' },
-  { value: 'wholesale', label: '🏢 Wholesale' },
-  { value: '3dprint', label: '🖨️ 3D Printing' }
+  { value: 'all', label: 'All Boards', icon: 'layout-grid' },
+  { value: 'etsy', label: 'Etsy', icon: 'shopping-bag' },
+  { value: 'photography', label: 'Photography', icon: 'camera' },
+  { value: 'wholesale', label: 'Wholesale', icon: 'building-2' },
+  { value: '3dprint', label: '3D Printing', icon: 'printer' }
 ]
 
 export function openLeadModal(leadId = null) {
@@ -33,8 +34,8 @@ export function openLeadModal(leadId = null) {
   modal.innerHTML = `
     <div class="modal" style="max-width: 500px;">
       <div class="modal-header">
-        <div class="modal-title">${isEdit ? '✏️ Edit Lead' : '➕ Add Lead'}</div>
-        <button class="modal-close" onclick="closeLeadModal()">✕</button>
+        <div class="modal-title">${isEdit ? icon('pencil', 'm-icon') + ' Edit Lead' : icon('plus', 'm-icon') + ' Add Lead'}</div>
+        <button class="modal-close m-touch" onclick="closeLeadModal()">${icon('x')}</button>
       </div>
       
       <form id="leadForm" class="modal-body">
@@ -109,9 +110,9 @@ export function openLeadModal(leadId = null) {
       </form>
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeLeadModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="saveLead(${isEdit ? leadId : 'null'})">
-          ${isEdit ? '💾 Save Changes' : '➕ Add Lead'}
+        <button type="button" class="btn btn-secondary m-touch" onclick="closeLeadModal()">Cancel</button>
+        <button type="button" class="btn btn-primary m-touch" onclick="saveLead(${isEdit ? leadId : 'null'})">
+          ${isEdit ? icon('save', 'm-icon') + ' Save Changes' : icon('plus', 'm-icon') + ' Add Lead'}
         </button>
       </div>
     </div>
