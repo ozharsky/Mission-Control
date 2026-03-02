@@ -5,37 +5,38 @@ import { logActivity } from '../utils/taskUtils.js'
 import { confirmDelete } from './ConfirmDialog.js'
 import { storageManager } from '../utils/storageManager.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icon } from '../utils/icons.js'
 
 const FILE_ICONS = {
-  markdown: '📝',
-  md: '📝',
-  html: '🌐',
-  pdf: '📄',
-  doc: '📘',
-  docx: '📘',
-  xls: '📊',
-  xlsx: '📊',
-  csv: '📊',
-  json: '⚙️',
-  js: '⚙️',
-  css: '🎨',
-  png: '🖼️',
-  jpg: '🖼️',
-  jpeg: '🖼️',
-  gif: '🖼️',
-  webp: '🖼️',
-  svg: '🖼️',
-  default: '📄'
+  markdown: 'file-text',
+  md: 'file-text',
+  html: 'globe',
+  pdf: 'file',
+  doc: 'file-text',
+  docx: 'file-text',
+  xls: 'bar-chart-2',
+  xlsx: 'bar-chart-2',
+  csv: 'bar-chart-2',
+  json: 'settings',
+  js: 'settings',
+  css: 'palette',
+  png: 'image',
+  jpg: 'image',
+  jpeg: 'image',
+  gif: 'image',
+  webp: 'image',
+  svg: 'image',
+  default: 'file'
 }
 
 const CATEGORIES = {
-  'Etsy': { icon: '🛒', color: '#ff6b6b' },
-  'Photography': { icon: '📸', color: '#4ecdc4' },
-  'Strategy': { icon: '🏢', color: '#45b7d1' },
-  'Research': { icon: '📊', color: '#96ceb4' },
-  'Marketing': { icon: '📢', color: '#feca57' },
-  'Operations': { icon: '⚙️', color: '#dfe6e9' },
-  'Other': { icon: '📁', color: '#b2bec3' }
+  'Etsy': { icon: 'shopping-cart', color: '#ff6b6b' },
+  'Photography': { icon: 'camera', color: '#4ecdc4' },
+  'Strategy': { icon: 'building-2', color: '#45b7d1' },
+  'Research': { icon: 'bar-chart-2', color: '#96ceb4' },
+  'Marketing': { icon: 'megaphone', color: '#feca57' },
+  'Operations': { icon: 'settings', color: '#dfe6e9' },
+  'Other': { icon: 'folder', color: '#b2bec3' }
 }
 
 export function openEditPriorityModal(id) {
@@ -60,8 +61,8 @@ export function openEditPriorityModal(id) {
   modal.innerHTML = `
     <div class="modal" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
-        <div class="modal-title">✏️ Edit Priority</div>
-        <button class="modal-close" onclick="document.getElementById('editPriorityModal').remove()">✕</button>
+        <div class="modal-title">${icon('pencil')} Edit Priority</div>
+        <button class="modal-close m-touch" onclick="document.getElementById('editPriorityModal').remove()">${icon('x')}</button>
       </div>
       
       <div class="modal-body">
@@ -89,9 +90,9 @@ export function openEditPriorityModal(id) {
           <div class="form-group">
             <label class="form-label">Status</label>
             <select class="form-input" id="editPriorityStatus">
-              <option value="later" ${priority.status === 'later' ? 'selected' : ''}>📥 Later</option>
-              <option value="now" ${priority.status === 'now' ? 'selected' : ''}>⚡ Now</option>
-              <option value="done" ${priority.status === 'done' ? 'selected' : ''}>✅ Done</option>
+              <option value="later" ${priority.status === 'later' ? 'selected' : ''}>${icon('inbox', 'inline-icon')} Later</option>
+              <option value="now" ${priority.status === 'now' ? 'selected' : ''}>${icon('zap', 'inline-icon')} Now</option>
+              <option value="done" ${priority.status === 'done' ? 'selected' : ''}>${icon('check', 'inline-icon')} Done</option>
             </select>
           </div>
         </div>
@@ -127,19 +128,19 @@ export function openEditPriorityModal(id) {
           <label class="form-label">Assignee</label>
           <select class="form-input" id="editPriorityAssignee">
             <option value="" ${!priority.assignee ? 'selected' : ''}>Unassigned</option>
-            <option value="KimiClaw" ${priority.assignee === 'KimiClaw' ? 'selected' : ''}>🤖 KimiClaw</option>
-            <option value="Oleg" ${priority.assignee === 'Oleg' ? 'selected' : ''}>👤 Oleg</option>
+            <option value="KimiClaw" ${priority.assignee === 'KimiClaw' ? 'selected' : ''}>${icon('bot', 'inline-icon')} KimiClaw</option>
+            <option value="Oleg" ${priority.assignee === 'Oleg' ? 'selected' : ''}>${icon('user', 'inline-icon')} Oleg</option>
           </select>
         </div>
         
         <div class="form-group">
           <label class="form-label">Board</label>
           <select class="form-input" id="editPriorityBoard">
-            <option value="all" ${priority.board === 'all' ? 'selected' : ''}>🏢 All</option>
-            <option value="etsy" ${priority.board === 'etsy' ? 'selected' : ''}>🛒 Etsy</option>
-            <option value="photography" ${priority.board === 'photography' ? 'selected' : ''}>📸 Photo</option>
-            <option value="wholesale" ${priority.board === 'wholesale' ? 'selected' : ''}>🏪 B2B</option>
-            <option value="3dprint" ${priority.board === '3dprint' ? 'selected' : ''}>🖨️ 3D Print</option>
+            <option value="all" ${priority.board === 'all' ? 'selected' : ''}>${icon('building-2', 'inline-icon')} All</option>
+            <option value="etsy" ${priority.board === 'etsy' ? 'selected' : ''}>${icon('shopping-cart', 'inline-icon')} Etsy</option>
+            <option value="photography" ${priority.board === 'photography' ? 'selected' : ''}>${icon('camera', 'inline-icon')} Photo</option>
+            <option value="wholesale" ${priority.board === 'wholesale' ? 'selected' : ''}>${icon('store', 'inline-icon')} B2B</option>
+            <option value="3dprint" ${priority.board === '3dprint' ? 'selected' : ''}>${icon('printer', 'inline-icon')} 3D Print</option>
           </select>
         </div>
         
@@ -151,7 +152,7 @@ export function openEditPriorityModal(id) {
         <!-- Files Section -->
         <div class="form-group priority-files-section">
           <label class="form-label">
-            📎 Attached Files (${attachedFiles.length})
+            ${icon('paperclip', 'inline-icon')} Attached Files (${attachedFiles.length})
           </label>
           
           ${attachedFiles.length > 0 ? `
@@ -166,11 +167,11 @@ export function openEditPriorityModal(id) {
                     </div>
                   </div>
                   <div class="priority-file-actions">
-                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); downloadPriorityFile('${file.id}')" title="Download">
-                      ⬇️
+                    <button class="btn btn-sm btn-secondary m-touch" onclick="event.stopPropagation(); downloadPriorityFile('${file.id}')" title="Download">
+                      ${icon('download', 'inline-icon')}
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); unlinkPriorityFile('${file.id}', ${id})" title="Remove link">
-                      ✕
+                    <button class="btn btn-sm btn-danger m-touch" onclick="event.stopPropagation(); unlinkPriorityFile('${file.id}', ${id})" title="Remove link">
+                      ${icon('x', 'inline-icon')}
                     </button>
                   </div>
                 </div>
@@ -178,13 +179,13 @@ export function openEditPriorityModal(id) {
             </div>
           ` : `
             <div class="priority-files-empty">
-              <span class="priority-files-empty-icon">📎</span>
+              <span class="priority-files-empty-icon">${icon('paperclip')}</span>
               <span>No files attached to this priority</span>
             </div>
           `}
           
-          <button class="btn btn-secondary priority-upload-btn" onclick="openPriorityFileUpload(${id})" style="margin-top: 0.75rem;">
-            <span>📤</span>
+          <button class="btn btn-secondary priority-upload-btn m-touch" onclick="openPriorityFileUpload(${id})" style="margin-top: 0.75rem;">
+            <span>${icon('upload', 'inline-icon')}</span>
             <span>Upload File</span>
           </button>
         </div>
@@ -205,10 +206,10 @@ export function openEditPriorityModal(id) {
       </div>
       
       <div class="modal-footer" style="display: flex; justify-content: space-between;">
-        <button class="btn btn-secondary" onclick="document.getElementById('editPriorityModal').remove()">Cancel</button>
+        <button class="btn btn-secondary m-touch" onclick="document.getElementById('editPriorityModal').remove()">Cancel</button>
         <div>
-          <button class="btn btn-danger" onclick="deletePriority(${id})" style="margin-right: 0.5rem;">🗑️ Delete</button>
-          <button class="btn btn-primary" onclick="saveEditedPriority(${id})">💾 Save Changes</button>
+          <button class="btn btn-danger m-touch" onclick="deletePriority(${id})" style="margin-right: 0.5rem;">${icon('trash-2', 'inline-icon')} Delete</button>
+          <button class="btn btn-primary m-touch" onclick="saveEditedPriority(${id})">${icon('save', 'inline-icon')} Save Changes</button>
         </div>
       </div>
     </div>
@@ -311,7 +312,8 @@ function escapeHtml(text) {
 }
 
 function getFileIcon(type) {
-  return FILE_ICONS[type?.toLowerCase()] || FILE_ICONS.default
+  const iconName = FILE_ICONS[type?.toLowerCase()] || FILE_ICONS.default
+  return icon(iconName, 'priority-file-icon-svg')
 }
 
 function formatFileSize(bytes) {
