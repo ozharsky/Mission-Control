@@ -2,6 +2,7 @@
 import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
 import { confirmDelete } from './ConfirmDialog.js'
+import { icon } from '../utils/icons.js'
 
 class BulkManager {
   constructor() {
@@ -81,27 +82,27 @@ class BulkManager {
         </div>
         
         <div class="bulk-actions">
-          <button class="bulk-btn" onclick="bulk.showMoreMenu()" title="More actions">
-            ⋮ More
+          <button class="bulk-btn m-touch" onclick="bulk.showMoreMenu()" title="More actions">
+            ${icon('more-vertical', 'icon-sm')} More
           </button>
           
-          <button class="bulk-btn primary" onclick="bulk.completeSelected()" 
+          <button class="bulk-btn primary m-touch" onclick="bulk.completeSelected()" 
                   ${count === 0 ? 'disabled' : ''}>
-            ✅ Complete
+            ${icon('check', 'icon-sm')} Complete
           </button>
           
-          <button class="bulk-btn danger" onclick="bulk.deleteSelected()" 
+          <button class="bulk-btn danger m-touch" onclick="bulk.deleteSelected()" 
                   ${count === 0 ? 'disabled' : ''}>
-            🗑️ Delete
+            ${icon('trash-2', 'icon-sm')} Delete
           </button>
           
-          <button class="bulk-btn" onclick="bulk.clearSelection()" 
+          <button class="bulk-btn m-touch" onclick="bulk.clearSelection()" 
                   ${count === 0 ? 'disabled' : ''}>
             Clear
           </button>
           
-          <button class="bulk-btn" onclick="bulk.toggle()">
-            ✕ Close
+          <button class="bulk-btn m-touch" onclick="bulk.toggle()">
+            ${icon('x', 'icon-sm')} Close
           </button>
         </div>
       </div>
@@ -114,40 +115,40 @@ class BulkManager {
     return `
       <div class="bulk-more-menu">
         <div class="bulk-menu-section">
-          <div class="bulk-menu-title">Status</div>
-          <button class="bulk-menu-item" onclick="bulk.moveSelected('now')">⚡ Move to Now</button>
-          <button class="bulk-menu-item" onclick="bulk.moveSelected('later')">📥 Move to Later</button>
-          <button class="bulk-menu-item" onclick="bulk.moveSelected('backlog')">📋 Move to Backlog</button>
+          <div class="bulk-menu-title">${icon('zap', 'icon-sm')} Status</div>
+          <button class="bulk-menu-item m-touch" onclick="bulk.moveSelected('now')">${icon('zap', 'icon-sm')} Move to Now</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.moveSelected('later')">${icon('inbox', 'icon-sm')} Move to Later</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.moveSelected('backlog')">${icon('clipboard-list', 'icon-sm')} Move to Backlog</button>
         </div>
         
         <div class="bulk-menu-section">
-          <div class="bulk-menu-title">Assignee</div>
-          <button class="bulk-menu-item" onclick="bulk.setAssignee('Oleg')">👤 Assign to Oleg</button>
-          <button class="bulk-menu-item" onclick="bulk.setAssignee('KimiClaw')">🤖 Assign to KimiClaw</button>
-          <button class="bulk-menu-item" onclick="bulk.setAssignee('')">❌ Unassign</button>
+          <div class="bulk-menu-title">${icon('user', 'icon-sm')} Assignee</div>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setAssignee('Oleg')">${icon('user', 'icon-sm')} Assign to Oleg</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setAssignee('KimiClaw')">${icon('bot', 'icon-sm')} Assign to KimiClaw</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setAssignee('')">${icon('user-x', 'icon-sm')} Unassign</button>
         </div>
         
         <div class="bulk-menu-section">
-          <div class="bulk-menu-title">Tags</div>
-          <button class="bulk-menu-item" onclick="bulk.addTag('urgent')">🔥 Add "urgent" tag</button>
-          <button class="bulk-menu-item" onclick="bulk.addTag('etsy')">🛒 Add "etsy" tag</button>
-          <button class="bulk-menu-item" onclick="bulk.removeAllTags()">🏷️ Clear all tags</button>
+          <div class="bulk-menu-title">${icon('tag', 'icon-sm')} Tags</div>
+          <button class="bulk-menu-item m-touch" onclick="bulk.addTag('urgent')">${icon('flame', 'icon-sm')} Add "urgent" tag</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.addTag('etsy')">${icon('shopping-cart', 'icon-sm')} Add "etsy" tag</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.removeAllTags()">${icon('tags', 'icon-sm')} Clear all tags</button>
         </div>
         
         <div class="bulk-menu-section">
-          <div class="bulk-menu-title">Due Date</div>
-          <button class="bulk-menu-item" onclick="bulk.setDueDate('today')">📅 Set to Today</button>
-          <button class="bulk-menu-item" onclick="bulk.setDueDate('tomorrow')">📅 Set to Tomorrow</button>
-          <button class="bulk-menu-item" onclick="bulk.setDueDate('nextWeek')">📅 Set to Next Week</button>
-          <button class="bulk-menu-item" onclick="bulk.clearDueDate()">❌ Clear Due Date</button>
+          <div class="bulk-menu-title">${icon('calendar', 'icon-sm')} Due Date</div>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setDueDate('today')">${icon('calendar-check', 'icon-sm')} Set to Today</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setDueDate('tomorrow')">${icon('calendar', 'icon-sm')} Set to Tomorrow</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setDueDate('nextWeek')">${icon('calendar-days', 'icon-sm')} Set to Next Week</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.clearDueDate()">${icon('calendar-x', 'icon-sm')} Clear Due Date</button>
         </div>
         
         <div class="bulk-menu-section">
-          <div class="bulk-menu-title">Board</div>
-          <button class="bulk-menu-item" onclick="bulk.setBoard('etsy')">🛒 Move to Etsy</button>
-          <button class="bulk-menu-item" onclick="bulk.setBoard('photography')">📸 Move to Photo</button>
-          <button class="bulk-menu-item" onclick="bulk.setBoard('wholesale')">🏪 Move to B2B</button>
-          <button class="bulk-menu-item" onclick="bulk.setBoard('3dprint')">🖨️ Move to 3D Print</button>
+          <div class="bulk-menu-title">${icon('layout-grid', 'icon-sm')} Board</div>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setBoard('etsy')">${icon('shopping-cart', 'icon-sm')} Move to Etsy</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setBoard('photography')">${icon('camera', 'icon-sm')} Move to Photo</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setBoard('wholesale')">${icon('building-2', 'icon-sm')} Move to B2B</button>
+          <button class="bulk-menu-item m-touch" onclick="bulk.setBoard('3dprint')">${icon('printer', 'icon-sm')} Move to 3D Print</button>
         </div>
       </div>
     `
