@@ -9,7 +9,7 @@ import { lazyLoader } from './js/utils/lazyLoader-v2.js'
 import { diagnoseDatabaseConnection } from './js/utils/dbDiagnostics.js'
 
 // Cache-busting version - increment when deploying updates
-const APP_VERSION = 'v131'
+const APP_VERSION = 'v132'
 
 // Initialize namespace first (replaces global window pollution)
 import './js/namespace.js'
