@@ -3,29 +3,30 @@ import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
 import { sanitizeInput } from '../utils/sanitize.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icon } from '../utils/icons.js'
 
 const EVENT_TYPES = [
-  { value: 'cannabis', label: '🌿 Cannabis', color: '#4ade80' },
-  { value: 'trade', label: '🏢 Trade Show', color: '#60a5fa' },
-  { value: 'photo', label: '📸 Photography', color: '#f472b6' },
-  { value: 'etsy', label: '🛒 Etsy', color: '#f59e0b' },
-  { value: 'other', label: '📅 Other', color: '#9ca3af' }
+  { value: 'cannabis', label: 'Cannabis', icon: 'leaf', color: '#4ade80' },
+  { value: 'trade', label: 'Trade Show', icon: 'building-2', color: '#60a5fa' },
+  { value: 'photo', label: 'Photography', icon: 'camera', color: '#f472b6' },
+  { value: 'etsy', label: 'Etsy', icon: 'shopping-cart', color: '#f59e0b' },
+  { value: 'other', label: 'Other', icon: 'calendar', color: '#9ca3af' }
 ]
 
 const STATUS_OPTIONS = [
-  { value: 'upcoming', label: '📅 Upcoming' },
-  { value: 'confirmed', label: '✅ Confirmed' },
-  { value: 'tentative', label: '❓ Tentative' },
-  { value: 'completed', label: '✓ Completed' },
-  { value: 'cancelled', label: '✕ Cancelled' }
+  { value: 'upcoming', label: 'Upcoming', icon: 'calendar' },
+  { value: 'confirmed', label: 'Confirmed', icon: 'check-circle' },
+  { value: 'tentative', label: 'Tentative', icon: 'help-circle' },
+  { value: 'completed', label: 'Completed', icon: 'check' },
+  { value: 'cancelled', label: 'Cancelled', icon: 'x' }
 ]
 
 const BOARD_OPTIONS = [
-  { value: 'all', label: '📋 All Boards' },
-  { value: 'etsy', label: '🛒 Etsy' },
-  { value: 'photography', label: '📸 Photography' },
-  { value: 'wholesale', label: '🏢 Wholesale' },
-  { value: '3dprint', label: '🖨️ 3D Printing' }
+  { value: 'all', label: 'All Boards', icon: 'clipboard-list' },
+  { value: 'etsy', label: 'Etsy', icon: 'shopping-cart' },
+  { value: 'photography', label: 'Photography', icon: 'camera' },
+  { value: 'wholesale', label: 'Wholesale', icon: 'building-2' },
+  { value: '3dprint', label: '3D Printing', icon: 'printer' }
 ]
 
 export function openEventModal(eventId = null, prefillData = null) {
@@ -55,8 +56,8 @@ export function openEventModal(eventId = null, prefillData = null) {
   modal.innerHTML = `
     <div class="modal" style="max-width: 500px;">
       <div class="modal-header">
-        <div class="modal-title">${isEdit ? '✏️ Edit Event' : '➕ Add Event'}</div>
-        <button class="modal-close" onclick="closeEventModal()">✕</button>
+        <div class="modal-title">${isEdit ? icon('pencil', 'modal-title-icon') + ' Edit Event' : icon('plus', 'modal-title-icon') + ' Add Event'}</div>
+        <button class="modal-close m-touch" onclick="closeEventModal()">${icon('x')}</button>
       </div>
       
       <form id="eventForm" class="modal-body">
@@ -126,9 +127,9 @@ export function openEventModal(eventId = null, prefillData = null) {
       </form>
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="saveEvent(${isEdit ? eventId : 'null'})">
-          ${isEdit ? '💾 Save Changes' : '➕ Add Event'}
+        <button type="button" class="btn btn-secondary m-touch" onclick="closeEventModal()">Cancel</button>
+        <button type="button" class="btn btn-primary m-touch" onclick="saveEvent(${isEdit ? eventId : 'null'})">
+          ${isEdit ? icon('save') + ' Save Changes' : icon('plus') + ' Add Event'}
         </button>
       </div>
     </div>
