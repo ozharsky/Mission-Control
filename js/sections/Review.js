@@ -267,12 +267,12 @@ export function createReviewSection(containerId) {
         <div class="status-breakdown">
           <div class="status-item">
             <div class="status-info">
-              <div class="status-dot" style="background: var(--accent-primary);"></div>
+              <div class="status-dot" style="background: var(--color-primary);"></div>
               <span class="m-body">Now (In Progress)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
-                <div class="status-fill" style="width: ${(stats.byStatus.now / Math.max(stats.total, 1)) * 100}%; background: var(--accent-primary);"
+                <div class="status-fill" style="width: ${(stats.byStatus.now / Math.max(stats.total, 1)) * 100}%; background: var(--color-primary);"
                 ></div>
               </div>
               <span class="status-count m-body">${stats.byStatus.now}</span>
@@ -280,12 +280,12 @@ export function createReviewSection(containerId) {
           </div>          
           <div class="status-item">
             <div class="status-info">
-              <div class="status-dot" style="background: var(--text-muted);"></div>
+              <div class="status-dot" style="background: var(--color-text-muted);"></div>
               <span class="m-body">Later (Backlog)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
-                <div class="status-fill" style="width: ${(stats.byStatus.later / Math.max(stats.total, 1)) * 100}%; background: var(--text-muted);"
+                <div class="status-fill" style="width: ${(stats.byStatus.later / Math.max(stats.total, 1)) * 100}%; background: var(--color-text-muted);"
                 ></div>
               </div>
               <span class="status-count m-body">${stats.byStatus.later}</span>
@@ -293,12 +293,12 @@ export function createReviewSection(containerId) {
           </div>          
           <div class="status-item">
             <div class="status-info">
-              <div class="status-dot" style="background: var(--accent-success);"></div>
+              <div class="status-dot" style="background: var(--color-success);"></div>
               <span class="m-body">Done (Completed)</span>
             </div>
             <div class="status-bar-container">
               <div class="status-bar">
-                <div class="status-fill" style="width: ${(stats.byStatus.done / Math.max(stats.total, 1)) * 100}%; background: var(--accent-success);"
+                <div class="status-fill" style="width: ${(stats.byStatus.done / Math.max(stats.total, 1)) * 100}%; background: var(--color-success);"
                 ></div>
               </div>
               <span class="status-count m-body">${stats.byStatus.done}</span>
@@ -354,7 +354,7 @@ export function createReviewSection(containerId) {
           <div class="tags-cloud">
             ${stats.byTags.map(([tag, count], index) => `
               <div class="tag-item ${index < 3 ? 'top' : ''}"
-                   style="${index < 3 ? 'background: rgba(99, 102, 241, 0.15); color: var(--accent-primary);' : ''}"
+                   style="${index < 3 ? 'background: rgba(99, 102, 241, 0.15); color: var(--color-primary);' : ''}"
               >
                 <span class="tag-name m-body">#${tag}</span>
                 <span class="tag-count m-caption">${count}</span>

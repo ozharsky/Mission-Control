@@ -5,9 +5,9 @@ import { icons } from '../utils/icons.js'
 let expandedPhases = new Set()
 
 const STATUS_CONFIG = {
-  completed: { label: 'Completed', icon: 'check', color: 'var(--accent-success)', bg: 'rgba(16, 185, 129, 0.1)' },
-  active: { label: 'In Progress', icon: 'zap', color: 'var(--accent-primary)', bg: 'rgba(99, 102, 241, 0.1)' },
-  pending: { label: 'Upcoming', icon: 'hourglass', color: 'var(--text-muted)', bg: 'rgba(156, 163, 175, 0.1)' }
+  completed: { label: 'Completed', icon: 'check', color: 'var(--color-success)', bg: 'rgba(16, 185, 129, 0.1)' },
+  active: { label: 'In Progress', icon: 'zap', color: 'var(--color-primary)', bg: 'rgba(99, 102, 241, 0.1)' },
+  pending: { label: 'Upcoming', icon: 'hourglass', color: 'var(--color-text-muted)', bg: 'rgba(156, 163, 175, 0.1)' }
 }
 
 export function createTimelineSection(containerId) {
@@ -55,11 +55,11 @@ export function createTimelineSection(containerId) {
         
         <div class="timeline-stats">
           <div class="timeline-stat">
-            <div class="stat-value m-title" style="color: var(--accent-success);">${completedMilestones}</div>
+            <div class="stat-value m-title" style="color: var(--color-success);">${completedMilestones}</div>
             <div class="stat-label m-caption">Completed</div>
           </div>
           <div class="timeline-stat">
-            <div class="stat-value m-title" style="color: var(--accent-primary);">${totalMilestones - completedMilestones}</div>
+            <div class="stat-value m-title" style="color: var(--color-primary);">${totalMilestones - completedMilestones}</div>
             <div class="stat-label m-caption">Remaining</div>
           </div>
           <div class="timeline-stat">

@@ -10,7 +10,7 @@ let editingNoteId = null
 let previewMode = false
 
 const NOTE_COLORS = [
-  { id: 'default', bg: 'var(--bg-tertiary)', border: 'var(--border-color)' },
+  { id: 'default', bg: 'var(--color-surface)', border: 'var(--color-border)' },
   { id: 'yellow', bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)' },
   { id: 'blue', bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)' },
   { id: 'green', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)' },

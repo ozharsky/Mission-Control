@@ -1,7 +1,7 @@
 // Mission Control V5 Configuration
 // These values are stored in localStorage, not in code
 
-export const APP_VERSION = 'v129'
+export const APP_VERSION = 'v130'
 
 export const CONFIG = {
   // Firebase Realtime Database
