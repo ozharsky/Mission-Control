@@ -43,7 +43,7 @@ export function createSettingsSection(containerId) {
     const lastBackup = localStorage.getItem('mc_last_backup')
 
     container.innerHTML = `
-      <div class="welcome-bar">
+      <div class="welcome-bar m-card">
         <div class="welcome-content">
           <div class="welcome-greeting m-title">${icons.settings()} Settings</div>
           <div class="welcome-status">
