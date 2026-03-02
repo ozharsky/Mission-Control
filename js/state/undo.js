@@ -1,4 +1,4 @@
-import { toast } from '../components/Toast.js'
+import { Toast } from '../components/Toast.js'
 
 class UndoManager {
   constructor() {
@@ -39,7 +39,7 @@ class UndoManager {
     if (!entry) return
     
     // Show toast with undo action
-    toast.show({
+    Toast.show({
       title: message,
       type: 'info',
       duration: timeout,
@@ -77,11 +77,11 @@ class UndoManager {
       entry.undo()
       this.remove(id)
       
-      toast.success('Undo successful', entry.description + ' restored')
+      Toast.success('Undo successful', entry.description + ' restored')
       return true
     } catch (e) {
       console.error('Undo failed:', e)
-      toast.error('Undo failed', 'Could not restore item')
+      Toast.error('Undo failed', 'Could not restore item')
       return false
     }
   }
