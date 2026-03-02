@@ -3,6 +3,7 @@ import { exportToJSON, readFile } from '../utils/csv.js'
 import { Toast } from '../components/Toast.js'
 import { migrateV3ToV4 } from '../utils/migrate.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icons } from '../utils/icons.js'
 
 export function createBackupModal() {
   const existing = document.getElementById('backupModal')
@@ -14,31 +15,31 @@ export function createBackupModal() {
   modal.innerHTML = `
     <div class="modal">
       <div class="modal-header">
-        <div class="modal-title">💾 Backup & Restore</div>
-        <button class="modal-close" onclick="document.getElementById('backupModal').remove()">✕</button>
+        <div class="modal-title">${icons.save()} Backup & Restore</div>
+        <button class="modal-close m-touch" onclick="document.getElementById('backupModal').remove()">${icons.x()}</button>
       </div>
       
       <div class="modal-body">
         <div style="margin-bottom: 1.5rem;">
-          <div style="font-weight: 600; margin-bottom: 0.75rem;">📤 Export Data</div>
+          <div style="font-weight: 600; margin-bottom: 0.75rem;">${icons.upload()} Export Data</div>
           <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Download a complete backup of all your data.</p>
-          <button class="btn btn-primary" onclick="backup.export()">
-            📥 Download Backup
+          <button class="btn btn-primary m-touch" onclick="backup.export()">
+            ${icons.download()} Download Backup
           </button>
         </div>
         
         <div style="margin-bottom: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-          <div style="font-weight: 600; margin-bottom: 0.75rem;">📥 Import Data</div>
+          <div style="font-weight: 600; margin-bottom: 0.75rem;">${icons.download()} Import Data</div>
           <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Restore from a previous backup. V3 backups will be automatically migrated.</p>
           
           <input type="file" id="backupFileInput" accept=".json" style="display: none;">
-          <button class="btn btn-secondary" onclick="document.getElementById('backupFileInput').click()">
-            📁 Select Backup File
+          <button class="btn btn-secondary m-touch" onclick="document.getElementById('backupFileInput').click()">
+            ${icons.folder()} Select Backup File
           </button>
         </div>
         
         <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
-          <div style="font-weight: 600; margin-bottom: 0.5rem;">⚠️ Warning</div>
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">${icons.alert()} Warning</div>
           <div style="font-size: 0.875rem; color: var(--text-secondary);">
             Importing will replace all your current data. Make sure to export a backup first!
           </div>
@@ -46,7 +47,7 @@ export function createBackupModal() {
       </div>
       
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="document.getElementById('backupModal').remove()">Close</button>
+        <button class="btn btn-secondary m-touch" onclick="document.getElementById('backupModal').remove()">Close</button>
       </div>
     </div>
   `
