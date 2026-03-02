@@ -54,7 +54,6 @@ import { syncStorage } from './js/storage/sync.js'
 import { keyboard } from './js/components/Keyboard.js'
 import { Toast } from './js/components/Toast.js'
 import { bulk } from './js/components/Bulk.js'
-import { createNavigation } from './js/components/Navigation.js'
 import { createMobileNav } from './js/components/MobileNav.js'
 
 import { backupScheduler } from './js/utils/backupScheduler.js'
