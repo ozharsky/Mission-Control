@@ -3,6 +3,7 @@ import { Toast } from './Toast.js'
 import { undoManager } from '../state/undo.js'
 import { confirmDelete } from './ConfirmDialog.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icon } from '../utils/icons.js'
 
 export function openEditProjectModal(id, status) {
   const projects = store.get('projects') || {}
@@ -22,8 +23,8 @@ export function openEditProjectModal(id, status) {
   modal.innerHTML = `
     <div class="modal" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
-        <div class="modal-title">✏️ Edit Project</div>
-        <button class="modal-close" onclick="closeEditProjectModal()">✕</button>
+        <div class="modal-title">${icon('pencil', 'modal-title-icon')} Edit Project</div>
+        <button class="modal-close m-touch" onclick="closeEditProjectModal()">${icon('x')}</button>
       </div>
       
       <div class="modal-body">
@@ -41,10 +42,10 @@ export function openEditProjectModal(id, status) {
           <div class="form-group">
             <label class="form-label">Status</label>
             <select class="form-input" id="editProjectStatus">
-              <option value="backlog" ${project.status === 'backlog' ? 'selected' : ''}>📥 Backlog</option>
-              <option value="todo" ${project.status === 'todo' ? 'selected' : ''}>📝 To Do</option>
-              <option value="inprogress" ${project.status === 'inprogress' ? 'selected' : ''}>⚡ In Progress</option>
-              <option value="done" ${project.status === 'done' ? 'selected' : ''}>✅ Done</option>
+              <option value="backlog" ${project.status === 'backlog' ? 'selected' : ''}>${icon('inbox', 'select-icon')} Backlog</option>
+              <option value="todo" ${project.status === 'todo' ? 'selected' : ''}>${icon('circle', 'select-icon')} To Do</option>
+              <option value="inprogress" ${project.status === 'inprogress' ? 'selected' : ''}>${icon('zap', 'select-icon')} In Progress</option>
+              <option value="done" ${project.status === 'done' ? 'selected' : ''}>${icon('check-circle', 'select-icon')} Done</option>
             </select>
           </div>
           
@@ -67,11 +68,11 @@ export function openEditProjectModal(id, status) {
           <div class="form-group">
             <label class="form-label">Board</label>
             <select class="form-input" id="editProjectBoard">
-              <option value="all" ${project.board === 'all' ? 'selected' : ''}>🏢 All</option>
-              <option value="etsy" ${project.board === 'etsy' ? 'selected' : ''}>🛒 Etsy</option>
-              <option value="photography" ${project.board === 'photography' ? 'selected' : ''}>📸 Photo</option>
-              <option value="wholesale" ${project.board === 'wholesale' ? 'selected' : ''}>🏪 B2B</option>
-              <option value="3dprint" ${project.board === '3dprint' ? 'selected' : ''}>🖨️ 3D Print</option>
+              <option value="all" ${project.board === 'all' ? 'selected' : ''}>${icon('building-2', 'select-icon')} All</option>
+              <option value="etsy" ${project.board === 'etsy' ? 'selected' : ''}>${icon('shopping-cart', 'select-icon')} Etsy</option>
+              <option value="photography" ${project.board === 'photography' ? 'selected' : ''}>${icon('camera', 'select-icon')} Photo</option>
+              <option value="wholesale" ${project.board === 'wholesale' ? 'selected' : ''}>${icon('store', 'select-icon')} B2B</option>
+              <option value="3dprint" ${project.board === '3dprint' ? 'selected' : ''}>${icon('printer', 'select-icon')} 3D Print</option>
             </select>
           </div>
         </div>
@@ -88,10 +89,10 @@ export function openEditProjectModal(id, status) {
       </div>
       
       <div class="modal-footer" style="display: flex; justify-content: space-between;">
-        <button class="btn btn-secondary" onclick="closeEditProjectModal()">Cancel</button>
+        <button class="btn btn-secondary m-touch" onclick="closeEditProjectModal()">Cancel</button>
         <div>
-          <button class="btn btn-danger" onclick="deleteProject(${id}, '${status}')" style="margin-right: 0.5rem;">🗑️ Delete</button>
-          <button class="btn btn-primary" onclick="saveEditedProject(${id}, '${status}')">💾 Save Changes</button>
+          <button class="btn btn-danger m-touch" onclick="deleteProject(${id}, '${status}')" style="margin-right: 0.5rem;">${icon('trash-2')} Delete</button>
+          <button class="btn btn-primary m-touch" onclick="saveEditedProject(${id}, '${status}')">${icon('save')} Save Changes</button>
         </div>
       </div>
     </div>
