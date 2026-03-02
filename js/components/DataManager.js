@@ -4,6 +4,7 @@
 import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
 import { loadingStates } from './LoadingStates.js'
+import { icon } from '../utils/icons.js'
 
 export const dataManager = {
   // Export all data to JSON file
@@ -212,8 +213,8 @@ export const dataManager = {
     modal.innerHTML = `
       <div class="modal" style="max-width: 500px;">
         <div class="modal-header">
-          <div class="modal-title">📥 Import Data</div>
-          <button class="modal-close" onclick="document.getElementById('importDialog').remove()">✕</button>
+          <div class="modal-title">${icon('download', 'm-icon')} Import Data</div>
+          <button class="modal-close m-touch" onclick="document.getElementById('importDialog').remove()" aria-label="Close">${icon('x', 'm-icon-sm')}</button>
         </div>
         
         <div class="modal-body">
@@ -246,14 +247,14 @@ export const dataManager = {
           </div>
           
           <div class="import-warning">
-            ⚠️ This will ${section ? 'replace' : 'merge with'} your current data. 
+            ${icon('alert-triangle', 'm-icon-sm')} This will ${section ? 'replace' : 'merge with'} your current data. 
             Consider exporting a backup first.
           </div>
         </div>
         
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="document.getElementById('importDialog').remove()">Cancel</button>
-          <button class="btn btn-primary" onclick="dataManager.confirmImport()">📥 Import Data</button>
+          <button class="btn btn-secondary m-touch" onclick="document.getElementById('importDialog').remove()">Cancel</button>
+          <button class="btn btn-primary m-touch" onclick="dataManager.confirmImport()">${icon('download', 'm-icon-sm')} Import Data</button>
         </div>
       </div>
     `
@@ -269,20 +270,20 @@ export const dataManager = {
     const stats = []
     
     if (data.priorities) {
-      stats.push({ icon: '⏳', label: 'Priorities', count: data.priorities.length })
+      stats.push({ icon: icon('hourglass', 'm-icon-sm'), label: 'Priorities', count: data.priorities.length })
     }
     if (data.projects) {
       const projectCount = Object.values(data.projects).flat().length
-      stats.push({ icon: '📋', label: 'Projects', count: projectCount })
+      stats.push({ icon: icon('folder-kanban', 'm-icon-sm'), label: 'Projects', count: projectCount })
     }
     if (data.skus) {
-      stats.push({ icon: '📦', label: 'SKUs', count: data.skus.length })
+      stats.push({ icon: icon('package', 'm-icon-sm'), label: 'SKUs', count: data.skus.length })
     }
     if (data.events) {
-      stats.push({ icon: '📅', label: 'Events', count: data.events.length })
+      stats.push({ icon: icon('calendar-days', 'm-icon-sm'), label: 'Events', count: data.events.length })
     }
     if (data.notes) {
-      stats.push({ icon: '📝', label: 'Notes', count: data.notes.length })
+      stats.push({ icon: icon('file-text', 'm-icon-sm'), label: 'Notes', count: data.notes.length })
     }
     
     return stats
@@ -375,7 +376,7 @@ export const dataManager = {
   // Clear all data (with confirmation)
   async clearAll() {
     const confirmed = confirm(
-      '⚠️ WARNING: This will delete ALL data!\n\n' +
+      icon('alert-triangle', 'm-icon') + ' WARNING: This will delete ALL data!\n\n' +
       'This action cannot be undone.\n\n' +
       'Make sure you have exported a backup first.\n\n' +
       'Click OK to proceed with deletion.'
