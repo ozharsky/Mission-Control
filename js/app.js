@@ -5,7 +5,7 @@
 import '../main.js';
 
 // Import components for any additional initialization
-import { createNavigation } from './components/Navigation.js';
+import { Navigation, MobileNavWithMore } from './components/Navigation.js';
 import { createMobileNav } from './components/MobileNav.js';
 import { Toast } from './components/Toast.js';
 
@@ -25,4 +25,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export components for external use
-export { createNavigation, createMobileNav, Toast };
+export { Navigation, MobileNavWithMore, createMobileNav, Toast };
