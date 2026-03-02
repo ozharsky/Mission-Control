@@ -179,7 +179,7 @@ export function createReviewSection(containerId) {
     if (revenue.hasData && revenue.growthRate > 20) {
       insights.push({
         type: 'success',
-        icon: 'trendUp',
+        icon: 'trending-up',
         title: 'Revenue growing!',
         message: `Your revenue is up ${revenue.growthRate}% compared to last period.`
       })

@@ -227,7 +227,7 @@ export function createPrioritiesSection(containerId) {
       
       const kanbanBtn = Button({
         text: 'Board',
-        icon: 'layout-kanban',
+        icon: 'columns',
         variant: viewMode === 'kanban' ? 'primary' : 'secondary',
         size: 'sm',
         onClick: () => {
