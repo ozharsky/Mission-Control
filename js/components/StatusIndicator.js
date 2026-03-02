@@ -1,4 +1,5 @@
 import { syncStorage } from '../storage/sync.js'
+import { icons } from '../utils/icons.js'
 
 export function createStatusIndicator(containerId) {
   const container = document.getElementById(containerId)
@@ -9,26 +10,26 @@ export function createStatusIndicator(containerId) {
     
     let statusText = 'Offline (Local)'
     let statusClass = 'offline'
-    let icon = '⚪'
+    let statusIcon = icons.globe()
     let pulseAnimation = 'none'
     let glowColor = '#6b7280'
     
     if (status.firebase) {
-      statusText = '🔥 Firebase Live'
+      statusText = 'Firebase Live'
       statusClass = 'online'
-      icon = '🔥'
+      statusIcon = icons.flame()
       pulseAnimation = 'pulse 2s infinite'
       glowColor = '#10b981'
     } else if (status.github) {
-      statusText = '🔗 GitHub Sync'
+      statusText = 'GitHub Sync'
       statusClass = 'github'
-      icon = '🔗'
+      statusIcon = icons.github()
       pulseAnimation = 'pulse 2s infinite'
       glowColor = '#6366f1'
     }
     
     container.innerHTML = `
-      <div class="status-indicator ${statusClass}" style="
+      <div class="status-indicator ${statusClass} m-touch" style="
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -40,6 +41,7 @@ export function createStatusIndicator(containerId) {
         border: 1px solid var(--border-color);
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
+        min-height: 44px;
       " title="Click to refresh connection">
         <span class="status-dot ${statusClass}" style="
           width: 8px;
@@ -50,6 +52,7 @@ export function createStatusIndicator(containerId) {
           box-shadow: ${statusClass !== 'offline' ? `0 0 8px ${glowColor}, 0 0 16px ${glowColor}40` : 'none'};
           transition: all 0.3s ease;
         "></span>
+        <span class="status-icon" style="display: flex; align-items: center; width: 16px; height: 16px;">${statusIcon}</span>
         <span class="status-text" style="font-weight: 500;">${statusText}</span>
       </div>
     `
