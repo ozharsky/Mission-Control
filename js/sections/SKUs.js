@@ -57,18 +57,16 @@ export function createSKUsSection(containerId) {
     
     container.innerHTML = `
       <!-- Welcome Header -->
-      <div class="welcome-bar">
+      <div class="welcome-bar m-card">
         <div class="welcome-content">
           <div class="welcome-greeting m-title">${icons.package()} SKU Stock</div>
           <div class="welcome-status">
             ${stats.low > 0 ? `
-              <span class="m-badge-danger"
-              >${icons.alert()} ${stats.low} low stock</span>
+              <span class="m-badge m-badge-danger">${icons.alert()} ${stats.low} low stock</span>
             ` : `
-              <span class="m-badge-success"
-              >${icons.check()} Stock OK</span>
+              <span class="m-badge m-badge-success">${icons.check()} Stock OK</span>
             `}
-            <span class="m-badge-secondary">${stats.total} SKUs</span>
+            <span class="m-badge">${stats.total} SKUs</span>
           </div>
         </div>
         <div class="welcome-actions">
@@ -96,15 +94,15 @@ export function createSKUsSection(containerId) {
       <div class="m-card stock-stats-card">
         <div class="stock-stats">
           <div class="stock-stat low">
-            <div class="stock-value m-title m-badge-danger">${stats.low}</div>
+            <div class="stock-value m-title m-badge m-badge-danger">${stats.low}</div>
             <div class="stock-label m-caption">Low (<5)</div>
           </div>
           <div class="stock-stat medium">
-            <div class="stock-value m-title m-badge-warning">${stats.medium}</div>
+            <div class="stock-value m-title m-badge m-badge-warning">${stats.medium}</div>
             <div class="stock-label m-caption">Medium (5-9)</div>
           </div>
           <div class="stock-stat good">
-            <div class="stock-value m-title m-badge-success">${stats.good}</div>
+            <div class="stock-value m-title m-badge m-badge-success">${stats.good}</div>
             <div class="stock-label m-caption">Good (10+)</div>
           </div>
           <div class="stock-divider"></div>
@@ -122,13 +120,13 @@ export function createSKUsSection(containerId) {
             onclick="setSkuFilter('all')"
           >
             <span>All</span>
-            <span class="filter-count m-badge-secondary">${stats.total}</span>
+            <span class="filter-count m-badge">${stats.total}</span>
           </button>
           <button class="m-btn-secondary ${currentFilter === 'low' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('low')"
           >
             <span>${icons.alert()} Low</span>
-            <span class="filter-count m-badge-danger">${stats.low}</span>
+            <span class="filter-count m-badge m-badge-danger">${stats.low}</span>
           </button>
           <button class="m-btn-secondary ${currentFilter === 'medium' ? 'active' : ''} m-touch" 
             onclick="setSkuFilter('medium')"
@@ -193,8 +191,7 @@ export function createSKUsSection(containerId) {
         </div>
         
         <div class="sku-status numeric">
-          <span class="${level.colorClass} m-caption"
-          >${level.label}</span>
+          <span class="${level.colorClass} m-badge m-caption">${level.label}</span>
         </div>
         
         <div class="sku-actions">

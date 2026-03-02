@@ -3,58 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0f">
-  <meta name="description" content="Mission Control V5 - Business Operations Dashboard">
+  <meta name="theme-color" content="#0f0f1a">
+  <meta name="description" content="Mission Control V5 - Business Operations Dashboard for OZ3DPrint">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mission Control">
   
   <title>Mission Control V5</title>
   
-  <!-- Fonts -->
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- CSS with cache busting -->
-  <link rel="stylesheet" href="./css/variables.css?v=108">
-  <link rel="stylesheet" href="./css/ui-components.css?v=108">
-  <link rel="stylesheet" href="./css/base.css?v=108">
-  <link rel="stylesheet" href="./css/components.css?v=108">
-  <link rel="stylesheet" href="./css/navigation.css?v=108">
-  <link rel="stylesheet" href="./css/modal.css?v=108">
-  <link rel="stylesheet" href="./css/utilities.css?v=108">
-  <link rel="stylesheet" href="./css/kanban.css?v=108">
-  <link rel="stylesheet" href="./css/calendar-views.css?v=108">
-  <link rel="stylesheet" href="./css/dragdrop.css?v=108">
-  <link rel="stylesheet" href="./css/print.css?v=108">
-  <link rel="stylesheet" href="./css/animations.css?v=108">
-  <link rel="stylesheet" href="./css/scroll-animations.css?v=108">
-  <link rel="stylesheet" href="./css/empty-states.css?v=108">
-  <link rel="stylesheet" href="./css/skeleton.css?v=108">
-  <link rel="stylesheet" href="./css/toast.css?v=108">
-  <link rel="stylesheet" href="./css/bulk.css?v=108">
-  <link rel="stylesheet" href="./css/progress.css?v=108">
-  <link rel="stylesheet" href="./css/pagination.css?v=108">
-  <link rel="stylesheet" href="./css/tooltips.css?v=108">
-  <link rel="stylesheet" href="./css/scoping.css?v=108">
-  <link rel="stylesheet" href="./css/hover-effects.css?v=108">
-
-  <!-- NEW Layout CSS -->
-  <link rel="stylesheet" href="./css/layout.css?v=108">
-  <link rel="stylesheet" href="./css/mobile-visual.css?v=108">
-
-  <!-- Mobile Components CSS -->
-  <link rel="stylesheet" href="./css/mobile-components.css?v=108">
-
-  <!-- Mobile Navigation CSS -->
-  <link rel="stylesheet" href="./css/mobile-nav.css?v=108">
-
-  <!-- Other CSS -->
-  <link rel="stylesheet" href="./css/animations-utilities.css?v=108">
-  <link rel="stylesheet" href="./css/performance.css?v=108">
-  <link rel="stylesheet" href="./css/file-storage.css?v=108">
-  <link rel="stylesheet" href="./css/accessibility.css?v=108">
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="./css/styles.css?v=200">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
@@ -66,28 +30,44 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  
-  <!-- Design System CSS -->
-  <link rel="stylesheet" href="./css/design-system.css?v=108">
-  <link rel="stylesheet" href="./css/color-system.css?v=108">
-  <link rel="stylesheet" href="./css/spacing-system.css?v=108">
 </head>
 <body>
-  <!-- Desktop Navigation (hidden on mobile) -->
-  <nav id="mainNav" class="nav"></nav>
+  <!-- Desktop Sidebar Navigation -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar__header">
+      <div class="sidebar__logo">
+        <i data-lucide="rocket"></i>
+        <span>Mission Control</span>
+      </div>
+    </div>
+    <nav class="sidebar__nav" id="sidebarNav"></nav>
+    <div class="sidebar__footer" id="sidebarFooter"></div>
+  </aside>
   
-  <!-- Mobile Navigation Container -->
-  <div id="mobileNavContainer"></div>
+  <!-- Mobile Bottom Navigation -->
+  <nav id="bottomNav" class="bottom-nav"></nav>
   
   <!-- Main Content -->
-  <main id="mainContent" class="content"></main>
+  <main id="main" class="main">
+    <header class="main__header">
+      <h1 id="pageTitle">Dashboard</h1>
+      <div id="headerActions"></div>
+    </header>
+    <div class="main__content" id="mainContent"></div>
+  </main>
   
-  <script type="module" src="./main.js?v=108"></script>
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+  
+  <!-- Main Application Script -->
+  <script type="module" src="./js/app.js?v=200"></script>
+  
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js?v=108')
-        .then(() => console.log('✅ Service Worker registered'))
-        .catch(err => console.log('❌ SW registration failed:', err))
+      navigator.serviceWorker.register('./sw.js?v=200')
+        .then(() => console.log('[SW] Registered'))
+        .catch(err => console.log('[SW] Registration failed:', err));
     }
   </script>
 </body>
