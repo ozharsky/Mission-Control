@@ -165,7 +165,7 @@ export function createNotesSection(containerId) {
           <div class="stat-tile success">
             <div class="stat-tile-header">
               <span class="stat-tile-label">With Title</span>
-              <div class="stat-tile-icon">${icons.type()}</div>
+              <div class="stat-tile-icon">${icons.file()}</div>
             </div>
             <div class="stat-tile-value">${stats.withTitle}</div>
           </div>
