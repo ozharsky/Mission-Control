@@ -1,5 +1,6 @@
 // Dashboard Widgets - Reusable data visualization components
 import { store } from '../state/store.js'
+import { icon } from '../utils/icons.js'
 
 // Memoization cache for expensive computations
 const memoCache = new Map()
@@ -71,16 +72,16 @@ export const dashboardWidgets = {
   
   // Stat card widget
   renderStatCard(title, value, change, options = {}) {
-    const { icon = '📊', trend = null, subtitle = '' } = options
+    const { icon: iconName = 'bar-chart-2', trend = null, subtitle = '' } = options
     
-    const trendIcon = trend > 0 ? '📈' : trend < 0 ? '📉' : '➡️'
+    const trendIcon = trend > 0 ? 'trending-up' : trend < 0 ? 'trending-down' : 'minus'
     const trendColor = trend > 0 ? 'var(--accent-success)' : trend < 0 ? 'var(--accent-danger)' : 'var(--text-muted)'
     
     return `
       <div class="stat-card" ${options.onClick ? `onclick="${options.onClick}" tabindex="0" role="button"` : ''}>
         <div class="stat-header">
-          <span class="stat-icon" aria-hidden="true">${icon}</span>
-          ${trend !== null ? `<span class="stat-trend" style="color: ${trendColor}" aria-label="Trend ${trend > 0 ? 'up' : trend < 0 ? 'down' : 'stable'}">${trendIcon} ${Math.abs(trend)}%</span>` : ''}
+          <span class="stat-icon" aria-hidden="true">${icon(iconName)}</span>
+          ${trend !== null ? `<span class="stat-trend" style="color: ${trendColor}" aria-label="Trend ${trend > 0 ? 'up' : trend < 0 ? 'down' : 'stable'}">${icon(trendIcon)} ${Math.abs(trend)}%</span>` : ''}
         </div>
         <div class="stat-value" aria-label="${title}: ${value}">${value}</div>
         <div class="stat-title">${title}</div>
@@ -98,19 +99,19 @@ export const dashboardWidgets = {
     }
     
     const icons = {
-      created: '➕',
-      completed: '✅',
-      updated: '✏️',
-      deleted: '🗑️',
-      assigned: '👤',
-      commented: '💬'
+      created: 'plus-circle',
+      completed: 'check-circle',
+      updated: 'pencil',
+      deleted: 'trash-2',
+      assigned: 'user',
+      commented: 'message-square'
     }
     
     return `
       <div class="activity-feed">
         ${activities.slice(0, limit).map(activity => `
           <div class="activity-item">
-            <span class="activity-icon" aria-hidden="true">${icons[activity.action] || '📝'}</span>
+            <span class="activity-icon" aria-hidden="true">${icon(icons[activity.action] || 'file-text')}</span>
             <div class="activity-content">
               <div class="activity-text">${activity.text}</div>
               <div class="activity-meta">
@@ -135,7 +136,7 @@ export const dashboardWidgets = {
                   ${action.disabled ? 'disabled' : ''}
                   aria-label="${action.label}"
                   ${action.primary ? 'aria-pressed="true"' : ''}>
-            <span class="quick-action-icon" aria-hidden="true">${action.icon}</span>
+            <span class="quick-action-icon" aria-hidden="true">${icon(action.icon)}</span>
             <span class="quick-action-label">${action.label}</span>
           </button>
         `).join('')}
@@ -233,7 +234,17 @@ export const dashboardWidgets = {
       }
       
       .stat-icon {
-        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        color: var(--accent-primary);
+      }
+      
+      .stat-icon svg {
+        width: 24px;
+        height: 24px;
       }
       
       .stat-trend {
@@ -281,8 +292,18 @@ export const dashboardWidgets = {
       }
       
       .activity-icon {
-        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        color: var(--accent-primary);
         flex-shrink: 0;
+      }
+      
+      .activity-icon svg {
+        width: 18px;
+        height: 18px;
       }
       
       .activity-content {
@@ -347,7 +368,16 @@ export const dashboardWidgets = {
       }
       
       .quick-action-icon {
-        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+      }
+      
+      .quick-action-icon svg {
+        width: 16px;
+        height: 16px;
       }
       
       .quick-action-label {
