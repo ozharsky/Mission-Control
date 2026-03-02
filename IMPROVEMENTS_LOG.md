@@ -142,6 +142,12 @@
 - **Commit:** 2d61127
 - **Status:** ✅ Complete
 
+### Run 22 (08:34)
+- **Component:** SKUs.js - Update badge classes to m-badge-* standard, add m-card to welcome-bar
+- **Files:** js/sections/SKUs.js
+- **Commit:** 17761bf
+- **Status:** ✅ Complete
+
 --- (Priority Order)
 
 1. [x] Card components - consistent styling across all sections (Inventory.js standardized)
