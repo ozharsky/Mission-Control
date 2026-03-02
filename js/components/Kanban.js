@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 export function createKanban(containerId, options = {}) {
   const container = document.getElementById(containerId)

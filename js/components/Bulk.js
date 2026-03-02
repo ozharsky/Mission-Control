@@ -1,6 +1,6 @@
 // Enhanced Bulk Operations Manager
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { confirmDelete } from './ConfirmDialog.js'
 
 class BulkManager {
@@ -31,7 +31,7 @@ class BulkManager {
     
     if (this.isActive) {
       this.showBar()
-      toast.info('Bulk mode active', 'Click items to select, then choose an action')
+      Toast.info('Bulk mode active', 'Click items to select, then choose an action')
     } else {
       this.hideBar()
       this.clearSelection()
@@ -278,7 +278,7 @@ class BulkManager {
     const remaining = priorities.filter(p => !this.selected.has(p.id))
     
     store.set('priorities', remaining)
-    toast.success(`Deleted ${this.selected.size} priorities`)
+    Toast.success(`Deleted ${this.selected.size} priorities`)
     this.clearSelection()
   }
   
@@ -301,7 +301,7 @@ class BulkManager {
     store.set('priorities', priorities)
     this.menuOpen = false
     this.clearSelection()
-    toast.success(successMessage, `${count} items updated`)
+    Toast.success(successMessage, `${count} items updated`)
   }
   
   // Render checkbox for priority item

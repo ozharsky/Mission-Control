@@ -1,6 +1,6 @@
 // Error Boundary - Catches and displays errors gracefully
 
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class ErrorBoundary {
   constructor() {
@@ -94,10 +94,10 @@ class ErrorBoundary {
     const isDev = location.hostname === 'localhost' || location.search.includes('debug=true')
     
     if (isDev) {
-      toast.error('Error', `${errorInfo.message} (${errorInfo.source})`, 5000)
+      Toast.error('Error', `${errorInfo.message} (${errorInfo.source})`, 5000)
     } else {
       // Production - generic message
-      toast.error('Something went wrong', 'Please refresh the page if issues persist', 3000)
+      Toast.error('Something went wrong', 'Please refresh the page if issues persist', 3000)
     }
   }
 

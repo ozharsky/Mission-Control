@@ -1,7 +1,7 @@
 // Bulk Operations Component
 // Adds bulk select/checkbox functionality to lists
 
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { confirmDelete } from './ConfirmDialog.js'
 
 export function createBulkOperations(options) {
@@ -167,7 +167,7 @@ export const bulkActions = {
         })
         undoManager.showUndo(undoId, `Deleted ${ids.length} items`)
       } else {
-        toast.success('Deleted', `${ids.length} items removed`)
+        Toast.success('Deleted', `${ids.length} items removed`)
       }
       
       if (onComplete) onComplete()
@@ -209,7 +209,7 @@ export const bulkActions = {
         })
         undoManager.showUndo(undoId, `Updated ${ids.length} items`)
       } else {
-        toast.success('Updated', `${ids.length} items marked ${status}`)
+        Toast.success('Updated', `${ids.length} items marked ${status}`)
       }
       
       if (onComplete) onComplete()
@@ -230,7 +230,7 @@ export const bulkActions = {
       a.click()
       URL.revokeObjectURL(url)
       
-      toast.success('Exported', `${selectedItems.length} items exported`)
+      Toast.success('Exported', `${selectedItems.length} items exported`)
     }
   })
 }

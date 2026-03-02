@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { undoManager } from '../state/undo.js'
 import { logActivity } from '../utils/taskUtils.js'
 import { confirmDelete } from './ConfirmDialog.js'
@@ -267,7 +267,7 @@ export function openEditPriorityModal(id) {
       }
     })
     
-    toast.success('Priority updated')
+    Toast.success('Priority updated')
     document.getElementById('editPriorityModal').remove()
     unlockBodyScroll()
   }
@@ -340,7 +340,7 @@ window.downloadPriorityFile = (fileId) => {
   if (file && file.url) {
     window.open(file.url, '_blank')
   } else {
-    toast.error('File not found or URL unavailable')
+    Toast.error('File not found or URL unavailable')
   }
 }
 
@@ -353,7 +353,7 @@ window.unlinkPriorityFile = (fileId, priorityId) => {
     if (file) {
       delete file.priorityId
       store.set('docs', docs)
-      toast.success('File unlinked from priority')
+      Toast.success('File unlinked from priority')
       // Refresh modal
       openEditPriorityModal(priorityId)
     }

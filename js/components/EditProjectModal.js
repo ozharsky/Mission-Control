@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { undoManager } from '../state/undo.js'
 import { confirmDelete } from './ConfirmDialog.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
@@ -122,7 +122,7 @@ export function saveEditedProject(id, oldStatus) {
   
   const title = document.getElementById('editProjectTitle').value.trim()
   if (!title) {
-    toast.error('Please enter a project title')
+    Toast.error('Please enter a project title')
     return
   }
   
@@ -171,7 +171,7 @@ export function saveEditedProject(id, oldStatus) {
     }
   })
   
-  toast.success('Project updated')
+  Toast.success('Project updated')
   closeEditProjectModal()
 }
 

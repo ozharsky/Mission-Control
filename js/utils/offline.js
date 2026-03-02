@@ -1,5 +1,5 @@
 // Offline Detection and Handling
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class OfflineManager {
   constructor() {
@@ -33,7 +33,7 @@ class OfflineManager {
         ? Math.round((Date.now() - this.offlineTimestamp) / 1000)
         : 0
       
-      toast.success(
+      Toast.success(
         'Back Online',
         duration > 0 
           ? `Connection restored after ${this.formatDuration(duration)}`
@@ -56,7 +56,7 @@ class OfflineManager {
     this.wasOffline = true
     this.offlineTimestamp = Date.now()
     
-    toast.warning(
+    Toast.warning(
       'Offline',
       'You are offline. Changes will be saved locally.',
       5000
@@ -208,7 +208,7 @@ class OfflineQueue {
     this.saveQueue()
     
     if (failed.length > 0) {
-      toast.warning(
+      Toast.warning(
         'Sync Issues',
         `${failed.length} actions failed to sync`
       )

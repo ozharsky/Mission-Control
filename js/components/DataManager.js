@@ -2,7 +2,7 @@
 // Backup and restore functionality
 
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { loadingStates } from './LoadingStates.js'
 
 export const dataManager = {
@@ -40,14 +40,14 @@ export const dataManager = {
       URL.revokeObjectURL(url)
       
       loader.hide()
-      toast.success('Export complete', `Saved as ${filename}`)
+      Toast.success('Export complete', `Saved as ${filename}`)
       
       // Log activity
       this.logActivity('Data exported', filename)
       
     } catch (err) {
       loader.hide()
-      toast.error('Export failed', err.message)
+      Toast.error('Export failed', err.message)
       console.error('Export error:', err)
     }
   },
@@ -58,7 +58,7 @@ export const dataManager = {
     const data = state[section]
     
     if (!data) {
-      toast.error('Export failed', `Section "${section}" not found`)
+      Toast.error('Export failed', `Section "${section}" not found`)
       return
     }
     
@@ -84,7 +84,7 @@ export const dataManager = {
     document.body.removeChild(a)
     
     URL.revokeObjectURL(url)
-    toast.success('Export complete', `Saved as ${filename}`)
+    Toast.success('Export complete', `Saved as ${filename}`)
   },
   
   // Import data from JSON file
@@ -152,7 +152,7 @@ export const dataManager = {
       
     } catch (err) {
       loader.hide()
-      toast.error('Import failed', err.message)
+      Toast.error('Import failed', err.message)
       console.error('Import error:', err)
     }
   },
@@ -329,7 +329,7 @@ export const dataManager = {
       }
       
       loader.hide()
-      toast.success('Import complete', 'Data has been imported successfully')
+      Toast.success('Import complete', 'Data has been imported successfully')
       
       // Log activity
       this.logActivity('Data imported', section || 'All data')
@@ -339,7 +339,7 @@ export const dataManager = {
       
     } catch (err) {
       loader.hide()
-      toast.error('Import failed', err.message)
+      Toast.error('Import failed', err.message)
       console.error('Import error:', err)
     }
     
@@ -388,7 +388,7 @@ export const dataManager = {
     )
     
     if (doubleConfirmed !== 'DELETE') {
-      toast.info('Deletion cancelled')
+      Toast.info('Deletion cancelled')
       return
     }
     
@@ -403,13 +403,13 @@ export const dataManager = {
       localStorage.clear()
       
       loader.hide()
-      toast.success('Data cleared', 'All data has been removed')
+      Toast.success('Data cleared', 'All data has been removed')
       
       setTimeout(() => window.location.reload(), 1500)
       
     } catch (err) {
       loader.hide()
-      toast.error('Clear failed', err.message)
+      Toast.error('Clear failed', err.message)
     }
   }
 }

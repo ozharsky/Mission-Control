@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
 
 export function openProjectModal(status = 'backlog') {
@@ -111,7 +111,7 @@ export function saveProject() {
   const title = document.getElementById('projectTitle').value.trim()
   
   if (!title) {
-    toast.error('Please enter a project title')
+    Toast.error('Please enter a project title')
     document.getElementById('projectTitle').focus()
     return
   }
@@ -147,7 +147,7 @@ export function saveProject() {
   projects[status].push(project)
   store.set('projects', projects)
   
-  toast.success('Project created', title)
+  Toast.success('Project created', title)
   closeProjectModal()
 }
 

@@ -1,5 +1,5 @@
 // Progress Indicator Component
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class ProgressManager {
   constructor() {

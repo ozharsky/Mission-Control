@@ -1,6 +1,6 @@
 // Lead Modal - Create and edit leads
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { sanitizeInput, sanitizeNumber } from '../utils/sanitize.js'
 
 const STATUS_OPTIONS = [
@@ -154,13 +154,13 @@ export async function saveLead(leadId = null) {
   
   // Validation
   if (!company) {
-    toast.error('Company name is required')
+    Toast.error('Company name is required')
     document.getElementById('leadCompany').focus()
     return
   }
   
   if (!name) {
-    toast.error('Contact name is required')
+    Toast.error('Contact name is required')
     document.getElementById('leadName').focus()
     return
   }
@@ -183,7 +183,7 @@ export async function saveLead(leadId = null) {
         notes: sanitizeInput(notes),
         updatedAt: new Date().toISOString()
       }
-      toast.success('Lead updated')
+      Toast.success('Lead updated')
     }
   } else {
     // Create new
@@ -201,7 +201,7 @@ export async function saveLead(leadId = null) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     })
-    toast.success('Lead added')
+    Toast.success('Lead added')
   }
   
   store.set('leads', leads)

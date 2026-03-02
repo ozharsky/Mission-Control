@@ -1,5 +1,5 @@
 // File Upload Component
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { sanitizeInput } from '../utils/sanitize.js'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
@@ -105,13 +105,13 @@ export function createFileUploader(options) {
     const validFiles = files.filter(file => {
       // Check file size
       if (file.size > maxSize) {
-        toast.error('File too large', `${file.name} exceeds ${formatFileSize(maxSize)}`)
+        Toast.error('File too large', `${file.name} exceeds ${formatFileSize(maxSize)}`)
         return false
       }
       
       // Check file type if accept is specified
       if (accept !== '*/*' && !isFileTypeAllowed(file, accept)) {
-        toast.error('File type not allowed', file.name)
+        Toast.error('File type not allowed', file.name)
         return false
       }
       
@@ -169,13 +169,13 @@ export function createFileUploader(options) {
       
       if (onUpload) onUpload(fileData)
       
-      toast.success('File uploaded', file.name)
+      Toast.success('File uploaded', file.name)
       
     } catch (err) {
       queueItem.status = 'error'
       queueItem.error = err.message
       renderQueue()
-      toast.error('Upload failed', file.name)
+      Toast.error('Upload failed', file.name)
     }
   }
   

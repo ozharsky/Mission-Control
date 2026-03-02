@@ -1,5 +1,5 @@
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { logActivity } from '../utils/taskUtils.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
 import { icons } from '../utils/icons.js'
@@ -616,14 +616,14 @@ window.clearDraft = function() {
   clearFormAutoSave()
   closePriorityModal()
   openPriorityModal()
-  toast.success('Draft cleared')
+  Toast.success('Draft cleared')
 }
 
 export function savePriority() {
   const text = document.getElementById('priorityText').value.trim()
   
   if (!text) {
-    toast.error('Please enter a task description')
+    Toast.error('Please enter a task description')
     document.getElementById('priorityText').focus()
     document.getElementById('priorityText').classList.add('error')
     return
@@ -682,7 +682,7 @@ export function savePriority() {
   // Clear auto-save
   clearFormAutoSave()
   
-  toast.success('Priority created', text)
+  Toast.success('Priority created', text)
   closePriorityModal()
 }
 

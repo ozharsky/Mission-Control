@@ -1,6 +1,6 @@
 // Offline Indicator - Shows connection status
 
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class OfflineIndicator {
   constructor() {
@@ -40,7 +40,7 @@ class OfflineIndicator {
     this.hideOffline()
     
     if (this.wasOffline) {
-      toast.success('Back online', 'Your changes will now sync', 3000)
+      Toast.success('Back online', 'Your changes will now sync', 3000)
       this.wasOffline = false
       
       // Trigger sync
@@ -52,7 +52,7 @@ class OfflineIndicator {
     this.isOnline = false
     this.wasOffline = true
     this.showOffline()
-    toast.warning('You\'re offline', 'Changes saved locally', 3000)
+    Toast.warning('You\'re offline', 'Changes saved locally', 3000)
   }
 
   showOffline() {

@@ -1,4 +1,4 @@
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 export function confirmDialog(options = {}) {
   const {

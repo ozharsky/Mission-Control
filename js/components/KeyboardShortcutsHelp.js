@@ -1,6 +1,6 @@
 // Keyboard Shortcuts Help - Show available keyboard shortcuts
 
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class KeyboardShortcutsHelp {
   constructor() {

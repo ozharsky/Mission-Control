@@ -1,6 +1,6 @@
 // Event Modal - Create and edit events
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { sanitizeInput } from '../utils/sanitize.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
 
@@ -178,13 +178,13 @@ export async function saveEvent(eventId = null) {
   
   // Validation
   if (!name) {
-    toast.error('Event name is required')
+    Toast.error('Event name is required')
     document.getElementById('eventName').focus()
     return
   }
   
   if (!date) {
-    toast.error('Event date is required')
+    Toast.error('Event date is required')
     document.getElementById('eventDate').focus()
     return
   }
@@ -206,7 +206,7 @@ export async function saveEvent(eventId = null) {
         notes: sanitizeInput(notes),
         updatedAt: new Date().toISOString()
       }
-      toast.success('Event updated')
+      Toast.success('Event updated')
     }
   } else {
     // Create new
@@ -222,7 +222,7 @@ export async function saveEvent(eventId = null) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     })
-    toast.success('Event added')
+    Toast.success('Event added')
   }
   
   store.set('events', events)

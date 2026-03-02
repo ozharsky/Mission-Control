@@ -1,6 +1,6 @@
 // Pull to Refresh - Mobile gesture for refreshing data
 
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 class PullToRefresh {
   constructor(options = {}) {
@@ -201,9 +201,9 @@ class PullToRefresh {
 
     try {
       await this.onRefresh()
-      toast.success('Refreshed', 'Data updated successfully')
+      Toast.success('Refreshed', 'Data updated successfully')
     } catch (err) {
-      toast.error('Refresh failed', err.message)
+      Toast.error('Refresh failed', err.message)
     } finally {
       this.isRefreshing = false
       indicatorEl.classList.remove('refreshing')

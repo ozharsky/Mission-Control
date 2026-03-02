@@ -1,6 +1,6 @@
 // SKU Modal - Create and edit SKUs
 import { store } from '../state/store.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 import { sanitizeInput, sanitizeNumber } from '../utils/sanitize.js'
 
 const COLOR_OPTIONS = [
@@ -140,13 +140,13 @@ export async function saveSKU(skuId = null) {
   
   // Validation
   if (!code) {
-    toast.error('SKU code is required')
+    Toast.error('SKU code is required')
     document.getElementById('skuCode')?.focus()
     return
   }
   
   if (!name) {
-    toast.error('Product name is required')
+    Toast.error('Product name is required')
     document.getElementById('skuName')?.focus()
     return
   }
@@ -154,7 +154,7 @@ export async function saveSKU(skuId = null) {
   // Validate SKU format (XXX-CC-V)
   const skuRegex = /^[A-Z]{3}-[A-Z]{2}-\d{2}$/
   if (!skuRegex.test(code)) {
-    toast.error('Invalid SKU format', 'Use format: XXX-CC-01 (e.g., MIN-BK-01)')
+    Toast.error('Invalid SKU format', 'Use format: XXX-CC-01 (e.g., MIN-BK-01)')
     document.getElementById('skuCode')?.focus()
     return
   }
@@ -164,7 +164,7 @@ export async function saveSKU(skuId = null) {
   // Check for duplicate code
   const existing = skus.find(s => s.code === code && s.id !== skuId)
   if (existing) {
-    toast.error('SKU code already exists', code)
+    Toast.error('SKU code already exists', code)
     return
   }
   
@@ -177,7 +177,7 @@ export async function saveSKU(skuId = null) {
         stock,
         updatedAt: new Date().toISOString()
       }
-      toast.success('SKU updated', code)
+      Toast.success('SKU updated', code)
     }
   } else {
     // Create new
@@ -189,7 +189,7 @@ export async function saveSKU(skuId = null) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     })
-    toast.success('SKU added', code)
+    Toast.success('SKU added', code)
   }
   
   store.set('skus', skus)
@@ -204,7 +204,7 @@ export async function deleteSKU(id) {
   
   const skus = store.get('skus').filter(s => s.id !== id)
   store.set('skus', skus)
-  toast.success('SKU deleted')
+  Toast.success('SKU deleted')
 }
 
 // Expose globally

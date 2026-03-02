@@ -1,6 +1,6 @@
 import { syncStorage } from '../storage/sync.js'
 import { isFirebaseConfigured, isGitHubConfigured, saveFirebaseConfig, saveGitHubConfig } from '../config.js'
-import { toast } from './Toast.js'
+import { Toast } from './Toast.js'
 
 export function createSettingsModal() {
   const existing = document.getElementById('settingsModal')
@@ -163,7 +163,7 @@ export function createSettingsModal() {
     if (ghToken) localStorage.setItem('mc_github_token', ghToken)
     if (ghGistId) localStorage.setItem('mc_gist_id', ghGistId)
     
-    toast.success('Settings saved', 'Configuration updated successfully')
+    Toast.success('Settings saved', 'Configuration updated successfully')
     modal.remove()
     
     // Reload to apply new Firebase config
@@ -173,9 +173,9 @@ export function createSettingsModal() {
   window.manualBackup = async () => {
     try {
       await syncStorage.sync()
-      toast.success('Backup complete', 'Data saved to cloud storage')
+      Toast.success('Backup complete', 'Data saved to cloud storage')
     } catch (error) {
-      toast.error('Backup failed', error.message)
+      Toast.error('Backup failed', error.message)
     }
   }
 }
