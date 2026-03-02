@@ -130,7 +130,7 @@ const utils = {
 export const mc = {
   // Core
   store,
-  toast,
+  toast: Toast,
   
   // Navigation
   navigate: navigation.goTo.bind(navigation),

@@ -79,7 +79,7 @@ setupGlobalErrorHandler()
 window.errorBoundary = errorBoundary
 window.offlineIndicator = offlineIndicator
 window.syncStatus = syncStatus
-window.toast = toast
+window.toast = Toast
 
 // Detect low-power devices and adjust animations
 const isLowPower = isLowPowerDevice()
