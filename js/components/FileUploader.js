@@ -1,6 +1,7 @@
 // File Upload Component
 import { Toast } from './Toast.js'
 import { sanitizeInput } from '../utils/sanitize.js'
+import { icon } from '../utils/icons.js'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const ALLOWED_TYPES = {
@@ -37,7 +38,7 @@ export function createFileUploader(options) {
                onchange="handleFileSelect(this.files)"
         >
         
-        <div class="upload-icon">📁</div>
+        <div class="upload-icon">${icon('folder-open')}</div>
         <div class="upload-text">
           <strong>Click to upload</strong> or drag and drop
         </div>
@@ -211,7 +212,7 @@ export function createFileUploader(options) {
               <div class="queue-progress">
                 <div class="queue-progress-bar" style="width: ${file.progress || 0}%"></div>
               </div>
-            ` : file.status === 'complete' ? '✅' : file.status === 'error' ? '❌' : '⏳'}
+            ` : file.status === 'complete' ? icon('check-circle', 'queue-status-icon') : file.status === 'error' ? icon('x-circle', 'queue-status-icon') : icon('clock', 'queue-status-icon')}
           </div>
         </div>
       `).join('')}
@@ -226,13 +227,13 @@ export function createFileUploader(options) {
   }
   
   function getFileIcon(mimeType) {
-    if (mimeType.startsWith('image/')) return '🖼️'
-    if (mimeType === 'application/pdf') return '📄'
-    if (mimeType.includes('word')) return '📝'
-    if (mimeType.includes('excel') || mimeType.includes('sheet')) return '📊'
-    if (mimeType.startsWith('text/')) return '📃'
-    if (mimeType.includes('json') || mimeType.includes('javascript')) return '💻'
-    return '📎'
+    if (mimeType.startsWith('image/')) return icon('image', 'file-type-icon')
+    if (mimeType === 'application/pdf') return icon('file-text', 'file-type-icon')
+    if (mimeType.includes('word')) return icon('file-type', 'file-type-icon')
+    if (mimeType.includes('excel') || mimeType.includes('sheet')) return icon('table', 'file-type-icon')
+    if (mimeType.startsWith('text/')) return icon('file-text', 'file-type-icon')
+    if (mimeType.includes('json') || mimeType.includes('javascript')) return icon('code', 'file-type-icon')
+    return icon('paperclip', 'file-type-icon')
   }
   
   function formatFileSize(bytes) {
@@ -294,7 +295,7 @@ export function createFilePreview(fileData) {
   
   return `
     <div class="file-preview generic">
-      <div class="preview-icon">📄</div>
+      <div class="preview-icon">${icon('file-text')}</div>
       <div class="preview-name">${escapeHtml(name)}</div>
     </div>
   `
@@ -310,7 +311,7 @@ export function showFilePreview(fileData) {
     <div class="modal" style="max-width: 90vw; max-height: 90vh;">
       <div class="modal-header">
         <div class="modal-title">${escapeHtml(name)}</div>
-        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+        <button class="modal-close m-touch" onclick="this.closest('.modal-overlay').remove()">${icon('x')}</button>
       </div>
       <div class="modal-body" style="padding: 0; overflow: auto;">
         ${type.startsWith('image/') 
@@ -319,8 +320,8 @@ export function showFilePreview(fileData) {
         }
       </div>
       <div class="modal-footer">
-        <a href="${data}" download="${escapeHtml(name)}" class="btn btn-primary">📥 Download</a>
-        <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
+        <a href="${data}" download="${escapeHtml(name)}" class="btn btn-primary m-touch">${icon('download')} Download</a>
+        <button class="btn btn-secondary m-touch" onclick="this.closest('.modal-overlay').remove()">Close</button>
       </div>
     </div>
   `
