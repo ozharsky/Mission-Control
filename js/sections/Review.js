@@ -239,7 +239,7 @@ export function createReviewSection(containerId) {
           <div class="metric-label m-body">Completion Rate</div>
           ${completionChange !== 0 ? `
             <div class="metric-change ${completionChange > 0 ? 'positive' : 'negative'} m-caption"
-            >${completionChange > 0 ? icons.trendUp() : icons.trendDown()} ${Math.abs(completionChange)}%</div>
+            >${completionChange > 0 ? icons.chart() : icons.chart()} ${Math.abs(completionChange)}%</div>
           ` : ''}
         </div>        
         <div class="m-card metric-card">
