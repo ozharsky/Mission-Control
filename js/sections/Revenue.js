@@ -1,16 +1,24 @@
-// Revenue Section - Improved with relevant metrics and better chart
+/**
+ * Revenue Section - Financial tracking with charts and goals
+ * Uses new design system with Card, Button, Badge components
+ */
 
 import { store } from '../state/store.js'
 import { parseEtsyCSV, readFile } from '../utils/csv.js'
-import { toast } from '../components/Toast.js'
-import { addTouchFeedback } from '../utils/mobileInteractions.js'
-import { icons } from '../utils/icons.js'
+import { Toast } from '../components/Toast.js'
+import { Card, StatCard } from '../components/Card.js'
+import { Button } from '../components/Button.js'
+import { Badge } from '../components/Badge.js'
 
 let revenueChart = null
 let isLoading = false
 let chartRenderTimeout = null
 
-// Calculate realistic goals based on historical data
+/**
+ * Calculate smart goals based on historical data
+ * @param {Array} history - Revenue history array
+ * @returns {Object} Monthly revenue and orders goals
+ */
 function calculateSmartGoals(history) {
   if (history.length === 0) {
     return { monthlyRevenueGoal: 500, monthlyOrdersGoal: 20 }
@@ -28,7 +36,13 @@ function calculateSmartGoals(history) {
   }
 }
 
-// Create gradient for chart
+/**
+ * Create gradient for chart
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {string} color1 - Start color
+ * @param {string} color2 - End color
+ * @returns {CanvasGradient} Linear gradient
+ */
 function createGradient(ctx, color1, color2) {
   const gradient = ctx.createLinearGradient(0, 0, 0, 300)
   gradient.addColorStop(0, color1)
@@ -36,6 +50,10 @@ function createGradient(ctx, color1, color2) {
   return gradient
 }
 
+/**
+ * Render the revenue chart using Chart.js
+ * @param {Array} history - Revenue history data
+ */
 function renderRevenueChart(history) {
   const canvas = document.getElementById('revenueChart')
   if (!canvas || !history?.length) return
@@ -62,12 +80,16 @@ function renderRevenueChart(history) {
   }, 50)
 }
 
+/**
+ * Create Chart.js chart instance
+ * @param {HTMLCanvasElement} canvas - Canvas element
+ * @param {Array} history - Revenue history data
+ */
 function createChart(canvas, history) {
   const ctx = canvas.getContext('2d')
   
   // Create gradients
   const revenueGradient = createGradient(ctx, 'rgba(99, 102, 241, 0.8)', 'rgba(99, 102, 241, 0.2)')
-  const revenueBorderGradient = createGradient(ctx, '#6366f1', '#8b5cf6')
   
   revenueChart = new window.Chart(ctx, {
     type: 'bar',
@@ -88,10 +110,10 @@ function createChart(canvas, history) {
           label: 'Orders',
           data: history.map(h => h.orders),
           type: 'line',
-          borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
           borderWidth: 3,
-          pointBackgroundColor: '#10b981',
+          pointBackgroundColor: '#22c55e',
           pointBorderColor: '#fff',
           pointBorderWidth: 2,
           pointRadius: 4,
@@ -120,10 +142,10 @@ function createChart(canvas, history) {
           }
         },
         tooltip: {
-          backgroundColor: 'rgba(26, 26, 37, 0.95)',
-          titleColor: '#f8fafc',
-          bodyColor: '#94a3b8',
-          borderColor: 'rgba(148, 163, 184, 0.2)',
+          backgroundColor: 'rgba(26, 26, 46, 0.95)',
+          titleColor: '#ffffff',
+          bodyColor: 'rgba(255, 255, 255, 0.7)',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1,
           padding: 12,
           cornerRadius: 8,
@@ -141,7 +163,7 @@ function createChart(canvas, history) {
         x: {
           grid: { display: false },
           ticks: {
-            color: '#64748b',
+            color: 'rgba(255, 255, 255, 0.5)',
             font: { size: 11 }
           }
         },
@@ -150,11 +172,11 @@ function createChart(canvas, history) {
           display: true,
           position: 'left',
           grid: {
-            color: 'rgba(148, 163, 184, 0.1)',
+            color: 'rgba(255, 255, 255, 0.05)',
             drawBorder: false
           },
           ticks: {
-            color: '#64748b',
+            color: 'rgba(255, 255, 255, 0.5)',
             callback: v => '$' + v,
             font: { size: 11 }
           }
@@ -165,7 +187,7 @@ function createChart(canvas, history) {
           position: 'right',
           grid: { display: false },
           ticks: {
-            color: '#10b981',
+            color: '#22c55e',
             font: { size: 11 }
           }
         }
@@ -174,6 +196,11 @@ function createChart(canvas, history) {
   })
 }
 
+/**
+ * Format month label for display
+ * @param {string} monthStr - Month string (YYYY-MM)
+ * @returns {string} Formatted month label
+ */
 function formatMonthLabel(monthStr) {
   if (!monthStr) return ''
   const [year, month] = monthStr.split('-')
@@ -181,6 +208,11 @@ function formatMonthLabel(monthStr) {
   return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
 }
 
+/**
+ * Create the Revenue section
+ * @param {string} containerId - Container element ID
+ * @returns {Object} Section controller with render method
+ */
 export function createRevenueSection(containerId) {
   const container = document.getElementById(containerId)
   if (!container) return
@@ -229,189 +261,306 @@ export function createRevenueSection(containerId) {
     
     // Key metrics
     const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
-    const itemsPerOrder = totalOrders > 0 ? totalItems / totalOrders : 0
     const avgMonthlyRevenue = history.length > 0 ? totalRevenue / history.length : 0
     
-    container.innerHTML = `
-      <div class="welcome-bar m-card">
-        <div class="welcome-content">
-          <div class="welcome-greeting m-title">${icons.dollar()} Revenue</div>
-          <div class="welcome-status">
-            ${trend.direction !== 'flat' ? `
-              <span class="m-badge ${trend.direction === 'up' ? 'm-badge-success' : 'm-badge-danger'}">
-                ${trend.direction === 'up' ? icons.trendUp() : icons.trendDown()} ${trend.percent.toFixed(0)}% vs last quarter
-              </span>
-            ` : ''}
-            ${onTrack && current.value > 0 ? `
-              <span class="m-badge m-badge-success">${icons.check()} On track</span>
-            ` : current.value > 0 ? `
-              <span class="m-badge m-badge-warning">${icons.alert()} Behind pace</span>
-            ` : ''}
-          </div>
-        </div>
-        <button class="m-btn-secondary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import</button>
-      </div>
-      
-      <input type="file" id="revenueFileInput" accept=".csv" style="display: none;" onchange="handleRevenueFileSelect(this)">
-      
-      <!-- Key Metrics -->
-      <div class="metrics-grid revenue-metrics m-grid-2">
-        <div class="metric-card m-card">
-          <div class="metric-value">$${totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-          <div class="metric-label m-body">Total Revenue</div>
-          <div class="metric-sub m-caption">Lifetime earnings</div>
-        </div>
-        
-        <div class="metric-card m-card">
-          <div class="metric-value">${totalOrders.toLocaleString()}</div>
-          <div class="metric-label m-body">Total Orders</div>
-          <div class="metric-sub m-caption">${avgOrderValue > 0 ? `$${avgOrderValue.toFixed(2)} avg order` : 'Import data'}</div>
-        </div>
-        
-        <div class="metric-card m-card">
-          <div class="metric-value">$${avgMonthlyRevenue.toFixed(0)}</div>
-          <div class="metric-label m-body">Avg/Month</div>
-          <div class="metric-sub m-caption">Based on ${history.length} months</div>
-        </div>
-        
-        <div class="metric-card m-card">
-          <div class="metric-value">${bestMonth ? formatMonthLabel(bestMonth.month) : '-'}</div>
-          <div class="metric-label m-body">Best Month</div>
-          <div class="metric-sub m-caption">${bestMonth ? `$${bestMonth.value.toFixed(0)} revenue` : 'No data'}</div>
+    // Build header section
+    const headerSection = document.createElement('div')
+    headerSection.className = 'section-header'
+    headerSection.innerHTML = `
+      <div class="section-header__content">
+        <h1 class="section-header__title">
+          <i data-lucide="dollar-sign"></i> Revenue
+        </h1>
+        <div class="section-header__badges">
+          ${trend.direction !== 'flat' ? `
+            <span class="badge badge--${trend.direction === 'up' ? 'success' : 'danger'}">
+              <i data-lucide="trend-${trend.direction === 'up' ? 'up' : 'down'}"></i>
+              ${trend.percent.toFixed(0)}% vs last quarter
+            </span>
+          ` : ''}
+          ${onTrack && current.value > 0 ? `
+            <span class="badge badge--success">
+              <i data-lucide="check-circle"></i> On track
+            </span>
+          ` : current.value > 0 ? `
+            <span class="badge badge--warning">
+              <i data-lucide="alert-triangle"></i> Behind pace
+            </span>
+          ` : ''}
         </div>
       </div>
-      
-      <!-- Monthly Goals (SMART goals based on history) -->
-      <div class="m-card">
-        <div class="card-header">
-          <div class="card-title m-title">${icons.target()} This Month's Goals</div>
-          <span class="goal-subtitle m-caption">Based on your ${history.length > 3 ? '3-month average + 20%' : 'starter goals'}</span>
-        </div>
-        
-        <div class="progress-section">
-          <div class="progress-header">
-            <span class="progress-label m-body">Revenue Goal: $${monthlyRevenueGoal.toLocaleString()}</span>
-            <span class="progress-value ${revenueProgress >= 100 ? 'success' : ''} m-body">${revenueProgress.toFixed(0)}%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill revenue ${revenueProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(revenueProgress, 100)}%"></div>
-          </div>
-          <div class="progress-footer m-caption">
-            ${revenueProgress >= 100 ? `${icons.party()} Goal achieved!` : 
-              `$${revenueRemaining.toLocaleString()} more needed • ${daysRemaining} days left • Projected: $${projectedRevenue.toFixed(0)}`}
-          </div>
-        </div>
-        
-        <div class="progress-section" style="margin-top: 1rem;">
-          <div class="progress-header">
-            <span class="progress-label m-body">Orders Goal: ${monthlyOrdersGoal}</span>
-            <span class="progress-value ${ordersProgress >= 100 ? 'success' : ''} m-body">${ordersProgress.toFixed(0)}%</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill orders ${ordersProgress >= 100 ? 'success' : ''}" style="width: ${Math.min(ordersProgress, 100)}%"></div>
-          </div>
-          <div class="progress-footer m-caption">
-            ${ordersProgress >= 100 ? `${icons.party()} Target achieved!` : `${ordersRemaining} more orders needed`}
-          </div>
-        </div>
-      </div>
-      
-      ${history.length > 0 ? `
-        <!-- Revenue Chart -->
-        <div class="m-card">
-          <div class="card-header">
-            <div class="card-title m-title">${icons.chart()} Revenue & Orders Trend</div>
-          </div>
-          <div class="chart-container" style="max-width: 100%; overflow-x: auto;">
-            <canvas id="revenueChart" style="max-width: 100%;"></canvas>
-          </div>
-        </div>
-        
-        <!-- Monthly History Table -->
-        <div class="m-card">
-          <div class="card-header">
-            <div class="card-title m-title">${icons.clipboard()} Monthly History</div>
-            <span class="history-count m-caption">${history.length} months tracked</span>
-          </div>
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Month</th>
-                  <th class="numeric">Orders</th>
-                  <th class="numeric">Items</th>
-                  <th class="numeric">Revenue</th>
-                  <th class="numeric">Avg/Order</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${history.slice().reverse().map(h => {
-                  const avg = h.orders > 0 ? h.value / h.orders : 0
-                  const isBest = bestMonth && h.month === bestMonth.month
-                  const isCurrent = h.month === currentMonthKey
-                  return `<tr class="${isBest ? 'best-month' : ''} ${isCurrent ? 'current-month' : ''}">
-                    <td>
-                      ${formatMonthLabel(h.month)}
-                      ${isBest ? '<span class="m-badge m-badge-success">' + icons.star() + ' Best</span>' : ''}
-                      ${isCurrent ? '<span class="m-badge">Current</span>' : ''}
-                    </td>
-                    <td class="numeric">${h.orders || 0}</td>
-                    <td class="numeric">${h.items || 0}</td>
-                    <td class="numeric revenue">$${(h.value || 0).toFixed(2)}</td>
-                    <td class="numeric">$${avg.toFixed(2)}</td>
-                  </tr>`
-                }).join('')}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td><strong>Total/Avg</strong></td>
-                  <td class="numeric"><strong>${totalOrders}</strong></td>
-                  <td class="numeric"><strong>${totalItems}</strong></td>
-                  <td class="numeric revenue"><strong>$${totalRevenue.toFixed(2)}</strong></td>
-                  <td class="numeric"><strong>$${avgOrderValue.toFixed(2)}</strong></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      ` : `
-        <div class="empty-state m-card">
-          <div class="empty-state-icon">${icons.chart()}</div>
-          <div class="empty-state-title m-title">No revenue data yet</div>
-          <div class="empty-state-text m-body">
-            Import your Etsy Orders CSV to see revenue trends and insights.<br>
-            <strong>Go to:</strong> Etsy Shop Manager → Orders & Shipping → Download CSV
-          </div>
-          <button class="m-btn-primary m-touch" onclick="document.getElementById('revenueFileInput').click()">${icons.folder()} Import Orders CSV</button>
-        </div>
-      `}
     `
     
-    // Apply touch feedback to all interactive elements
-    container.querySelectorAll('.m-touch, .m-touch-lg').forEach(addTouchFeedback)
+    const importBtn = Button({
+      text: 'Import from Etsy',
+      variant: 'secondary',
+      icon: 'folder-open',
+      onClick: () => document.getElementById('revenueFileInput').click()
+    })
+    headerSection.querySelector('.section-header__content').appendChild(importBtn)
     
+    // Hidden file input
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.id = 'revenueFileInput'
+    fileInput.accept = '.csv'
+    fileInput.style.display = 'none'
+    fileInput.onchange = (e) => handleRevenueFileSelect(e.target)
+    headerSection.appendChild(fileInput)
+    
+    // Stats grid
+    const statsGrid = document.createElement('div')
+    statsGrid.className = 'grid grid--2 mb-4'
+    
+    const statCards = [
+      StatCard({
+        title: 'Total Revenue',
+        value: `$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        change: avgOrderValue > 0 ? `$${avgOrderValue.toFixed(2)} avg order` : 'Import data',
+        changeType: 'neutral',
+        icon: 'dollar-sign'
+      }),
+      StatCard({
+        title: 'Total Orders',
+        value: totalOrders.toLocaleString(),
+        change: `${totalItems} items sold`,
+        changeType: 'neutral',
+        icon: 'shopping-bag'
+      }),
+      StatCard({
+        title: 'Avg/Month',
+        value: `$${avgMonthlyRevenue.toFixed(0)}`,
+        change: `Based on ${history.length} months`,
+        changeType: 'neutral',
+        icon: 'bar-chart-3'
+      }),
+      StatCard({
+        title: 'Best Month',
+        value: bestMonth ? formatMonthLabel(bestMonth.month) : '-',
+        change: bestMonth ? `$${bestMonth.value.toFixed(0)} revenue` : 'No data',
+        changeType: bestMonth ? 'positive' : 'neutral',
+        icon: 'trophy'
+      })
+    ]
+    
+    statCards.forEach(card => statsGrid.appendChild(card))
+    
+    // Goals card
+    const goalsCard = Card({
+      header: { 
+        title: "This Month's Goals",
+        actions: Badge({ 
+          text: `Based on ${history.length > 3 ? '3-month avg + 20%' : 'starter goals'}`,
+          variant: 'neutral'
+        })
+      },
+      body: createGoalsBody(revenueProgress, revenueRemaining, ordersProgress, ordersRemaining, 
+                           monthlyRevenueGoal, monthlyOrdersGoal, daysRemaining, projectedRevenue)
+    })
+    
+    // Clear container and append sections
+    container.innerHTML = ''
+    container.appendChild(headerSection)
+    container.appendChild(statsGrid)
+    container.appendChild(goalsCard)
+    
+    // Add chart and history if data exists
     if (history.length > 0) {
+      // Chart card
+      const chartCard = Card({
+        header: { title: 'Revenue & Orders Trend' },
+        body: (() => {
+          const wrapper = document.createElement('div')
+          wrapper.style.height = '300px'
+          wrapper.style.position = 'relative'
+          const canvas = document.createElement('canvas')
+          canvas.id = 'revenueChart'
+          wrapper.appendChild(canvas)
+          return wrapper
+        })()
+      })
+      container.appendChild(chartCard)
+      
+      // History table card
+      const historyCard = Card({
+        header: { 
+          title: 'Monthly History',
+          actions: Badge({ text: `${history.length} months tracked`, variant: 'neutral' })
+        },
+        body: createHistoryTable(history, currentMonthKey, bestMonth, totalOrders, totalItems, totalRevenue, avgOrderValue)
+      })
+      container.appendChild(historyCard)
+      
+      // Render chart after DOM update
       setTimeout(() => renderRevenueChart(history), 100)
+    } else {
+      // Empty state
+      const emptyCard = createEmptyStateCard()
+      container.appendChild(emptyCard)
+    }
+    
+    // Initialize Lucide icons
+    if (window.lucide) {
+      window.lucide.createIcons()
     }
   }
   
-  window.handleRevenueFileSelect = async (input) => {
+  /**
+   * Create goals progress body
+   */
+  function createGoalsBody(revenueProgress, revenueRemaining, ordersProgress, ordersRemaining,
+                          monthlyRevenueGoal, monthlyOrdersGoal, daysRemaining, projectedRevenue) {
+    const body = document.createElement('div')
+    body.innerHTML = `
+      <div class="progress-section mb-4">
+        <div class="progress-header flex justify-between items-center mb-2">
+          <span class="form-label">Revenue Goal: $${monthlyRevenueGoal.toLocaleString()}</span>
+          <span class="font-semibold ${revenueProgress >= 100 ? 'text-success' : ''}">${revenueProgress.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar" style="height: 8px; background: var(--color-surface-hover); border-radius: var(--radius-full); overflow: hidden;">
+          <div class="progress-fill ${revenueProgress >= 100 ? 'bg-success' : 'bg-primary'}" 
+               style="height: 100%; width: ${Math.min(revenueProgress, 100)}%; transition: width var(--transition-slow);"></div>
+        </div>
+        <div class="progress-footer text-sm text-muted mt-2">
+          ${revenueProgress >= 100 ? `
+            <span class="text-success"><i data-lucide="party-popper"></i> Goal achieved!</span>
+          ` : `
+            $${revenueRemaining.toLocaleString()} more needed • ${daysRemaining} days left • Projected: $${projectedRevenue.toFixed(0)}
+          `}
+        </div>
+      </div>
+      
+      <div class="progress-section">
+        <div class="progress-header flex justify-between items-center mb-2">
+          <span class="form-label">Orders Goal: ${monthlyOrdersGoal}</span>
+          <span class="font-semibold ${ordersProgress >= 100 ? 'text-success' : ''}">${ordersProgress.toFixed(0)}%</span>
+        </div>
+        <div class="progress-bar" style="height: 8px; background: var(--color-surface-hover); border-radius: var(--radius-full); overflow: hidden;">
+          <div class="progress-fill ${ordersProgress >= 100 ? 'bg-success' : 'bg-success'}" 
+               style="height: 100%; width: ${Math.min(ordersProgress, 100)}%; transition: width var(--transition-slow);"></div>
+        </div>
+        <div class="progress-footer text-sm text-muted mt-2">
+          ${ordersProgress >= 100 ? `
+            <span class="text-success"><i data-lucide="party-popper"></i> Target achieved!</span>
+          ` : `
+            ${ordersRemaining} more orders needed
+          `}
+        </div>
+      </div>
+    `
+    return body
+  }
+  
+  /**
+   * Create history table
+   */
+  function createHistoryTable(history, currentMonthKey, bestMonth, totalOrders, totalItems, totalRevenue, avgOrderValue) {
+    const wrapper = document.createElement('div')
+    wrapper.style.overflowX = 'auto'
+    
+    const table = document.createElement('table')
+    table.className = 'data-table'
+    table.style.width = '100%'
+    table.style.borderCollapse = 'collapse'
+    
+    table.innerHTML = `
+      <thead>
+        <tr style="border-bottom: 1px solid var(--color-border);">
+          <th style="text-align: left; padding: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: var(--font-weight-medium);">Month</th>
+          <th style="text-align: right; padding: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: var(--font-weight-medium);">Orders</th>
+          <th style="text-align: right; padding: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: var(--font-weight-medium);">Items</th>
+          <th style="text-align: right; padding: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: var(--font-weight-medium);">Revenue</th>
+          <th style="text-align: right; padding: var(--space-3); font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: var(--font-weight-medium);">Avg/Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${history.slice().reverse().map(h => {
+          const avg = h.orders > 0 ? h.value / h.orders : 0
+          const isBest = bestMonth && h.month === bestMonth.month
+          const isCurrent = h.month === currentMonthKey
+          return `
+            <tr style="border-bottom: 1px solid var(--color-border); ${isBest ? 'background: var(--color-success-light);' : ''} ${isCurrent ? 'background: var(--color-primary-light);' : ''}">
+              <td style="padding: var(--space-3);">
+                ${formatMonthLabel(h.month)}
+                ${isBest ? '<span class="badge badge--success" style="margin-left: var(--space-2);"><i data-lucide="star" style="width: 12px; height: 12px;"></i> Best</span>' : ''}
+                ${isCurrent ? '<span class="badge badge--primary" style="margin-left: var(--space-2);">Current</span>' : ''}
+              </td>
+              <td style="text-align: right; padding: var(--space-3);">${h.orders || 0}</td>
+              <td style="text-align: right; padding: var(--space-3);">${h.items || 0}</td>
+              <td style="text-align: right; padding: var(--space-3); color: var(--color-success); font-weight: var(--font-weight-medium);">$${(h.value || 0).toFixed(2)}</td>
+              <td style="text-align: right; padding: var(--space-3);">$${avg.toFixed(2)}</td>
+            </tr>
+          `
+        }).join('')}
+      </tbody>
+      <tfoot>
+        <tr style="font-weight: var(--font-weight-semibold);">
+          <td style="padding: var(--space-3);">Total/Avg</td>
+          <td style="text-align: right; padding: var(--space-3);">${totalOrders}</td>
+          <td style="text-align: right; padding: var(--space-3);">${totalItems}</td>
+          <td style="text-align: right; padding: var(--space-3); color: var(--color-success);">$${totalRevenue.toFixed(2)}</td>
+          <td style="text-align: right; padding: var(--space-3);">$${avgOrderValue.toFixed(2)}</td>
+        </tr>
+      </tfoot>
+    `
+    
+    wrapper.appendChild(table)
+    return wrapper
+  }
+  
+  /**
+   * Create empty state card
+   */
+  function createEmptyStateCard() {
+    const body = document.createElement('div')
+    body.className = 'empty-state'
+    body.innerHTML = `
+      <i data-lucide="bar-chart-3" class="empty-state__icon"></i>
+      <h3 class="empty-state__title">No revenue data yet</h3>
+      <p class="empty-state__message">
+        Import your Etsy Orders CSV to see revenue trends and insights.<br>
+        <strong>Go to:</strong> Etsy Shop Manager → Orders & Shipping → Download CSV
+      </p>
+    `
+    
+    const importBtn = Button({
+      text: 'Import Orders CSV',
+      variant: 'primary',
+      icon: 'folder-open',
+      onClick: () => document.getElementById('revenueFileInput').click()
+    })
+    importBtn.style.marginTop = 'var(--space-4)'
+    body.appendChild(importBtn)
+    
+    return Card({ body })
+  }
+  
+  /**
+   * Handle file selection for revenue import
+   */
+  async function handleRevenueFileSelect(input) {
     const file = input.files[0]
     if (!file) return
     await processRevenueFile(file)
     input.value = ''
   }
   
+  /**
+   * Process the uploaded revenue CSV file
+   */
   async function processRevenueFile(file) {
     if (isLoading) return
     isLoading = true
+    
     try {
-      toast.info('Reading file...', file.name)
+      Toast.info('Reading file...', 3000)
       const text = await readFile(file)
-      toast.info('Parsing CSV...')
+      
+      Toast.info('Parsing CSV...', 3000)
       const rows = parseEtsyCSV(text)
+      
       if (rows.length === 0) { 
-        toast.error('No valid data found')
+        Toast.error('No valid data found in file')
         return
       }
       
@@ -437,14 +586,15 @@ export function createRevenueSection(containerId) {
       store.set('totalItems', totalItems)
       store.set('revenueHistory', history)
       
-      toast.success('Import complete!', `${totalOrders} orders, $${totalRevenue.toFixed(2)}`)
+      Toast.success(`Import complete! ${totalOrders} orders, $${totalRevenue.toFixed(2)}`)
     } catch (err) {
-      toast.error('Import failed', err.message)
+      Toast.error('Import failed: ' + err.message)
     } finally {
       isLoading = false
     }
   }
   
+  // Subscribe to store changes
   store.subscribe((state, path) => {
     if (!path || path.includes('revenue') || path.includes('orders') || path.includes('revenueHistory')) {
       render()
@@ -454,3 +604,5 @@ export function createRevenueSection(containerId) {
   render()
   return { render }
 }
+
+export default createRevenueSection

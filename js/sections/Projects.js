@@ -1,375 +1,500 @@
+/**
+ * Projects Section
+ * Project grid with progress tracking and team management
+ */
+
 import { store } from '../state/store.js'
-import { createKanban } from '../components/Kanban.js'
-import { openProjectModal } from '../components/ProjectModal.js'
-import { openEditProjectModal } from '../components/EditProjectModal.js'
-import { toast } from '../components/Toast.js'
-import { filterByBoard, getCurrentBoardLabel } from '../components/BoardSelector.js'
-import { getDueAlert } from '../utils/priority.js'
-import { addTouchFeedback, initSwipeActions, haptic } from '../utils/mobileInteractions.js'
-import { icons } from '../utils/icons.js'
+import { Button } from '../components/Button.js'
+import { Card } from '../components/Card.js'
+import { Badge } from '../components/Badge.js'
+import { Toast } from '../components/Toast.js'
 
 let currentFilter = 'all'
-let viewMode = window.innerWidth < 768 ? 'list' : 'kanban' // Default to list on mobile
-let kanbanInstance = null
+let isMobile = window.innerWidth < 768
 
+// Listen for resize
+window.addEventListener('resize', () => {
+  const newIsMobile = window.innerWidth < 768
+  if (newIsMobile !== isMobile) {
+    isMobile = newIsMobile
+    const projectsSection = document.getElementById('projects')
+    if (projectsSection && !projectsSection.classList.contains('hidden')) {
+      const event = new CustomEvent('projects-rerender')
+      window.dispatchEvent(event)
+    }
+  }
+})
+
+/**
+ * Create the projects section
+ * @param {string} containerId - ID of the container element
+ * @returns {Object} Section API with render method
+ */
 export function createProjectsSection(containerId) {
   const container = document.getElementById(containerId)
-  if (!container) return
-  
+  if (!container) {
+    console.error(`Container #${containerId} not found`)
+    return
+  }
+
+  function getDaysUntilDue(dueDate) {
+    if (!dueDate) return null
+    const due = new Date(dueDate)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    due.setHours(0, 0, 0, 0)
+    const diffTime = due - today
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  }
+
+  function getDueAlert(project) {
+    if (!project.dueDate || project.status === 'done') return null
+    const days = getDaysUntilDue(project.dueDate)
+    if (days === null) return null
+    if (days < 0) return { type: 'overdue', text: `${Math.abs(days)}d overdue` }
+    if (days === 0) return { type: 'soon', text: 'Due today' }
+    if (days === 1) return { type: 'soon', text: 'Due tomorrow' }
+    if (days <= 3) return { type: 'soon', text: `Due in ${days}d` }
+    return null
+  }
+
   function getFilteredProjects(projects) {
-    // Filter by board first
-    let filtered = {}
-    Object.keys(projects).forEach(status => {
-      filtered[status] = filterByBoard(projects[status], 'board')
-    })
-    
-    // Then apply category filter
-    if (currentFilter !== 'all') {
-      Object.keys(filtered).forEach(status => {
-        filtered[status] = filtered[status].filter(p => {
-          if (currentFilter === 'etsy') {
-            return p.tags?.includes('etsy') || p.board === 'etsy'
-          }
-          if (currentFilter === 'photo') {
-            return p.tags?.includes('photo') || p.board === 'photography'
-          }
-          if (currentFilter === 'b2b') {
-            return p.tags?.includes('b2b') || p.board === 'wholesale'
-          }
-          if (currentFilter === 'high') {
-            return p.priority === 'high'
-          }
-          return true
-        })
-      })
-    }
-    
-    return filtered
-  }
-  
-  function getProjectAlert(project) {
-    if (!project.dueDate) return null
-    return getDueAlert({ dueDate: project.dueDate })
-  }
-  
-  function render() {
-    const projects = store.getState().projects || { backlog: [], todo: [], inprogress: [], done: [] }
-    const filteredProjects = getFilteredProjects(projects)
-    
-    // Ensure all arrays exist
-    const backlog = filteredProjects.backlog || []
-    const todo = filteredProjects.todo || []
-    const inprogress = filteredProjects.inprogress || []
-    const done = filteredProjects.done || []
-    
     const allProjects = [
-      ...backlog.map(p => ({ ...p, status: 'backlog' })),
-      ...todo.map(p => ({ ...p, status: 'todo' })),
-      ...inprogress.map(p => ({ ...p, status: 'inprogress' })),
-      ...done.map(p => ({ ...p, status: 'done' }))
+      ...(projects.backlog || []),
+      ...(projects.todo || []),
+      ...(projects.inprogress || []),
+      ...(projects.done || [])
+    ]
+
+    if (currentFilter === 'all') return allProjects
+    
+    return allProjects.filter(p => {
+      switch (currentFilter) {
+        case 'active':
+          return p.status !== 'done'
+        case 'completed':
+          return p.status === 'done'
+        case 'high':
+          return p.priority === 'high' && p.status !== 'done'
+        case 'etsy':
+          return p.board === 'etsy' || p.tags?.includes('etsy')
+        case 'photo':
+          return p.board === 'photography' || p.tags?.includes('photo')
+        case 'b2b':
+          return p.board === 'wholesale' || p.tags?.includes('b2b')
+        default:
+          return true
+      }
+    })
+  }
+
+  function getProjectStats(projects) {
+    const allProjects = [
+      ...(projects.backlog || []),
+      ...(projects.todo || []),
+      ...(projects.inprogress || []),
+      ...(projects.done || [])
     ]
     
-    const totalActive = backlog.length + todo.length + inprogress.length
-    const highPriorityCount = allProjects.filter(p => p.priority === 'high' && p.status !== 'done').length
-    const overdueCount = allProjects.filter(p => {
-      const alert = getProjectAlert(p)
-      return alert?.type === 'overdue' && p.status !== 'done'
-    }).length
+    const active = allProjects.filter(p => p.status !== 'done')
+    const overdue = active.filter(p => {
+      const alert = getDueAlert(p)
+      return alert?.type === 'overdue'
+    })
+    const highPriority = active.filter(p => p.priority === 'high')
     
-    const boardLabel = getCurrentBoardLabel()
-    
-    container.innerHTML = `
-      <!-- Welcome Header -->
-      <div class="welcome-bar m-card">
-        <div class="welcome-content">
-          <div class="welcome-greeting m-title">${icons.folder()} Projects</div>
-          <div class="welcome-status">
-            ${overdueCount > 0 
-              ? `<span class="m-badge-danger">${icons.flame()} ${overdueCount} overdue</span>`
-              : highPriorityCount > 0
-                ? `<span class="m-badge-warning">${icons.zap()} ${highPriorityCount} high priority</span>`
-                : `<span class="m-badge-primary">${totalActive} active</span>`
-            }
-            <span class="m-badge-secondary">${boardLabel}</span>
-          </div>
-        </div>
-        <button class="m-btn-primary m-touch" onclick="openProjectModal()">
-          <span>${icons.plus()}</span>
-          <span class="hide-mobile">New Project</span>
-        </button>
-      </div>
-      
-      <!-- Category Filters -->
-      <div class="filter-bar project-filters m-scroll-x">
-        <button class="m-btn-secondary ${currentFilter === 'all' ? 'active' : ''} m-touch" onclick="setProjectFilter('all')">
-          <span>All</span>
-          <span class="filter-count m-badge">${totalActive + done.length}</span>
-        </button>
-        <button class="m-btn-secondary ${currentFilter === 'etsy' ? 'active' : ''} m-touch" onclick="setProjectFilter('etsy')">
-          <span>${icons.cart()} Etsy</span>
-        </button>
-        <button class="m-btn-secondary ${currentFilter === 'photo' ? 'active' : ''} m-touch" onclick="setProjectFilter('photo')">
-          <span>${icons.camera()} Photo</span>
-        </button>
-        <button class="m-btn-secondary ${currentFilter === 'b2b' ? 'active' : ''} m-touch" onclick="setProjectFilter('b2b')">
-          <span>${icons.store()} B2B</span>
-        </button>
-        <button class="m-btn-secondary ${currentFilter === 'high' ? 'active' : ''} m-touch" onclick="setProjectFilter('high')">
-          <span>${icons.flame()} High Priority</span>
-        </button>
-      </div>
-      
-      <!-- View Toggle -->
-      <div class="project-toolbar m-toolbar">
-        <div class="view-toggle m-view-toggle">
-          <button class="m-btn-secondary m-touch ${viewMode === 'kanban' ? 'active' : ''}" 
-            onclick="setProjectView('kanban')" title="Kanban board view">
-            ${icons.clipboard()} Board
-          </button>
-          <button class="m-btn-secondary m-touch ${viewMode === 'list' ? 'active' : ''}" 
-            onclick="setProjectView('list')" title="List view">
-            ${icons.menu()} List
-          </button>
-        </div>
-      </div>
-      
-      <!-- Kanban Board or List View -->
-      ${viewMode === 'kanban' ? `
-        <div id="projectsKanban"></div>
-      ` : `
-        <div id="projectsList" class="project-list-view"></div>
-      `}
-      
-      ${totalActive === 0 && done.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">${icons.folder()}</div>
-          <div class="empty-state-title m-title">No projects yet</div>
-          <div class="empty-state-text m-body">Create your first project to get started</div>
-          <button class="m-btn-primary m-touch" onclick="openProjectModal()">${icons.plus()} Create Project</button>
-        </div>
-      ` : ''}
-    `
-    
-    // Only init kanban or list if we have projects
-    if (totalActive > 0 || done.length > 0) {
-      if (viewMode === 'kanban') {
-        kanbanInstance = createKanban('projectsKanban', {
-          columns: [
-            { id: 'backlog', label: 'Backlog', icon: 'download' },
-            { id: 'todo', label: 'To Do', icon: 'file-text' },
-            { id: 'inprogress', label: 'In Progress', icon: 'zap' },
-            { id: 'done', label: 'Done', icon: 'check' }
-          ],
-          items: allProjects,
-          renderItem: (project) => renderProjectCard(project)
-        })
-      } else {
-        // List view - group by status
-        renderProjectListView(allProjects)
-      }
+    return {
+      total: allProjects.length,
+      active: active.length,
+      overdue: overdue.length,
+      highPriority: highPriority.length
     }
   }
-  
-  function renderProjectCard(project) {
-    const alert = getProjectAlert(project)
-    const isDone = project.status === 'done'
+
+  function render() {
+    const projects = store.getState().projects || { backlog: [], todo: [], inprogress: [], done: [] }
+    const filtered = getFilteredProjects(projects)
+    const stats = getProjectStats(projects)
+
+    // Clear container
+    container.innerHTML = ''
+
+    // Header section
+    const headerSection = document.createElement('div')
+    headerSection.className = 'section-header'
+
+    const headerCard = Card({
+      className: 'welcome-card',
+      body: (() => {
+        const body = document.createElement('div')
+        body.className = 'welcome-content'
+        body.innerHTML = `
+          <div class="welcome-text">
+            <h2 class="welcome-title">
+              <i data-lucide="folder" style="width: 24px; height: 24px;"></i>
+              Projects
+            </h2>
+            <div class="welcome-badges">
+              ${stats.overdue > 0 
+                ? `<span class="badge badge--danger"><i data-lucide="flame" style="width: 12px; height: 12px;"></i> ${stats.overdue} overdue</span>`
+                : stats.highPriority > 0
+                  ? `<span class="badge badge--warning"><i data-lucide="zap" style="width: 12px; height: 12px;"></i> ${stats.highPriority} high priority</span>`
+                  : `<span class="badge badge--primary">${stats.active} active</span>`
+              }
+            </div>
+          </div>
+        `
+        return body
+      })()
+    })
+
+    // Actions
+    const actionsDiv = document.createElement('div')
+    actionsDiv.className = 'header-actions'
     
-    return `
-      <div class="m-card project-card ${alert?.type || ''} ${isDone ? 'completed' : ''}" 
-           onclick="openEditProjectModal(${project.id}, '${project.status}')">
-        
-        <!-- Header Row -->
-        <div class="m-card-header project-card-header">
-          <h4 class="m-card-title project-title">${escapeHtml(project.title)}</h4>
-          ${!isDone ? `
-            <button class="m-btn-secondary m-touch project-complete-btn" 
-                    onclick="event.stopPropagation(); quickCompleteProject(${project.id}, '${project.status}')"
-                    title="Mark complete">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2" opacity="0.3"/>
-                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
-              </svg>
-            </button>
-          ` : `
-            <span class="project-done-icon">${icons.check()}</span>
-          `}
-        </div>
-        
-        <!-- Description -->
-        ${project.desc ? `
-          <p class="project-desc">${escapeHtml(project.desc)}</p>
-        ` : ''}
-        
-        <!-- Meta Row -->
-        <div class="m-card-meta project-meta">
-          ${project.priority ? `
-            <span class="project-priority ${project.priority}">${project.priority}</span>
-          ` : ''}
-          
-          ${alert && !isDone ? `
-            <span class="project-alert ${alert.type}">
-              ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
-            </span>
-          ` : ''}
-          
-          ${project.dueDate && !alert ? `
-            <span class="project-due">${icons.calendar()} ${formatDate(project.dueDate)}</span>
-          ` : ''}
-          
-          ${project.board && project.board !== 'all' ? `
-            <span class="project-board">${getBoardEmoji(project.board)} ${project.board}</span>
-          ` : ''}
-        </div>
-        
-        <!-- Tags -->
-        ${project.tags?.length ? `
-          <div class="project-tags">
-            ${project.tags.slice(0, 3).map(tag => `
-              <span class="project-tag">#${escapeHtml(tag)}</span>
-            `).join('')}
-            ${project.tags.length > 3 ? `
-              <span class="project-tag-more">+${project.tags.length - 3}</span>
-            ` : ''}
-          </div>
-        ` : ''}
-        
-        <!-- Progress Bar (if in progress) -->
-        ${project.status === 'inprogress' && project.progress !== undefined ? `
-          <div class="project-progress">
-            <div class="project-progress-bar" style="width: ${project.progress}%"></div>
-          </div>
-        ` : ''}
-      </div>
-    `
+    const newProjectBtn = Button({
+      text: isMobile ? '' : 'New Project',
+      icon: 'plus',
+      variant: 'primary',
+      onClick: () => {
+        if (window.openProjectModal) window.openProjectModal()
+      }
+    })
+    actionsDiv.appendChild(newProjectBtn)
+
+    headerCard.querySelector('.card__body').appendChild(actionsDiv)
+    headerSection.appendChild(headerCard)
+    container.appendChild(headerSection)
+
+    // Filter bar
+    const filterSection = document.createElement('div')
+    filterSection.className = 'filter-bar'
+
+    const filters = [
+      { id: 'all', label: 'All', count: stats.total },
+      { id: 'active', label: 'Active' },
+      { id: 'high', label: 'High Priority', icon: 'flame' },
+      { id: 'etsy', label: 'Etsy', icon: 'shopping-cart' },
+      { id: 'photo', label: 'Photo', icon: 'camera' },
+      { id: 'b2b', label: 'B2B', icon: 'building-2' }
+    ]
+
+    filters.forEach(filter => {
+      const btn = Button({
+        text: filter.count ? `${filter.label} (${filter.count})` : filter.label,
+        icon: filter.icon,
+        variant: currentFilter === filter.id ? 'primary' : 'secondary',
+        size: 'sm',
+        onClick: () => {
+          currentFilter = filter.id
+          render()
+        }
+      })
+      filterSection.appendChild(btn)
+    })
+
+    container.appendChild(filterSection)
+
+    // Content area
+    if (filtered.length === 0) {
+      renderEmptyState(container)
+    } else if (isMobile) {
+      renderMobileList(container, filtered)
+    } else {
+      renderGrid(container, filtered)
+    }
+
+    // Initialize Lucide icons
+    if (window.lucide) {
+      window.lucide.createIcons({ attrs: { 'stroke-width': 2 }, nameAttr: 'data-lucide' })
+    }
   }
-  
-  function renderProjectListView(projects) {
-    const listContainer = document.getElementById('projectsList')
-    if (!listContainer) return
+
+  function renderEmptyState(container) {
+    const emptyState = document.createElement('div')
+    emptyState.className = 'empty-state'
+    emptyState.innerHTML = `
+      <i data-lucide="folder" class="empty-state-icon" style="width: 64px; height: 64px;"></i>
+      <h3 class="empty-state-title">No projects yet</h3>
+      <p class="empty-state-message">Create your first project to get started</p>
+    `
     
+    const createBtn = Button({
+      text: 'Create Project',
+      icon: 'plus',
+      variant: 'primary',
+      onClick: () => {
+        if (window.openProjectModal) window.openProjectModal()
+      }
+    })
+    
+    emptyState.appendChild(createBtn)
+    container.appendChild(emptyState)
+  }
+
+  function renderMobileList(container, projects) {
+    const listContainer = document.createElement('div')
+    listContainer.className = 'project-list-view'
+
     // Group by status
     const grouped = {
-      backlog: projects.filter(p => p.status === 'backlog'),
-      todo: projects.filter(p => p.status === 'todo'),
       inprogress: projects.filter(p => p.status === 'inprogress'),
+      todo: projects.filter(p => p.status === 'todo'),
+      backlog: projects.filter(p => p.status === 'backlog'),
       done: projects.filter(p => p.status === 'done')
     }
-    
+
     const statusConfig = {
-      backlog: { label: 'Backlog', icon: icons.download(), color: 'var(--text-muted)' },
-      todo: { label: 'To Do', icon: icons.file(), color: 'var(--accent-primary)' },
-      inprogress: { label: 'In Progress', icon: icons.zap(), color: 'var(--accent-warning)' },
-      done: { label: 'Done', icon: icons.check(), color: 'var(--accent-success)' }
+      inprogress: { label: 'In Progress', icon: 'zap', color: 'var(--color-warning)' },
+      todo: { label: 'To Do', icon: 'circle', color: 'var(--color-primary)' },
+      backlog: { label: 'Backlog', icon: 'archive', color: 'var(--color-text-muted)' },
+      done: { label: 'Done', icon: 'check-circle', color: 'var(--color-success)' }
     }
-    
-    listContainer.innerHTML = Object.entries(grouped)
-      .filter(([_, items]) => items.length > 0)
-      .map(([status, items]) => `
-        <div class="project-list-group">
-          <div class="project-list-header">
-            <span class="project-list-header-icon">${statusConfig[status].icon}</span>
-            <span class="project-list-header-label">${statusConfig[status].label}</span>
-            <span class="project-list-header-count">${items.length}</span>
-          </div>
-          <div class="project-list-items">
-            ${items.map(project => renderProjectListItem(project)).join('')}
-          </div>
-        </div>
-      `).join('')
+
+    Object.entries(grouped).forEach(([status, items]) => {
+      if (items.length === 0) return
+
+      const group = document.createElement('div')
+      group.className = 'project-list-group'
+
+      const header = document.createElement('div')
+      header.className = 'project-list-group-header'
+      header.innerHTML = `
+        <i data-lucide="${statusConfig[status].icon}" style="width: 16px; height: 16px; color: ${statusConfig[status].color};"></i>
+        <span>${statusConfig[status].label}</span>
+        <span class="badge badge--neutral">${items.length}</span>
+      `
+      group.appendChild(header)
+
+      items.forEach(project => {
+        const card = createProjectCard(project, true)
+        group.appendChild(card)
+      })
+
+      listContainer.appendChild(group)
+    })
+
+    container.appendChild(listContainer)
   }
-  
-  function renderProjectListItem(project) {
-    const alert = getProjectAlert(project)
-    const isDone = project.status === 'done'
-    
-    return `
-      <div class="m-card project-list-item m-touch ${alert?.type || ''} ${isDone ? 'completed' : ''}" 
-           onclick="openEditProjectModal(${project.id}, '${project.status}')"
-      >
-        <!-- Header Row -->
-        <div class="project-list-item-row">
-          <div class="project-list-item-main">
-            <div class="project-list-item-title">
-              ${escapeHtml(project.title)}
-            </div>
-            ${project.desc ? `
-              <div class="project-list-item-desc">
-                ${escapeHtml(project.desc)}
-              </div>
-            ` : ''}
-          </div>
-          
-          ${!isDone ? `
-            <button class="m-btn-secondary m-touch project-list-item-btn" 
-                    onclick="event.stopPropagation(); quickCompleteProject(${project.id}, '${project.status}')"
-                    title="Mark complete">
-              ${icons.check()}
-            </button>
-          ` : `
-            <span class="project-list-item-done">${icons.check()}</span>
-          `}
-        </div>
-        
-        <!-- Meta Row -->
-        <div class="project-list-item-meta">
-          ${project.priority ? `
-            <span class="project-priority ${project.priority}">${project.priority}</span>
-          ` : ''}
-          
-          ${alert && !isDone ? `
-            <span class="project-alert ${alert.type}">
-              ${alert.type === 'overdue' ? icons.flame() : icons.clock()} ${alert.text}
-            </span>
-          ` : ''}
-          
-          ${project.dueDate && !alert ? `
-            <span class="project-list-item-due">${icons.calendar()} ${formatDate(project.dueDate)}</span>
-          ` : ''}
-          
-          ${project.board && project.board !== 'all' ? `
-            <span class="project-list-item-board">${getBoardEmoji(project.board)} ${project.board}</span>
-          ` : ''}
-        </div>
-        
-        <!-- Progress Bar -->
-        ${project.status === 'inprogress' && project.progress !== undefined ? `
-          <div class="project-list-item-progress">
-            <div class="project-list-item-progress-header">
-              <span>Progress</span>
-              <span>${project.progress}%</span>
-            </div>
-            <div class="project-list-item-progress-bar">
-              <div class="project-list-item-progress-fill" style="width: ${project.progress}%;"></div>
-            </div>
-          </div>
-        ` : ''}
-        
-        <!-- Tags -->
-        ${project.tags?.length ? `
-          <div class="project-list-item-tags">
-            ${project.tags.slice(0, 3).map(tag => `
-              <span class="project-list-item-tag">#${escapeHtml(tag)}</span>
-            `).join('')}
-            ${project.tags.length > 3 ? `
-              <span class="project-list-item-tag-more">+${project.tags.length - 3}</span>
-            ` : ''}
-          </div>
-        ` : ''}
-      </div>
-    `
+
+  function renderGrid(container, projects) {
+    const grid = document.createElement('div')
+    grid.className = 'project-grid'
+
+    projects.forEach(project => {
+      const card = createProjectCard(project, false)
+      grid.appendChild(card)
+    })
+
+    container.appendChild(grid)
   }
-  
+
+  function createProjectCard(project, isMobile) {
+    const alert = getDueAlert(project)
+    const status = project.status || 'backlog'
+    
+    const cardContent = document.createElement('div')
+    cardContent.className = 'project-card-content'
+
+    // Title row
+    const titleRow = document.createElement('div')
+    titleRow.className = 'project-card-title-row'
+    
+    const title = document.createElement('h4')
+    title.className = 'project-card-title'
+    title.textContent = project.title
+    titleRow.appendChild(title)
+
+    // Status badge
+    const statusBadge = Badge({
+      text: status.charAt(0).toUpperCase() + status.slice(1),
+      variant: status === 'done' ? 'success' : status === 'inprogress' ? 'warning' : 'neutral'
+    })
+    titleRow.appendChild(statusBadge)
+
+    cardContent.appendChild(titleRow)
+
+    // Description
+    if (project.desc) {
+      const desc = document.createElement('p')
+      desc.className = 'project-card-desc'
+      desc.textContent = project.desc
+      cardContent.appendChild(desc)
+    }
+
+    // Meta row
+    const metaRow = document.createElement('div')
+    metaRow.className = 'project-card-meta'
+
+    // Due date badge
+    if (alert) {
+      const alertBadge = Badge({
+        text: alert.text,
+        variant: alert.type === 'overdue' ? 'danger' : 'warning',
+        icon: alert.type === 'overdue' ? 'flame' : 'clock'
+      })
+      metaRow.appendChild(alertBadge)
+    } else if (project.dueDate) {
+      const dueBadge = Badge({
+        text: formatDate(project.dueDate),
+        variant: 'neutral',
+        icon: 'calendar'
+      })
+      metaRow.appendChild(dueBadge)
+    }
+
+    // Priority badge
+    if (project.priority) {
+      const priorityBadge = Badge({
+        text: project.priority.charAt(0).toUpperCase() + project.priority.slice(1),
+        variant: project.priority === 'high' ? 'danger' : project.priority === 'medium' ? 'warning' : 'success'
+      })
+      metaRow.appendChild(priorityBadge)
+    }
+
+    // Board badge
+    if (project.board && project.board !== 'all') {
+      const boardIcons = {
+        etsy: 'shopping-cart',
+        photography: 'camera',
+        wholesale: 'building-2',
+        '3dprint': 'printer'
+      }
+      const boardBadge = Badge({
+        text: project.board,
+        variant: 'neutral',
+        icon: boardIcons[project.board] || 'folder'
+      })
+      metaRow.appendChild(boardBadge)
+    }
+
+    cardContent.appendChild(metaRow)
+
+    // Progress bar (for in-progress projects)
+    if (status === 'inprogress' && project.progress !== undefined) {
+      const progressContainer = document.createElement('div')
+      progressContainer.className = 'project-progress'
+      
+      const progressHeader = document.createElement('div')
+      progressHeader.className = 'project-progress-header'
+      progressHeader.innerHTML = `
+        <span>Progress</span>
+        <span class="project-progress-value">${project.progress}%</span>
+      `
+      progressContainer.appendChild(progressHeader)
+
+      const progressBar = document.createElement('div')
+      progressBar.className = 'project-progress-bar'
+      progressBar.innerHTML = `<div class="project-progress-fill" style="width: ${project.progress}%;"></div>`
+      progressContainer.appendChild(progressBar)
+
+      cardContent.appendChild(progressContainer)
+    }
+
+    // Task count
+    if (project.tasks) {
+      const completed = project.tasks.filter(t => t.completed).length
+      const total = project.tasks.length
+      const taskInfo = document.createElement('div')
+      taskInfo.className = 'project-task-count'
+      taskInfo.innerHTML = `
+        <i data-lucide="check-square" style="width: 14px; height: 14px;"></i>
+        <span>${completed}/${total} tasks</span>
+      `
+      cardContent.appendChild(taskInfo)
+    }
+
+    // Team members
+    if (project.team?.length) {
+      const teamDiv = document.createElement('div')
+      teamDiv.className = 'project-team'
+      
+      project.team.slice(0, 4).forEach(member => {
+        const avatar = document.createElement('div')
+        avatar.className = 'project-team-avatar'
+        avatar.textContent = member.charAt(0).toUpperCase()
+        avatar.title = member
+        teamDiv.appendChild(avatar)
+      })
+      
+      if (project.team.length > 4) {
+        const more = document.createElement('div')
+        more.className = 'project-team-avatar project-team-more'
+        more.textContent = `+${project.team.length - 4}`
+        teamDiv.appendChild(more)
+      }
+      
+      cardContent.appendChild(teamDiv)
+    }
+
+    // Tags
+    if (project.tags?.length) {
+      const tagsRow = document.createElement('div')
+      tagsRow.className = 'project-card-tags'
+      project.tags.slice(0, 3).forEach(tag => {
+        const tagSpan = document.createElement('span')
+        tagSpan.className = 'project-tag'
+        tagSpan.textContent = `#${tag}`
+        tagsRow.appendChild(tagSpan)
+      })
+      if (project.tags.length > 3) {
+        const moreSpan = document.createElement('span')
+        moreSpan.className = 'project-tag-more'
+        moreSpan.textContent = `+${project.tags.length - 3}`
+        tagsRow.appendChild(moreSpan)
+      }
+      cardContent.appendChild(tagsRow)
+    }
+
+    const card = Card({
+      className: `project-card ${status === 'done' ? 'project-card--completed' : ''}`,
+      body: cardContent,
+      clickable: true,
+      onClick: () => {
+        if (window.openEditProjectModal) {
+          window.openEditProjectModal(project.id, status)
+        }
+      }
+    })
+
+    return card
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const dateOnly = new Date(date)
+    dateOnly.setHours(0, 0, 0, 0)
+    
+    const diffTime = dateOnly - today
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 0) return 'Today'
+    if (diffDays === 1) return 'Tomorrow'
+    if (diffDays === -1) return 'Yesterday'
+    if (diffDays > 0 && diffDays < 7) return `In ${diffDays}d`
+    
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  }
+
+  // Subscribe to store changes
+  store.subscribe((state, path) => {
+    if (!path || path.includes('projects')) {
+      render()
+    }
+  })
+
+  // Listen for re-render events
+  window.addEventListener('projects-rerender', render)
+
   // Expose functions globally
   window.setProjectFilter = (filter) => {
     currentFilter = filter
     render()
   }
-  
-  window.setProjectView = (mode) => {
-    viewMode = mode
-    render()
-  }
-  
+
   window.quickCompleteProject = (id, status) => {
     const projects = store.get('projects')
     const project = projects[status]?.find(p => p.id === id)
@@ -383,83 +508,14 @@ export function createProjectsSection(containerId) {
       if (!projects.done) projects.done = []
       projects.done.push(project)
       store.set('projects', projects)
-      toast.success('Project completed', project.title)
+      Toast.success('Project completed', project.title)
     }
   }
-  
-  store.subscribe((state, path) => {
-    if (!path || path.includes('projects') || path.includes('currentBoard')) render()
-  })
-  
+
+  // Initial render
   render()
-  
-  // Initialize mobile interactions after render
-  setTimeout(() => {
-    // Add touch feedback to all interactive elements with m-touch class
-    container.querySelectorAll('.m-touch').forEach(addTouchFeedback)
-    
-    // Add swipe actions for mobile project items
-    const isMobile = window.innerWidth < 768
-    if (isMobile) {
-      document.querySelectorAll('.project-card, .project-list-item').forEach(el => {
-        const onclick = el.getAttribute('onclick') || ''
-        const projectMatch = onclick.match(/openEditProjectModal\((\d+)/)
-        const statusMatch = onclick.match(/openEditProjectModal\(\d+,\s*['"]([^'"]+)['"]\)/)
-        
-        if (projectMatch) {
-          const projectId = parseInt(projectMatch[1])
-          const status = statusMatch ? statusMatch[1] : 'backlog'
-          
-          initSwipeActions(el, [
-            { 
-              icon: icons.check(), 
-              label: 'Complete', 
-              variant: 'success',
-              onClick: () => {
-                if (window.quickCompleteProject) {
-                  window.quickCompleteProject(projectId, status)
-                  haptic('medium')
-                }
-              }
-            }
-          ])
-        }
-      })
-    }
-  }, 100)
-  
+
   return { render }
 }
 
-function getBoardEmoji(board) {
-  const iconMap = {
-    'etsy': icons.cart(),
-    'photography': icons.camera(),
-    'wholesale': icons.store(),
-    '3dprint': icons.printer(),
-    'all': icons.building()
-  }
-  return iconMap[board] || icons.clipboard()
-}
-
-function escapeHtml(text) {
-  if (!text) return ''
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  const today = new Date()
-  const diffTime = date - today
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  
-  if (diffDays === 0) return 'Today'
-  if (diffDays === 1) return 'Tomorrow'
-  if (diffDays === -1) return 'Yesterday'
-  if (diffDays > 0 && diffDays < 7) return `In ${diffDays}d`
-  
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
+export default createProjectsSection
