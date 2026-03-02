@@ -1,11 +1,12 @@
 import { store } from '../state/store.js'
+import { icon } from '../utils/icons.js'
 
 const BOARDS = [
-  { id: 'all', label: 'All', icon: '🏢' },
-  { id: 'etsy', label: 'Etsy', icon: '🛒' },
-  { id: 'photography', label: 'Photo', icon: '📸' },
-  { id: 'wholesale', label: 'B2B', icon: '🏪' },
-  { id: '3dprint', label: '3D Print', icon: '🖨️' }
+  { id: 'all', label: 'All', icon: 'building-2' },
+  { id: 'etsy', label: 'Etsy', icon: 'shopping-bag' },
+  { id: 'photography', label: 'Photo', icon: 'camera' },
+  { id: 'wholesale', label: 'B2B', icon: 'store' },
+  { id: '3dprint', label: '3D Print', icon: 'printer' }
 ]
 
 export function createBoardSelector(containerId) {
@@ -19,11 +20,11 @@ export function createBoardSelector(containerId) {
       <div class="board-selector" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
         ${BOARDS.map(board => `
           <button 
-            class="filter-btn ${currentBoard === board.id ? 'active' : ''}"
+            class="filter-btn m-touch ${currentBoard === board.id ? 'active' : ''}"
             onclick="switchBoard('${board.id}', this)"
             style="display: flex; align-items: center; gap: 0.5rem;"
           >
-            <span>${board.icon}</span>
+            <span>${icon(board.icon, 'm-icon-sm')}</span>
             <span>${board.label}</span>
           </button>
         `).join('')}
