@@ -1,7 +1,7 @@
 // Service Worker for Mission Control V5
 // Provides offline support and caching
 
-const CACHE_NAME = 'mission-control-v5-cache-v123'
+const CACHE_NAME = 'mission-control-v5-cache-v124'
 const STATIC_ASSETS = [
   './',
   './index.html',

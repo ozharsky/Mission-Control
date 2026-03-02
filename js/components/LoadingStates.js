@@ -456,3 +456,22 @@ export default {
   hideContentLoader,
   setButtonLoading
 };
+
+// Convenience wrapper object for backward compatibility
+export const loadingStates = {
+  showOverlay: LoadingOverlay,
+  showInline: InlineLoader,
+  showButtonLoading: setButtonLoading,
+  updateProgress: updateProgressBar,
+  showContent: showContentLoader,
+  hideContent: hideContentLoader,
+  SkeletonCard,
+  SkeletonList,
+  SkeletonText,
+  SkeletonGrid,
+  SkeletonTable,
+  LoadingSpinner,
+  ProgressBar,
+  LoadingOverlay,
+  InlineLoader
+};
