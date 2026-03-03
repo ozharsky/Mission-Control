@@ -1,6 +1,7 @@
 // Sync Status Indicator - Shows Firebase/GitHub sync status
 
 import { store } from '../state/store.js'
+import { icon } from '../utils/icons.js'
 
 class SyncStatus {
   constructor() {
@@ -17,9 +18,9 @@ class SyncStatus {
 
   createIndicator() {
     this.indicator = document.createElement('div')
-    this.indicator.className = 'sync-status'
+    this.indicator.className = 'sync-status m-touch'
     this.indicator.innerHTML = `
-      <span class="sync-icon">☁️</span>
+      <span class="sync-icon">${icon('cloud', 'sync-status-icon')}</span>
       <span class="sync-text">Synced</span>
       <span class="sync-time"></span>
     `
@@ -63,28 +64,28 @@ class SyncStatus {
   updateUI() {
     if (!this.indicator) return
 
-    const icon = this.indicator.querySelector('.sync-icon')
+    const iconEl = this.indicator.querySelector('.sync-icon')
     const text = this.indicator.querySelector('.sync-text')
     const time = this.indicator.querySelector('.sync-time')
 
-    this.indicator.className = `sync-status sync-${this.status}`
+    this.indicator.className = `sync-status sync-${this.status} m-touch`
 
     switch (this.status) {
       case 'idle':
-        icon.textContent = '☁️'
+        iconEl.innerHTML = icon('cloud', 'sync-status-icon')
         text.textContent = 'Ready'
         break
       case 'syncing':
-        icon.textContent = '🔄'
+        iconEl.innerHTML = icon('refresh-cw', 'sync-status-icon sync-spin')
         text.textContent = 'Syncing...'
         break
       case 'synced':
-        icon.textContent = '✅'
+        iconEl.innerHTML = icon('check-circle', 'sync-status-icon')
         text.textContent = 'Synced'
         this.lastSync = new Date()
         break
       case 'error':
-        icon.textContent = '⚠️'
+        iconEl.innerHTML = icon('alert-triangle', 'sync-status-icon')
         text.textContent = 'Sync failed'
         break
     }
