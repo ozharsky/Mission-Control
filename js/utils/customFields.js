@@ -2,6 +2,7 @@
 
 import { store } from '../state/store.js'
 import { Toast } from '../components/Toast.js'
+import { icon } from './icons.js'
 
 class CustomFieldsManager {
   constructor() {
@@ -22,13 +23,13 @@ class CustomFieldsManager {
    */
   getFieldTypes() {
     return [
-      { id: 'text', name: 'Text', icon: '📝' },
-      { id: 'number', name: 'Number', icon: '🔢' },
-      { id: 'date', name: 'Date', icon: '📅' },
-      { id: 'select', name: 'Select', icon: '📋' },
-      { id: 'checkbox', name: 'Checkbox', icon: '☑️' },
-      { id: 'url', name: 'URL', icon: '🔗' },
-      { id: 'email', name: 'Email', icon: '📧' }
+      { id: 'text', name: 'Text', icon: 'file-text' },
+      { id: 'number', name: 'Number', icon: 'hash' },
+      { id: 'date', name: 'Date', icon: 'calendar' },
+      { id: 'select', name: 'Select', icon: 'list' },
+      { id: 'checkbox', name: 'Checkbox', icon: 'check-square' },
+      { id: 'url', name: 'URL', icon: 'link' },
+      { id: 'email', name: 'Email', icon: 'mail' }
     ]
   }
   
@@ -181,7 +182,7 @@ class CustomFieldsManager {
                    value="${escapeHtml(value)}"
                    placeholder="https://..."
                    onchange="${onChange}('${field.id}', this.value)">
-            ${value ? `<a href="${value}" target="_blank" class="form-hint">🔗 Open link</a>` : ''}
+            ${value ? `<a href="${value}" target="_blank" class="form-hint">${icon('external-link', 'icon-sm')} Open link</a>` : ''}
           </div>
         `
         
@@ -217,7 +218,7 @@ class CustomFieldsManager {
       case 'email':
         return `<a href="mailto:${value}" class="link">${escapeHtml(value)}</a>`
       case 'checkbox':
-        return value ? '☑️ Yes' : '⬜ No'
+        return value ? icon('check-square') + ' Yes' : icon('square') + ' No'
       case 'date':
         return new Date(value).toLocaleDateString()
       default:
@@ -234,15 +235,15 @@ class CustomFieldsManager {
     
     container.innerHTML = `
       <div class="card">
-        <div class="card-title">🔧 Custom Fields</div>
+        <div class="card-title">${icon('sliders')} Custom Fields</div>
         
         <div style="margin-bottom: 1rem;">
-          <button class="btn btn-primary" onclick="customFields.showCreateDialog()">➕ Add Field</button>
+          <button class="btn btn-primary m-touch" onclick="customFields.showCreateDialog()">${icon('plus')} Add Field</button>
         </div>
         
         ${this.fields.length === 0 ? `
           <div class="empty-state">
-            <div class="empty-state-icon">🔧</div>
+            <div class="empty-state-icon">${icon('sliders')}</div>
             <div class="empty-state-title">No custom fields</div>
             <div class="empty-state-desc">Add custom fields to track additional information</div>
           </div>
@@ -251,13 +252,13 @@ class CustomFieldsManager {
             ${this.fields.map(f => `
               <div class="custom-field-item" data-id="${f.id}">
                 <div class="custom-field-info">
-                  <span class="custom-field-icon">${this.getFieldTypes().find(t => t.id === f.type)?.icon || '🔧'}</span>
+                  <span class="custom-field-icon">${icon(this.getFieldTypes().find(t => t.id === f.type)?.icon || 'sliders')}</span>
                   <span class="custom-field-name">${f.name}</span>
                   <span class="custom-field-type">${f.type}</span>
                 </div>
                 <div class="custom-field-actions">
-                  <button class="btn btn-sm btn-secondary" onclick="customFields.editField('${f.id}')">Edit</button>
-                  <button class="btn btn-sm btn-danger" onclick="customFields.deleteField('${f.id}')">Delete</button>
+                  <button class="btn btn-sm btn-secondary m-touch" onclick="customFields.editField('${f.id}')">Edit</button>
+                  <button class="btn btn-sm btn-danger m-touch" onclick="customFields.deleteField('${f.id}')">Delete</button>
                 </div>
               </div>
             `).join('')}
