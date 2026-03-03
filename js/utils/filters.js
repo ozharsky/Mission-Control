@@ -3,6 +3,7 @@
 
 import { store } from '../state/store.js'
 import { fuzzySearch } from './search.js'
+import { icon } from './icons.js'
 
 class FilterManager {
   constructor() {
@@ -23,32 +24,32 @@ class FilterManager {
     return [
       {
         id: 'today',
-        name: '📅 Today',
-        icon: '📅',
+        name: 'Today',
+        icon: 'calendar',
         filter: { dueDate: new Date().toISOString().split('T')[0] }
       },
       {
         id: 'overdue',
-        name: '🔥 Overdue',
-        icon: '🔥',
+        name: 'Overdue',
+        icon: 'flame',
         filter: { overdue: true }
       },
       {
         id: 'urgent',
-        name: '⚡ Urgent',
-        icon: '⚡',
+        name: 'Urgent',
+        icon: 'zap',
         filter: { tags: ['urgent'] }
       },
       {
         id: 'no-due-date',
-        name: '📋 No Due Date',
-        icon: '📋',
+        name: 'No Due Date',
+        icon: 'clipboard-list',
         filter: { noDueDate: true }
       },
       {
         id: 'completed-this-week',
-        name: '✅ Completed This Week',
-        icon: '✅',
+        name: 'Completed This Week',
+        icon: 'check',
         filter: { completed: true, completedSince: 7 }
       }
     ]
@@ -57,11 +58,11 @@ class FilterManager {
   /**
    * Create a new saved filter
    */
-  create(name, filter, icon = '🔍') {
+  create(name, filter, iconName = 'search') {
     const newFilter = {
       id: Date.now().toString(),
       name,
-      icon,
+      icon: iconName,
       filter,
       createdAt: new Date().toISOString()
     }
@@ -279,17 +280,17 @@ class FilterManager {
     container.innerHTML = `
       <div class="filter-bar">
         <div class="filter-group">
-          <select class="filter-select" id="savedFilter" onchange="filterManager.handleSavedFilterChange(this.value)">
-            <option value="">🔍 All Items</option>
+          <select class="filter-select m-touch" id="savedFilter" onchange="filterManager.handleSavedFilterChange(this.value)">
+            <option value="">${icon('search')} All Items</option>
             ${this.filters.map(f => `
-              <option value="${f.id}" ${this.activeFilter?.id === f.id ? 'selected' : ''}>${f.icon} ${f.name}</option>
+              <option value="${f.id}" ${this.activeFilter?.id === f.id ? 'selected' : ''}>${f.name}</option>
             `).join('')}
           </select>
         </div>
         
         <div class="filter-group">
           <input type="text" 
-                 class="filter-input" 
+                 class="filter-input m-touch" 
                  placeholder="Search..." 
                  id="filterQuery"
                  oninput="filterManager.handleQueryChange(this.value)"
@@ -297,25 +298,25 @@ class FilterManager {
         </div>
         
         <div class="filter-group">
-          <select class="filter-select" id="filterStatus" onchange="filterManager.handleStatusChange(this.value)">
+          <select class="filter-select m-touch" id="filterStatus" onchange="filterManager.handleStatusChange(this.value)">
             <option value="">All Status</option>
-            <option value="later">📥 Later</option>
-            <option value="now">⚡ Now</option>
-            <option value="done">✅ Done</option>
+            <option value="later">Later</option>
+            <option value="now">Now</option>
+            <option value="done">Done</option>
           </select>
         </div>
         
         ${tags.length > 0 ? `
           <div class="filter-group">
-            <select class="filter-select" id="filterTag" onchange="filterManager.handleTagChange(this.value)">
+            <select class="filter-select m-touch" id="filterTag" onchange="filterManager.handleTagChange(this.value)">
               <option value="">All Tags</option>
               ${tags.map(tag => `<option value="${tag}">#${tag}</option>`).join('')}
             </select>
           </div>
         ` : ''}
         
-        <button class="btn btn-secondary" onclick="filterManager.clearFilters()">Clear</button>
-        <button class="btn btn-primary" onclick="filterManager.showSaveDialog()">💾 Save</button>
+        <button class="btn btn-secondary m-touch" onclick="filterManager.clearFilters()">Clear</button>
+        <button class="btn btn-primary m-touch" onclick="filterManager.showSaveDialog()">${icon('save')} Save</button>
       </div>
     `
   }
