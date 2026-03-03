@@ -2,18 +2,19 @@
 import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
 import { sanitizeInput, sanitizeNumber } from '../utils/sanitize.js'
+import { icon } from '../utils/icons.js'
 
 const COLOR_OPTIONS = [
-  { value: 'BK', label: '⚫ Black' },
-  { value: 'WH', label: '⚪ White' },
-  { value: 'GY', label: '⚪ Grey' },
-  { value: 'BL', label: '🔵 Blue' },
-  { value: 'RD', label: '🔴 Red' },
-  { value: 'GN', label: '🟢 Green' },
-  { value: 'OR', label: '🟠 Orange' },
-  { value: 'YL', label: '🟡 Yellow' },
-  { value: 'PR', label: '🟣 Purple' },
-  { value: 'PK', label: '🩷 Pink' }
+  { value: 'BK', label: 'Black', color: '#000000' },
+  { value: 'WH', label: 'White', color: '#ffffff' },
+  { value: 'GY', label: 'Grey', color: '#9ca3af' },
+  { value: 'BL', label: 'Blue', color: '#3b82f6' },
+  { value: 'RD', label: 'Red', color: '#ef4444' },
+  { value: 'GN', label: 'Green', color: '#22c55e' },
+  { value: 'OR', label: 'Orange', color: '#f97316' },
+  { value: 'YL', label: 'Yellow', color: '#eab308' },
+  { value: 'PR', label: 'Purple', color: '#a855f7' },
+  { value: 'PK', label: 'Pink', color: '#ec4899' }
 ]
 
 const PRODUCT_TYPES = [
@@ -37,8 +38,8 @@ export function openSKUModal(skuId = null) {
   modal.innerHTML = `
     <div class="modal" style="max-width: 500px;">
       <div class="modal-header">
-        <div class="modal-title">${isEdit ? '✏️ Edit SKU' : '➕ Add SKU'}</div>
-        <button class="modal-close" onclick="closeSKUModal()">✕</button>
+        <div class="modal-title">${isEdit ? icon('pencil') + ' Edit SKU' : icon('plus') + ' Add SKU'}</div>
+        <button class="modal-close m-touch" onclick="closeSKUModal()">${icon('x')}</button>
       </div>
       
       <form id="skuForm" class="modal-body">
@@ -97,9 +98,9 @@ export function openSKUModal(skuId = null) {
       </form>
       
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeSKUModal()">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="saveSKU(${isEdit ? skuId : 'null'})">
-          ${isEdit ? '💾 Save Changes' : '➕ Add SKU'}
+        <button type="button" class="btn btn-secondary m-touch" onclick="closeSKUModal()">Cancel</button>
+        <button type="button" class="btn btn-primary m-touch" onclick="saveSKU(${isEdit ? skuId : 'null'})">
+          ${isEdit ? icon('save') + ' Save Changes' : icon('plus') + ' Add SKU'}
         </button>
       </div>
     </div>
