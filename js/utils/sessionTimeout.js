@@ -2,6 +2,7 @@
 // Auto-lock app after period of inactivity
 
 import { Toast } from '../components/Toast.js'
+import { icon } from './icons.js'
 
 class SessionManager {
   constructor(options = {}) {
@@ -21,7 +22,7 @@ class SessionManager {
   init() {
     this.resetTimer()
     this.attachEventListeners()
-    console.log(`🔒 Session timeout initialized (${this.timeoutMinutes} min)`)
+    console.log(`Session timeout initialized (${this.timeoutMinutes} min)`)
   }
   
   attachEventListeners() {
@@ -84,7 +85,7 @@ class SessionManager {
     clearTimeout(this.warningId)
     
     this.onTimeout()
-    console.log('🔒 Session locked due to inactivity')
+    console.log('Session locked due to inactivity')
   }
   
   unlock() {
@@ -98,7 +99,7 @@ class SessionManager {
       lockScreen.remove()
     }
     
-    console.log('🔓 Session unlocked')
+    console.log('Session unlocked')
   }
   
   defaultWarningHandler(minutesRemaining) {
@@ -133,11 +134,11 @@ class SessionManager {
     `
     
     lockScreen.innerHTML = `
-      <div style="font-size: 4rem;">🔒</div>
+      <div style="font-size: 4rem;">${icon('lock')}</div>
       <h2 style="color: white; margin: 0;">Session Locked</h2>
       <p style="color: var(--text-muted); margin: 0;">App locked due to inactivity</p>
-      <button id="unlock-btn" class="btn btn-primary btn-lg">
-        🔓 Unlock App
+      <button id="unlock-btn" class="btn btn-primary btn-lg m-touch">
+        ${icon('unlock')} Unlock App
       </button>
     `
     
