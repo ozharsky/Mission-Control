@@ -1,4 +1,5 @@
 import { undoManager } from '../state/undo.js'
+import { icon } from '../utils/icons.js'
 
 export const keyboard = {
   _initialized: false,
@@ -80,8 +81,8 @@ export const keyboard = {
     help.innerHTML = `
       <div class="modal">
         <div class="modal-header">
-          <div class="modal-title">⌨️ Keyboard Shortcuts</div>
-          <button class="modal-close" onclick="document.getElementById('keyboardHelpModal').remove()">✕</button>
+          <div class="modal-title">${icon('keyboard')} Keyboard Shortcuts</div>
+          <button class="modal-close m-touch" onclick="document.getElementById('keyboardHelpModal').remove()">${icon('x')}</button>
         </div>
         <div class="modal-body">
           <div style="display: grid; gap: 0.75rem;">

@@ -1,6 +1,7 @@
 // Offline Indicator - Shows connection status
 
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 class OfflineIndicator {
   constructor() {
@@ -28,7 +29,7 @@ class OfflineIndicator {
     this.indicator = document.createElement('div')
     this.indicator.className = 'offline-indicator'
     this.indicator.innerHTML = `
-      <span class="offline-icon">⚠️</span>
+      <span class="offline-icon">${icon('alert-triangle')}</span>
       <span class="offline-text">You're offline</span>
       <span class="offline-subtext">Changes will sync when connection is restored</span>
     `

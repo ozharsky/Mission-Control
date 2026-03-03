@@ -1,6 +1,7 @@
 // Keyboard Shortcuts Help - Show available keyboard shortcuts
 
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 class KeyboardShortcutsHelp {
   constructor() {
@@ -24,8 +25,8 @@ class KeyboardShortcutsHelp {
     this.modal.innerHTML = `
       <div class="modal" style="max-width: 500px;">
         <div class="modal-header">
-          <div class="modal-title">⌨️ Keyboard Shortcuts</div>
-          <button class="modal-close" onclick="keyboardShortcutsHelp.close()">&times;</button>
+          <div class="modal-title">${icon('keyboard')} Keyboard Shortcuts</div>
+          <button class="modal-close m-touch" onclick="keyboardShortcutsHelp.close()">${icon('x')}</button>
         </div>
         <div class="modal-body">
           <div class="shortcuts-grid">
@@ -33,7 +34,7 @@ class KeyboardShortcutsHelp {
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="keyboardShortcutsHelp.close()">Close</button>
+          <button class="btn btn-secondary m-touch" onclick="keyboardShortcutsHelp.close()">Close</button>
         </div>
       </div>
     `
