@@ -1,6 +1,8 @@
 // Voice Input
 // Speech-to-text for notes and forms
 
+import { icon } from './icons.js'
+
 class VoiceInput {
   constructor() {
     this.recognition = null
@@ -170,9 +172,9 @@ class VoiceInput {
       indicator = document.createElement('div')
       indicator.id = 'voice-indicator'
       indicator.innerHTML = `
-        <div class="voice-pulse">🎤</div>
+        <div class="voice-pulse">${icon('mic')}</div>
         <span class="voice-text">Listening...</span>
-        <button class="voice-stop">⏹️</button>
+        <button class="voice-stop m-touch">${icon('square')}</button>
       `
       indicator.querySelector('.voice-stop').onclick = () => this.stop()
       document.body.appendChild(indicator)
@@ -200,8 +202,8 @@ class VoiceInput {
     
     const btn = document.createElement('button')
     btn.type = 'button'
-    btn.className = 'voice-input-btn'
-    btn.innerHTML = '🎤'
+    btn.className = 'voice-input-btn m-touch'
+    btn.innerHTML = icon('mic')
     btn.title = 'Voice input'
     
     btn.onclick = () => {
