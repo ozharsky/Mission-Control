@@ -49,9 +49,9 @@ const discordNotifier = {
         body: JSON.stringify(payload)
       })
       if (res.ok) {
-        console.log('✅ Discord notification sent')
+        console.log('[Discord] Notification sent')
       } else {
-        console.error('❌ Discord webhook failed:', res.status)
+        console.error('[Discord] Webhook failed:', res.status)
       }
     } catch (e) {
       console.error('Discord notify failed:', e)
@@ -86,10 +86,10 @@ const discordNotifier = {
     }
 
     const title = action === 'reassigned' ? 
-      `👤 Task reassigned to ${task.assignee || 'Unassigned'}` :
-      action === 'completed' ? '✅ Task Completed' :
-      action === 'created' ? '🆕 New Task Created' :
-      action === 'updated' ? '📝 Task Updated' :
+      `Task reassigned to ${task.assignee || 'Unassigned'}` :
+      action === 'completed' ? 'Task Completed' :
+      action === 'created' ? 'New Task Created' :
+      action === 'updated' ? 'Task Updated' :
       `Task ${action}`
 
     const embed = {
@@ -98,17 +98,17 @@ const discordNotifier = {
       color: color,
       fields: [
         { 
-          name: '📋 Board', 
+          name: 'Board', 
           value: board.charAt(0).toUpperCase() + board.slice(1), 
           inline: true 
         },
         { 
-          name: '📊 Status', 
+          name: 'Status', 
           value: (task.status || 'todo').charAt(0).toUpperCase() + (task.status || 'todo').slice(1), 
           inline: true 
         },
         { 
-          name: '👤 Assignee', 
+          name: 'Assignee', 
           value: task.assignee || 'Unassigned', 
           inline: true 
         }
@@ -126,12 +126,12 @@ const discordNotifier = {
       const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
       
       let dueText = task.dueDate
-      if (diffDays < 0) dueText += ' 🔴 OVERDUE'
-      else if (diffDays === 0) dueText += ' ⏰ TODAY'
-      else if (diffDays <= 3) dueText += ` ⚠️ ${diffDays} days`
+      if (diffDays < 0) dueText += ' [OVERDUE]'
+      else if (diffDays === 0) dueText += ' [TODAY]'
+      else if (diffDays <= 3) dueText += ` [${diffDays} days]`
       
       embed.fields.push({
-        name: '📅 Due Date',
+        name: 'Due Date',
         value: dueText,
         inline: true
       })
@@ -140,7 +140,7 @@ const discordNotifier = {
     // Add tags if present
     if (task.tags && task.tags.length > 0) {
       embed.fields.push({
-        name: '🏷️ Tags',
+        name: 'Tags',
         value: task.tags.join(', '),
         inline: true
       })
@@ -158,7 +158,7 @@ export const syncStorage = {
       try {
         const data = await this.loadFromFirebase()
         if (data) {
-          console.log('✅ Loaded from Firebase')
+          console.log('[Sync] Loaded from Firebase')
           return data
         }
       } catch (e) {
@@ -171,7 +171,7 @@ export const syncStorage = {
       try {
         const data = await this.loadFromGitHub()
         if (data) {
-          console.log('✅ Loaded from GitHub')
+          console.log('[Sync] Loaded from GitHub')
           return data
         }
       } catch (e) {
@@ -225,14 +225,14 @@ export const syncStorage = {
   async loadFromGitHub() {
     const { token, gistId } = CONFIG.github
     if (!gistId || gistId.length < 20) {
-      console.warn('⚠️ Invalid Gist ID format')
+      console.warn('[Sync] Invalid Gist ID format')
       return null
     }
     const res = await fetch(`https://api.github.com/gists/${gistId}`, {
       headers: { 'Authorization': `token ${token}` }
     })
     if (res.status === 404) {
-      console.warn('⚠️ GitHub Gist not found. Check your Gist ID.')
+      console.warn('[Sync] GitHub Gist not found. Check your Gist ID.')
       return null
     }
     if (!res.ok) throw new Error(`GitHub error: ${res.status}`)
@@ -244,7 +244,7 @@ export const syncStorage = {
   async saveToGitHub(data) {
     const { token, gistId } = CONFIG.github
     if (!gistId || gistId.length < 32) {
-      console.warn('⚠️ Cannot save: Invalid Gist ID')
+      console.warn('[Sync] Cannot save: Invalid Gist ID')
       return false
     }
     const res = await fetch(`https://api.github.com/gists/${gistId}`, {
@@ -262,11 +262,11 @@ export const syncStorage = {
       })
     })
     if (res.status === 404) {
-      console.warn('⚠️ Cannot save to GitHub: Gist not found')
+      console.warn('[Sync] Cannot save to GitHub: Gist not found')
       return false
     }
     if (!res.ok) {
-      console.error('❌ GitHub API error:', res.status)
+      console.error('[Sync] GitHub API error:', res.status)
       return false
     }
     return true
@@ -274,7 +274,7 @@ export const syncStorage = {
   
   // Start periodic sync (placeholder for future real-time sync)
   startSync(interval = 30000) {
-    console.log('🔄 Sync started (interval:', interval, 'ms)')
+    console.log('[Sync] Started (interval:', interval, 'ms)')
     // Placeholder - could implement WebSocket or polling here
     return setInterval(async () => {
       // Optional: Periodic background sync
@@ -300,7 +300,7 @@ export const syncStorage = {
       return null
     }
 
-    console.log('🔄 Discord polling started (interval:', interval, 'ms)')
+    console.log('[Discord] Polling started (interval:', interval, 'ms)')
     
     // Load last checked state from localStorage to survive page refreshes
     const STORAGE_KEY = 'discordPollingLastState'
@@ -311,7 +311,7 @@ export const syncStorage = {
       if (saved) {
         const parsed = JSON.parse(saved)
         lastCheckedPriorities = new Map(Object.entries(parsed))
-        console.log('📦 Loaded', lastCheckedPriorities.size, 'tracked tasks from storage')
+        console.log('[Discord] Loaded', lastCheckedPriorities.size, 'tracked tasks from storage')
       }
     } catch (e) {
       console.error('Failed to load polling state:', e)
@@ -332,7 +332,7 @@ export const syncStorage = {
       if (data && data.priorities) {
         // If we have no saved state, populate without notifying
         if (lastCheckedPriorities.size === 0) {
-          console.log('🆕 Initial load - tracking', data.priorities.length, 'tasks without notifications')
+          console.log('[Discord] Initial load - tracking', data.priorities.length, 'tasks without notifications')
           data.priorities.forEach(p => {
             lastCheckedPriorities.set(String(p.id), { 
               status: p.status, 
@@ -360,22 +360,22 @@ export const syncStorage = {
 
           if (!lastState) {
             // New task created
-            console.log('🆕 New task detected:', priority.text)
+            console.log('[Discord] New task detected:', priority.text)
             await discordNotifier.notifyTaskChange(priority, 'created')
             hasChanges = true
           } else if (lastState.completed !== priority.completed && priority.completed) {
             // Task completed
-            console.log('✅ Task completed:', priority.text)
+            console.log('[Discord] Task completed:', priority.text)
             await discordNotifier.notifyTaskChange(priority, 'completed')
             hasChanges = true
           } else if (lastState.status !== priority.status) {
             // Task status changed
-            console.log('📝 Task updated:', priority.text)
+            console.log('[Discord] Task updated:', priority.text)
             await discordNotifier.notifyTaskChange(priority, 'updated')
             hasChanges = true
           } else if (lastState.assignee !== priority.assignee) {
             // Task reassigned
-            console.log('👤 Task reassigned:', priority.text, '→', priority.assignee)
+            console.log('[Discord] Task reassigned:', priority.text, '→', priority.assignee)
             await discordNotifier.notifyTaskChange(priority, 'reassigned')
             hasChanges = true
           }
