@@ -1,5 +1,6 @@
 import { store } from '../state/store.js'
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 export function createKanban(containerId, options = {}) {
   const container = document.getElementById(containerId)
@@ -88,7 +89,7 @@ export function createKanban(containerId, options = {}) {
     if (columnItems.length === 0) {
       return `
         <div class="empty-state" style="padding: 2rem 1rem;">
-          <div class="empty-state-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          <div class="empty-state-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">${icon('clipboard-list', 'empty-icon')}</div>
           <div style="font-size: 0.875rem; color: var(--text-muted);">No items</div>
         </div>
       `
