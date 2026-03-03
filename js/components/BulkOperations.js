@@ -3,6 +3,7 @@
 
 import { Toast } from './Toast.js'
 import { confirmDelete } from './ConfirmDialog.js'
+import { icon } from '../utils/icons.js'
 
 export function createBulkOperations(options) {
   const {
@@ -35,7 +36,7 @@ export function createBulkOperations(options) {
             </button>
           `).join('')}
           
-          <button class="btn btn-sm btn-text" onclick="bulkCancel()">
+          <button class="btn btn-sm btn-text m-touch" onclick="bulkCancel()">
             Cancel
           </button>
         </div>
@@ -48,11 +49,11 @@ export function createBulkOperations(options) {
     
     const isSelected = selectedIds.has(item.id)
     return `
-      <div class="bulk-checkbox-wrapper"
+      <div class="bulk-checkbox-wrapper m-touch"
            onclick="event.stopPropagation(); bulkToggleItem(${item.id})"
       >
         <div class="bulk-checkbox ${isSelected ? 'checked' : ''}">
-          ${isSelected ? '✓' : ''}
+          ${isSelected ? icon('check', 'bulk-check-icon') : ''}
         </div>
       </div>
     `
@@ -143,7 +144,7 @@ export const bulkActions = {
   delete: (storeKey, onComplete, undoManager) => ({
     id: 'delete',
     label: 'Delete',
-    icon: '🗑️',
+    icon: icon('trash-2'),
     variant: 'danger',
     handler: async (ids, items) => {
       const confirmed = await confirmDelete(`${ids.length} items`)
@@ -177,7 +178,7 @@ export const bulkActions = {
   changeStatus: (storeKey, status, onComplete, undoManager) => ({
     id: 'changeStatus',
     label: `Mark ${status}`,
-    icon: '✓',
+    icon: icon('check'),
     variant: 'primary',
     handler: (ids, items) => {
       const allItems = store.getState()[storeKey] || []
@@ -219,7 +220,7 @@ export const bulkActions = {
   export: (items, filename) => ({
     id: 'export',
     label: 'Export',
-    icon: '📤',
+    icon: icon('upload'),
     handler: (ids, selectedItems) => {
       const data = JSON.stringify(selectedItems, null, 2)
       const blob = new Blob([data], { type: 'application/json' })
