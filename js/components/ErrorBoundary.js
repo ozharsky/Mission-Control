@@ -1,6 +1,7 @@
 // Error Boundary - Catches and displays errors gracefully
 
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 class ErrorBoundary {
   constructor() {
@@ -146,11 +147,11 @@ class ErrorBoundary {
   createErrorUI(error, onRetry) {
     return `
       <div class="error-boundary">
-        <div class="error-icon">⚠️</div>
+        <div class="error-icon">${icon('alert-triangle', 'error-icon-svg')}</div>
         <div class="error-title">Something went wrong</div>
         <div class="error-message">${this.escapeHtml(error.message)}</div>
-        ${onRetry ? `<button class="btn btn-primary" onclick="${onRetry}()">Try Again</button>` : ''}
-        <button class="btn btn-secondary" onclick="location.reload()">Reload Page</button>
+        ${onRetry ? `<button class="m-touch m-btn m-btn-primary" onclick="${onRetry}()">Try Again</button>` : ''}
+        <button class="m-touch m-btn m-btn-secondary" onclick="location.reload()">Reload Page</button>
       </div>
     `
   }
