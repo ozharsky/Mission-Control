@@ -3,6 +3,7 @@
 
 import { KEYBOARD_SHORTCUTS } from '../utils/constants.js'
 import { lockBodyScroll, unlockBodyScroll } from '../utils/modalScrollLock.js'
+import { icon } from '../utils/icons.js'
 
 export function createShortcutsHelp() {
   const existing = document.getElementById('shortcuts-help-modal')
@@ -17,8 +18,8 @@ export function createShortcutsHelp() {
   modal.innerHTML = `
     <div class="modal" style="max-width: 600px;">
       <div class="modal-header">
-        <div class="modal-title">⌨️ Keyboard Shortcuts</div>
-        <button class="modal-close" onclick="closeShortcutsHelp()">✕</button>
+        <div class="modal-title">${icon('keyboard')} Keyboard Shortcuts</div>
+        <button class="modal-close m-touch" onclick="closeShortcutsHelp()">${icon('x')}</button>
       </div>
       
       <div class="modal-body">
@@ -75,7 +76,7 @@ export function createShortcutsHelp() {
         </div>
         
         <div class="shortcuts-tip">
-          💡 Press <strong>?</strong> anytime to show this help
+          ${icon('lightbulb')} Press <strong>?</strong> anytime to show this help
         </div>
         
       </div>
@@ -122,8 +123,8 @@ export function addShortcutIndicator(element, key) {
 // Create floating help button
 export function createShortcutsButton() {
   const btn = document.createElement('button')
-  btn.className = 'shortcuts-floating-btn'
-  btn.innerHTML = '⌨️'
+  btn.className = 'shortcuts-floating-btn m-touch'
+  btn.innerHTML = icon('keyboard')
   btn.title = 'Keyboard Shortcuts (?)'
   btn.onclick = createShortcutsHelp
   
