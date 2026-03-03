@@ -2,6 +2,7 @@
 import { getFirebase } from '../firebase.js'
 import { Toast } from '../components/Toast.js'
 import { loadingStates } from '../components/LoadingStates.js'
+import { getIcon } from './icons.js'
 
 class StorageManager {
   constructor() {
@@ -24,9 +25,9 @@ class StorageManager {
       const firebase = getFirebase()
       if (firebase && firebase.storage) {
         this.storage = firebase.storage
-        console.log('✅ Storage manager initialized')
+        console.log('Storage manager initialized')
       } else {
-        console.log('⚠️ Firebase Storage not available - configure in Settings')
+        console.log('Firebase Storage not available - configure in Settings')
       }
     }, 100)
   }
@@ -257,7 +258,7 @@ class StorageManager {
       container.innerHTML = `
         <div class="file-dropzone" style="border-color: var(--accent-warning);">
           <div class="dropzone-content">
-            <div class="dropzone-icon">⚠️</div>
+            <div class="dropzone-icon">${getIcon('alert-triangle', 32)}</div>
             <div class="dropzone-text">Firebase Storage not configured</div>
             <div class="dropzone-hint">Go to Settings → Firebase to configure storage</div>
           </div>
@@ -270,7 +271,7 @@ class StorageManager {
     dropzone.className = 'file-dropzone'
     dropzone.innerHTML = `
       <div class="dropzone-content">
-        <div class="dropzone-icon">📁</div>
+        <div class="dropzone-icon">${getIcon('folder-open', 32)}</div>
         <div class="dropzone-text">Drop files here or click to browse</div>
         <div class="dropzone-hint">Max ${this.formatFileSize(this.maxFileSize)} per file</div>
       </div>
@@ -345,7 +346,7 @@ class StorageManager {
     if (!files || files.length === 0) {
       return `
         <div class="file-list-empty">
-          <div class="file-list-empty-icon">📂</div>
+          <div class="file-list-empty-icon">${getIcon('folder-open', 32)}</div>
           <div>No files uploaded yet</div>
         </div>
       `
@@ -365,12 +366,12 @@ class StorageManager {
               </div>
             </div>
             <div class="file-actions">
-              <a href="${file.url}" target="_blank" class="btn btn-sm btn-text" title="View">
-                👁️
+              <a href="${file.url}" target="_blank" class="btn btn-sm btn-text m-touch" title="View">
+                ${getIcon('eye', 16)}
               </a>
               ${options.allowDelete !== false ? `
-                <button class="btn btn-sm btn-text btn-danger" onclick="storageManager.deleteFile('${file.path}')" title="Delete">
-                  🗑️
+                <button class="btn btn-sm btn-text btn-danger m-touch" onclick="storageManager.deleteFile('${file.path}')" title="Delete">
+                  ${getIcon('trash-2', 16)}
                 </button>
               ` : ''}
             </div>
@@ -384,12 +385,12 @@ class StorageManager {
    * Get icon for file type
    */
   getFileIcon(type) {
-    if (type.startsWith('image/')) return '🖼️'
-    if (type === 'application/pdf') return '📄'
-    if (type.includes('word')) return '📝'
-    if (type.includes('excel') || type.includes('sheet')) return '📊'
-    if (type.startsWith('text/')) return '📃'
-    return '📎'
+    if (type.startsWith('image/')) return getIcon('image', 20)
+    if (type === 'application/pdf') return getIcon('file-text', 20)
+    if (type.includes('word')) return getIcon('file-text', 20)
+    if (type.includes('excel') || type.includes('sheet')) return getIcon('bar-chart-2', 20)
+    if (type.startsWith('text/')) return getIcon('file', 20)
+    return getIcon('paperclip', 20)
   }
 }
 
