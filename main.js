@@ -85,7 +85,7 @@ window.toast = Toast  // Global toast access
 const isLowPower = isLowPowerDevice()
 if (isLowPower) {
   document.documentElement.classList.add('reduce-motion')
-  console.log('📱 Low-power device detected: animations reduced')
+  console.log('[Mobile] Low-power device detected: animations reduced')
 }
 
 const DEMO_DATA = {
@@ -484,10 +484,10 @@ if (document.readyState === 'loading') {
       console.error('App initialization failed:', err)
       document.body.innerHTML = `
         <div style="padding: 2rem; text-align: center; color: var(--text-primary);">
-          <h2>⚠️ Failed to load Mission Control</h2>
+          <h2>Failed to load Mission Control</h2>
           <p>Please refresh the page or clear your browser cache.</p>
-          <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); border: none; border-radius: var(--radius-md); color: white; cursor: pointer;">
-            🔄 Reload Page
+          <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); border: none; border-radius: var(--radius-md); color: white; cursor: pointer;" class="m-touch">
+            Reload Page
           </button>
         </div>
       `
@@ -498,10 +498,10 @@ if (document.readyState === 'loading') {
     console.error('App initialization failed:', err)
     document.body.innerHTML = `
       <div style="padding: 2rem; text-align: center; color: var(--text-primary);">
-        <h2>⚠️ Failed to load Mission Control</h2>
+        <h2>Failed to load Mission Control</h2>
         <p>Please refresh the page or clear your browser cache.</p>
-        <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); border: none; border-radius: var(--radius-md); color: white; cursor: pointer;">
-          🔄 Reload Page
+        <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-primary); border: none; border-radius: var(--radius-md); color: white; cursor: pointer;" class="m-touch">
+          Reload Page
         </button>
       </div>
     `
