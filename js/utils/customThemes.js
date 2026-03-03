@@ -169,7 +169,7 @@ class CustomThemeManager {
       btn.innerHTML = `
         <div class="theme-preview" style="background: ${theme.colors.primary}"></div>
         <span>${theme.name}</span>
-        ${theme.isCustom ? '<button class="delete-theme">✕</button>' : ''}
+        ${theme.isCustom ? '<button class="delete-theme m-touch">✕</button>' : ''}
       `
       
       btn.onclick = (e) => {
@@ -192,8 +192,8 @@ class CustomThemeManager {
     
     // Add "Create Custom" button
     const createBtn = document.createElement('button')
-    createBtn.className = 'theme-option create-theme'
-    createBtn.innerHTML = '➕ Create Custom'
+    createBtn.className = 'theme-option create-theme m-touch'
+    createBtn.innerHTML = '<span data-lucide="plus" class="lucide-icon" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"></span> Create Custom'
     createBtn.onclick = () => this.showCreateThemeModal()
     container.appendChild(createBtn)
     
@@ -207,8 +207,8 @@ class CustomThemeManager {
     modal.innerHTML = `
       <div class="modal" style="max-width: 400px;">
         <div class="modal-header">
-          <div class="modal-title">🎨 Create Custom Theme</div>
-          <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+          <div class="modal-title"><span data-lucide="palette" class="lucide-icon" style="width: 18px; height: 18px; vertical-align: middle; margin-right: 6px;"></span> Create Custom Theme</div>
+          <button class="modal-close m-touch" onclick="this.closest('.modal-overlay').remove()">✕</button>
         </div>
         <form class="modal-body" onsubmit="return false">
           <div class="form-group">
@@ -237,8 +237,8 @@ class CustomThemeManager {
         </form>
         
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
-          <button class="btn btn-primary" id="save-theme">Save Theme</button>
+          <button class="btn btn-secondary m-touch" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+          <button class="btn btn-primary m-touch" id="save-theme">Save Theme</button>
         </div>
       </div>
     `
