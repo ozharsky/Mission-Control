@@ -1,6 +1,7 @@
 import { syncStorage } from '../storage/sync.js'
 import { isFirebaseConfigured, isGitHubConfigured, saveFirebaseConfig, saveGitHubConfig } from '../config.js'
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 export function createSettingsModal() {
   const existing = document.getElementById('settingsModal')
@@ -12,14 +13,14 @@ export function createSettingsModal() {
   modal.innerHTML = `
     <div class="modal" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
-        <div class="modal-title">⚙️ Settings</div>
-        <button class="modal-close" onclick="closeSettings()">✕</button>
+        <div class="modal-title">${icon('settings')} Settings</div>
+        <button class="modal-close m-touch" onclick="closeSettings()">${icon('x')}</button>
       </div>
       
       <div class="modal-body">
         <!-- Firebase Configuration -->
         <div style="margin-bottom: 1.5rem;">
-          <div style="font-weight: 600; margin-bottom: 0.75rem; font-size: 1.1rem;">🔥 Firebase Configuration</div>
+          <div style="font-weight: 600; margin-bottom: 0.75rem; font-size: 1.1rem;">${icon('flame')} Firebase Configuration</div>
           <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
             Required for real-time sync, file storage, and cloud backup. 
             <a href="https://console.firebase.google.com" target="_blank" style="color: var(--accent-primary);">Get config from Firebase Console →</a>
@@ -68,7 +69,7 @@ export function createSettingsModal() {
         
         <!-- GitHub Configuration -->
         <div style="margin-bottom: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
-          <div style="font-weight: 600; margin-bottom: 0.75rem; font-size: 1.1rem;">🐙 GitHub Backup (Optional)</div>
+          <div style="font-weight: 600; margin-bottom: 0.75rem; font-size: 1.1rem;">${icon('github')} GitHub Backup (Optional)</div>
           <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 1rem;">
             Backup your data to a GitHub Gist for version control.
           </p>
@@ -86,14 +87,14 @@ export function createSettingsModal() {
         
         <!-- Status -->
         <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: 1.5rem;">
-          <div style="font-weight: 600; margin-bottom: 0.5rem;">📊 Connection Status</div>
+          <div style="font-weight: 600; margin-bottom: 0.5rem;">${icon('bar-chart-2')} Connection Status</div>
           <div style="font-size: 0.875rem; color: var(--text-secondary);">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-              <span>${isFirebaseConfigured() ? '✅' : '❌'}</span>
+              <span>${isFirebaseConfigured() ? icon('check') : icon('x')}</span>
               <span>Firebase: ${isFirebaseConfigured() ? 'Connected' : 'Not configured'}</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span>${isGitHubConfigured() ? '✅' : '❌'}</span>
+              <span>${isGitHubConfigured() ? icon('check') : icon('x')}</span>
               <span>GitHub: ${isGitHubConfigured() ? 'Connected' : 'Not configured'}</span>
             </div>
           </div>
@@ -101,9 +102,9 @@ export function createSettingsModal() {
         
         <!-- Manual Backup -->
         <div style="margin-bottom: 1rem;">
-          <div style="font-weight: 600; margin-bottom: 0.75rem;">💾 Manual Backup</div>
-          <button class="btn btn-secondary" onclick="manualBackup()" style="width: 100%;">
-            💾 Backup Now
+          <div style="font-weight: 600; margin-bottom: 0.75rem;">${icon('save')} Manual Backup</div>
+          <button class="btn btn-secondary m-touch" onclick="manualBackup()" style="width: 100%;">
+            ${icon('save')} Backup Now
           </button>
           <p style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem;">
             Manually save current state to cloud storage
@@ -112,8 +113,8 @@ export function createSettingsModal() {
       </div>
       
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        <button class="btn btn-secondary m-touch" onclick="closeSettings()">Cancel</button>
+        <button class="btn btn-primary m-touch" onclick="saveSettings()">Save Settings</button>
       </div>
     </div>
   `
