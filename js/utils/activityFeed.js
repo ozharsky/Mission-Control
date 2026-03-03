@@ -146,25 +146,30 @@ class ActivityFeed {
   render(containerId, options = {}) {
     const container = document.getElementById(containerId)
     if (!container) return
-    
+
     const activities = this.get(options)
-    
+
     if (activities.length === 0) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon"><i data-lucide="clipboard-list" class="lucide-icon"></i></div>
           <div class="empty-state-title">No activity yet</div>
           <div class="empty-state-desc">Your recent actions will appear here</div>
         </div>
       `
       return
     }
-    
+
     container.innerHTML = `
       <div class="activity-feed">
         ${activities.map(a => this.renderActivity(a)).join('')}
       </div>
     `
+
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons({ attrs: { 'stroke-width': 2 }, nameAttr: 'data-lucide' });
+    }
   }
   
   /**
@@ -190,28 +195,29 @@ class ActivityFeed {
    * Get icon for activity type
    */
   getActivityIcon(activity) {
-    const icons = {
+    const iconMap = {
       priority: {
-        created: '➕',
-        updated: '✏️',
-        completed: '✅',
-        deleted: '🗑️'
+        created: 'plus-circle',
+        updated: 'pencil',
+        completed: 'check-circle',
+        deleted: 'trash-2'
       },
       project: {
-        created: '📁',
-        updated: '📝',
-        moved: '➡️',
-        deleted: '🗑️'
+        created: 'folder-plus',
+        updated: 'file-edit',
+        moved: 'arrow-right',
+        deleted: 'trash-2'
       },
       system: {
-        backup: '💾',
-        import: '📥',
-        export: '📤',
-        sync: '🔄'
+        backup: 'save',
+        import: 'download',
+        export: 'upload',
+        sync: 'refresh-cw'
       }
     }
-    
-    return icons[activity.type]?.[activity.action] || '📌'
+
+    const iconName = iconMap[activity.type]?.[activity.action] || 'pin'
+    return `<i data-lucide="${iconName}" class="lucide-icon activity-type-icon"></i>`
   }
   
   /**
