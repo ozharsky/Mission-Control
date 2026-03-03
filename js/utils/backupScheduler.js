@@ -3,6 +3,7 @@
 import { store } from '../state/store.js'
 import { Toast } from '../components/Toast.js'
 import { dataExport } from './dataTransfer.js'
+import { icon } from './icons.js'
 
 class BackupScheduler {
   constructor() {
@@ -234,7 +235,7 @@ class BackupScheduler {
     
     return `
       <div class="card">
-        <div class="card-title">💾 Auto Backup</div>
+        <div class="card-title">${icon('save', 'm-icon')} Auto Backup</div>
         
         <div class="form-group">
           <label class="form-label">Enable Auto Backup</label>
@@ -274,7 +275,7 @@ class BackupScheduler {
           </div>
         ` : ''}
         
-        <button class="btn btn-primary" onclick="backupScheduler.backupNow()">💾 Backup Now</button>
+        <button class="btn btn-primary m-touch" onclick="backupScheduler.backupNow()">${icon('save', 'm-icon')} Backup Now</button>
       </div>
     `
   }
