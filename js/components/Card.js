@@ -167,8 +167,8 @@ export const StatCard = ({
   if (change !== null) {
     const changeEl = document.createElement('div');
     changeEl.className = `text-xs mt-2 ${changeType === 'positive' ? 'text-success' : changeType === 'negative' ? 'text-danger' : 'text-muted'}`;
-    const arrow = changeType === 'positive' ? '↑' : changeType === 'negative' ? '↓' : '•';
-    changeEl.textContent = `${arrow} ${change}`;
+    const arrowIcon = changeType === 'positive' ? 'trending-up' : changeType === 'negative' ? 'trending-down' : 'minus';
+    changeEl.innerHTML = `<i data-lucide="${arrowIcon}" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> ${change}`;
     body.appendChild(changeEl);
   }
   

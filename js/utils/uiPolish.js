@@ -271,8 +271,8 @@ export function initScrollToTop() {
   
   if (!scrollBtn) {
     scrollBtn = document.createElement('button')
-    scrollBtn.className = 'scroll-to-top'
-    scrollBtn.innerHTML = '↑'
+    scrollBtn.className = 'scroll-to-top m-touch'
+    scrollBtn.innerHTML = '<i data-lucide="chevron-up" style="width: 20px; height: 20px;"></i>'
     scrollBtn.setAttribute('aria-label', 'Scroll to top')
     scrollBtn.style.cssText = `
       position: fixed;
