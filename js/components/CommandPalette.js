@@ -3,6 +3,7 @@
 
 import { store } from '../state/store.js'
 import { createFocusTrap } from '../utils/focusManager.js'
+import { icon } from '../utils/icons.js'
 
 export const commandPalette = {
   isOpen: false,
@@ -123,7 +124,7 @@ export const commandPalette = {
     overlay.innerHTML = `
       <div class="command-palette ${isMobile ? 'command-palette-mobile' : ''}">
         <div class="command-palette-input-wrapper">
-          <span class="command-palette-icon" aria-hidden="true">⌘</span>
+          <span class="command-palette-icon" aria-hidden="true">${icon('command', 'command-palette-cmd-icon')}</span>
           <input type="text" 
                  class="command-palette-input" 
                  placeholder="Type a command or search..."
@@ -131,15 +132,15 @@ export const commandPalette = {
                  spellcheck="false"
                  aria-label="Search commands"
                  id="commandPaletteInput">
-          <button class="command-palette-close" onclick="commandPalette.close()" aria-label="Close command palette">✕</button>
+          <button class="command-palette-close m-touch" onclick="commandPalette.close()" aria-label="Close command palette">${icon('x')}</button>
         </div>
         <div class="command-palette-results" role="listbox" aria-label="Commands">
           ${this.renderCommands()}
         </div>
         <div class="command-palette-footer">
-          <span class="command-hint"><kbd>↑</kbd><kbd>↓</kbd> to navigate</span>
-          <span class="command-hint"><kbd>↵</kbd> to select</span>
-          <span class="command-hint"><kbd>esc</kbd> to close</span>
+          <span class="command-hint">${icon('arrow-up', 'command-hint-icon')} ${icon('arrow-down', 'command-hint-icon')} to navigate</span>
+          <span class="command-hint">${icon('corner-down-left', 'command-hint-icon')} to select</span>
+          <span class="command-hint">esc to close</span>
         </div>
       </div>
     `
@@ -436,9 +437,21 @@ export const commandPalette = {
       }
 
       .command-palette-icon {
-        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
         margin-right: 0.75rem;
         color: var(--text-secondary);
+      }
+
+      .command-palette-icon .lucide-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .command-hint-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+        vertical-align: middle;
       }
 
       .command-palette-input {
@@ -458,13 +471,20 @@ export const commandPalette = {
         background: none;
         border: none;
         color: var(--text-muted);
-        font-size: 1.25rem;
         cursor: pointer;
         padding: 0.5rem;
         margin-left: 0.5rem;
         border-radius: var(--radius-sm);
         transition: all 0.2s;
         display: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .command-palette-close .lucide-icon {
+        width: 1.25rem;
+        height: 1.25rem;
       }
 
       .command-palette-close:hover {
@@ -514,6 +534,7 @@ export const commandPalette = {
         cursor: pointer;
         transition: all 0.15s ease;
         border-left: 3px solid transparent;
+        min-height: 44px;
       }
 
       .command-item:hover,
