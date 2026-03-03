@@ -1,4 +1,5 @@
 import { Toast } from './Toast.js'
+import { icon } from './icons.js'
 
 /**
  * Copy text to clipboard
@@ -7,7 +8,7 @@ export function copyToClipboard(text) {
   if (!text) return
   
   navigator.clipboard.writeText(text).then(() => {
-    Toast.success('📋 Copied to clipboard')
+    Toast.success('Copied to clipboard')
   }).catch(err => {
     console.error('Failed to copy:', err)
     // Fallback for older browsers
@@ -20,7 +21,7 @@ export function copyToClipboard(text) {
     
     try {
       document.execCommand('copy')
-      Toast.success('📋 Copied to clipboard')
+      Toast.success('Copied to clipboard')
     } catch (err) {
       Toast.error('Failed to copy')
     }
@@ -49,7 +50,7 @@ export function openFile(path) {
   const fileUrl = `file://${fullPath}`
   
   window.open(fileUrl, '_blank')
-  Toast.success('📂 Opening file...')
+  Toast.success('Opening file...')
 }
 
 /**
