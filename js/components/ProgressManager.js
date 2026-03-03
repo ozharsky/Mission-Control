@@ -1,5 +1,6 @@
 // Progress Indicator Component
 import { Toast } from './Toast.js'
+import { icon } from '../utils/icons.js'
 
 class ProgressManager {
   constructor() {
@@ -126,19 +127,28 @@ class ProgressManager {
     const isError = operation.status === 'error'
     const isCancelled = operation.status === 'cancelled'
     
+    // Lucide icons for status
+    const statusIcon = isComplete 
+      ? icon('check-circle', 'status-icon status-complete') 
+      : isError 
+        ? icon('x-circle', 'status-icon status-error') 
+        : isCancelled 
+          ? icon('ban', 'status-icon status-cancelled') 
+          : icon('loader', 'status-icon status-running')
+
     el.className = `progress-item ${operation.status}`
     
     el.innerHTML = `
       <div class="progress-header">
-        <div class="progress-title">
-          ${isComplete ? '✅' : isError ? '❌' : isCancelled ? '⛔' : '⏳'} ${escapeHtml(operation.title)}
+        <div class="progress-title m-touch">
+          ${statusIcon} ${escapeHtml(operation.title)}
         </div>
         <div class="progress-meta">
           ${operation.showPercent && !isComplete && !isError ? `
             <span class="progress-percent">${Math.round(operation.progress)}%</span>
           ` : ''}
           ${operation.cancellable && operation.status === 'running' ? `
-            <button class="progress-cancel" onclick="progressManager.cancel('${operation.id}')">✕</button>
+            <button class="progress-cancel m-touch" onclick="progressManager.cancel('${operation.id}')" aria-label="Cancel">${icon('x', 'cancel-icon')}</button>
           ` : ''}
         </div>
       </div>
