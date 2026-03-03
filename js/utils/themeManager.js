@@ -1,6 +1,8 @@
 // Theme Manager
 // Handles dark/light mode with manual toggle
 
+import { icon } from './icons.js';
+
 class ThemeManager {
   constructor() {
     this.currentTheme = this.getStoredTheme() || this.getSystemTheme()
@@ -92,18 +94,18 @@ class ThemeManager {
   // Create theme toggle button
   createToggleButton() {
     const btn = document.createElement('button')
-    btn.className = 'theme-toggle-btn'
+    btn.className = 'theme-toggle-btn m-touch'
     btn.setAttribute('aria-label', 'Toggle theme')
-    btn.innerHTML = this.isDark() ? '☀️' : '🌙'
+    btn.innerHTML = this.isDark() ? icon('sun') : icon('moon')
     
     btn.addEventListener('click', () => {
       const newTheme = this.toggle()
-      btn.innerHTML = newTheme === 'dark' ? '☀️' : '🌙'
+      btn.innerHTML = newTheme === 'dark' ? icon('sun') : icon('moon')
     })
     
     // Listen for theme changes
     window.addEventListener('themechange', (e) => {
-      btn.innerHTML = e.detail.theme === 'dark' ? '☀️' : '🌙'
+      btn.innerHTML = e.detail.theme === 'dark' ? icon('sun') : icon('moon')
     })
     
     return btn
@@ -115,15 +117,15 @@ class ThemeManager {
     container.className = 'theme-selector'
     
     const themes = [
-      { value: 'light', label: '☀️ Light', icon: '☀️' },
-      { value: 'dark', label: '🌙 Dark', icon: '🌙' },
-      { value: 'system', label: '💻 System', icon: '💻' }
+      { value: 'light', label: 'Light', icon: 'sun' },
+      { value: 'dark', label: 'Dark', icon: 'moon' },
+      { value: 'system', label: 'System', icon: 'monitor' }
     ]
     
     themes.forEach(theme => {
       const btn = document.createElement('button')
-      btn.className = `theme-option ${this.currentTheme === theme.value ? 'active' : ''}`
-      btn.innerHTML = `${theme.icon} ${theme.label}`
+      btn.className = `theme-option ${this.currentTheme === theme.value ? 'active' : ''} m-touch`
+      btn.innerHTML = `${icon(theme.icon)} ${theme.label}`
       btn.onclick = () => {
         this.setTheme(theme.value)
         container.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'))
