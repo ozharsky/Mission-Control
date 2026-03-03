@@ -1,6 +1,8 @@
 // Swipe Actions
 // Mobile swipe gestures for cards
 
+import { icon } from './icons.js'
+
 class SwipeActions {
   constructor(element, options = {}) {
     this.element = element
@@ -56,8 +58,8 @@ class SwipeActions {
     
     actions.forEach(action => {
       const btn = document.createElement('button')
-      btn.className = `swipe-action-btn ${action.variant || 'secondary'}`
-      btn.innerHTML = `${action.icon || ''} ${action.label || ''}`
+      btn.className = `swipe-action-btn m-touch ${action.variant || 'secondary'}`
+      btn.innerHTML = `${action.icon || ''} <span>${action.label || ''}</span>`
       btn.onclick = (e) => {
         e.stopPropagation()
         action.onClick()
@@ -166,31 +168,31 @@ export function initSwipeActions(selector, options) {
 export const swipePresets = {
   priority: {
     rightActions: [
-      { icon: '✓', label: 'Done', variant: 'success', onClick: () => {} },
-      { icon: '📌', label: 'Pin', variant: 'primary', onClick: () => {} }
+      { icon: icon('check', 'swipe-icon'), label: 'Done', variant: 'success', onClick: () => {} },
+      { icon: icon('pin', 'swipe-icon'), label: 'Pin', variant: 'primary', onClick: () => {} }
     ],
     leftActions: [
-      { icon: '🗑️', label: 'Delete', variant: 'danger', onClick: () => {} }
+      { icon: icon('trash-2', 'swipe-icon'), label: 'Delete', variant: 'danger', onClick: () => {} }
     ]
   },
   
   project: {
     rightActions: [
-      { icon: '▶️', label: 'Start', variant: 'primary', onClick: () => {} },
-      { icon: '✓', label: 'Done', variant: 'success', onClick: () => {} }
+      { icon: icon('play', 'swipe-icon'), label: 'Start', variant: 'primary', onClick: () => {} },
+      { icon: icon('check', 'swipe-icon'), label: 'Done', variant: 'success', onClick: () => {} }
     ],
     leftActions: [
-      { icon: '🗑️', label: 'Delete', variant: 'danger', onClick: () => {} }
+      { icon: icon('trash-2', 'swipe-icon'), label: 'Delete', variant: 'danger', onClick: () => {} }
     ]
   },
   
   lead: {
     rightActions: [
-      { icon: '✉️', label: 'Email', variant: 'primary', onClick: () => {} },
-      { icon: '✓', label: 'Qualify', variant: 'success', onClick: () => {} }
+      { icon: icon('mail', 'swipe-icon'), label: 'Email', variant: 'primary', onClick: () => {} },
+      { icon: icon('check', 'swipe-icon'), label: 'Qualify', variant: 'success', onClick: () => {} }
     ],
     leftActions: [
-      { icon: '🗑️', label: 'Delete', variant: 'danger', onClick: () => {} }
+      { icon: icon('trash-2', 'swipe-icon'), label: 'Delete', variant: 'danger', onClick: () => {} }
     ]
   }
 }
