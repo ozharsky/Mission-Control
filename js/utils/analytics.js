@@ -439,7 +439,7 @@ class Analytics {
     modal.innerHTML = `
       <div class="modal" style="max-width: 600px;">
         <div class="modal-header">
-          <div class="modal-title">📊 Analytics Dashboard</div>
+          <div class="modal-title"><span data-lucide="bar-chart-3" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 0.5rem;"></span>Analytics Dashboard</div>
           <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
         </div>
         <div class="modal-body">
@@ -475,8 +475,8 @@ class Analytics {
         </div>
         
         <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="analytics.exportData()">📥 Export</button>
-          <button class="btn btn-danger" onclick="analytics.clearData(); this.closest('.modal-overlay').remove()">🗑️ Clear</button>
+          <button class="btn btn-secondary m-touch" onclick="analytics.exportData()"><span data-lucide="download" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 0.25rem;"></span>Export</button>
+          <button class="btn btn-danger m-touch" onclick="analytics.clearData(); this.closest('.modal-overlay').remove()"><span data-lucide="trash-2" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 0.25rem;"></span>Clear</button>
         </div>
       </div>
     `
@@ -486,6 +486,11 @@ class Analytics {
     }
     
     document.body.appendChild(modal)
+    
+    // Initialize Lucide icons
+    if (window.lucide) {
+      window.lucide.createIcons()
+    }
   }
 }
 
