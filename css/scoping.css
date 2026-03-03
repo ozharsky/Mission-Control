@@ -169,6 +169,49 @@
   --list-gap: 0.75rem;
 }
 
+/* Completed Priority Styles */
+.mc-priorities .priority-card.completed {
+  opacity: 0.6;
+  background: var(--bg-tertiary);
+}
+
+.mc-priorities .priority-card.completed .priority-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.mc-priorities .priority-card.completed .priority-due {
+  color: var(--text-muted);
+}
+
+.mc-priorities .priority-list-item.completed {
+  opacity: 0.6;
+  background: var(--bg-tertiary);
+}
+
+.mc-priorities .priority-list-item.completed .priority-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Due Date Color Coding */
+.mc-priorities .priority-due.overdue,
+.mc-priorities .priority-list-meta .overdue {
+  color: var(--accent-danger);
+  font-weight: 500;
+}
+
+.mc-priorities .priority-due.soon,
+.mc-priorities .priority-list-meta .soon {
+  color: var(--accent-warning);
+  font-weight: 500;
+}
+
+.mc-priorities .priority-due.upcoming,
+.mc-priorities .priority-list-meta .upcoming {
+  color: var(--accent-primary);
+}
+
 /* Containment for performance */
 .mc-contain-layout {
   contain: layout;

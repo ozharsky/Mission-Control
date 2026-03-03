@@ -102,6 +102,8 @@
     border-radius: var(--radius-sm);
     font-size: 0.875rem;
     white-space: nowrap;
+    min-height: 44px;
+    min-width: 44px;
   }
   
   .mobile-tab.active {

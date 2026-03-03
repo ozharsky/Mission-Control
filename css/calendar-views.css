@@ -12,7 +12,7 @@
 
 .view-toggle .btn {
   min-width: 60px;
-  height: 32px;
+  min-height: 44px;
   padding: 0 0.75rem;
   font-size: 0.8125rem;
   border: none;
@@ -353,6 +353,7 @@
 @media (max-width: 768px) {
   .view-toggle .btn {
     min-width: 50px;
+    min-height: 44px;
     padding: 0 0.5rem;
     font-size: 0.75rem;
   }

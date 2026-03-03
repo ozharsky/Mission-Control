@@ -1,6 +1,7 @@
 import { syncStorage } from '../storage/sync.js'
 import { isFirebaseConfigured, isGitHubConfigured, saveFirebaseConfig, saveGitHubConfig } from '../config.js'
 import { toast } from './Toast.js'
+import { store } from '../state/store.js'
 
 export function createSettingsModal() {
   const existing = document.getElementById('settingsModal')

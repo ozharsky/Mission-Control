@@ -1,8 +1,8 @@
 // Extended Keyboard Shortcuts
 // Additional shortcuts for power users
 
-import { store } from './state/store.js'
-import { toast } from './components/Toast.js'
+import { store } from '../state/store.js'
+import { toast } from '../components/Toast.js'
 
 class KeyboardShortcuts {
   constructor() {

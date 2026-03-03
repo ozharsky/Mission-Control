@@ -82,7 +82,7 @@ export function createDocsSection(containerId) {
   }
 
   function render() {
-    const allDocs = store.getState().docs || []
+    const allDocs = store.getState().documents || []
     const docs = getFilteredDocs(allDocs)
 
     // Get category counts
@@ -222,7 +222,7 @@ export function createDocsSection(containerId) {
         container.dataset.initialized = 'true'
         const uploader = createFileUploader({
           onUpload: (fileData) => {
-            const docs = store.get('docs') || []
+            const docs = store.get('documents') || []
             docs.push({
               id: fileData.id,
               name: fileData.name,
@@ -233,7 +233,7 @@ export function createDocsSection(containerId) {
               size: fileData.size,
               data: fileData.data
             })
-            store.set('docs', docs)
+            store.set('documents', docs)
             toast.success('Document uploaded', fileData.name)
             closeUploadModal()
           }
@@ -313,14 +313,14 @@ export function createDocsSection(containerId) {
   }
 
   window.openDocument = (id) => {
-    const doc = store.get('docs').find(d => d.id === id)
+    const doc = store.get('documents').find(d => d.id === id)
     if (doc) {
       toast.info(doc.name, `${doc.category} • ${doc.type}`)
     }
   }
 
   store.subscribe((state, path) => {
-    if (!path || path.includes('docs')) render()
+    if (!path || path.includes('documents')) render()
   })
 
   render()
@@ -338,15 +338,15 @@ function escapeHtml(text) {
 window.toggleUploadModal = () => {
   showUploadModal = !showUploadModal
   // Force re-render by updating a dummy state value
-  const docs = store.get('docs') || []
-  store.set('docs', [...docs])
+  const docs = store.get('documents') || []
+  store.set('documents', [...docs])
 }
 
 window.closeUploadModal = (e) => {
   if (e && e.target !== e.currentTarget) return
   showUploadModal = false
-  const docs = store.get('docs') || []
-  store.set('docs', [...docs])
+  const docs = store.get('documents') || []
+  store.set('documents', [...docs])
 }
 
 // Add document modal - opens upload modal

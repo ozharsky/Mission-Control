@@ -284,6 +284,32 @@ export function createDashboardSection(containerId) {
         </div>
       </div>
       
+      <!-- Activity Feed -->
+      <div class="activity-feed">
+        <div class="activity-feed-title">Recent Activity</div>
+        <div class="activity-item">
+          <div class="activity-icon">✓</div>
+          <div class="activity-content">
+            <div class="activity-text">Task completed: Website Redesign</div>
+            <div class="activity-time">2 minutes ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">🖨️</div>
+          <div class="activity-content">
+            <div class="activity-text">Print job started: Vase_Mode_Flower_Pot.gcode</div>
+            <div class="activity-time">15 minutes ago</div>
+          </div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon">📦</div>
+          <div class="activity-content">
+            <div class="activity-text">New order received: #1234</div>
+            <div class="activity-time">1 hour ago</div>
+          </div>
+        </div>
+      </div>
+      
       <!-- Top Priorities -->
       <div class="card priorities-card">
         <div class="card-header">

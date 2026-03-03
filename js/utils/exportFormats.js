@@ -2,6 +2,7 @@
 // Support for multiple export formats
 
 import { formatDate } from './shared.js'
+import { store } from '../state/store.js'
 
 // Export to CSV with proper formatting
 export function exportToCSV(data, options = {}) {
@@ -214,6 +215,3 @@ function escapeHtml(text) {
   div.textContent = text
   return div.innerHTML
 }
-
-// Import store for exporters
-import { store } from '../state/store.js'

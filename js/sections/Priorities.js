@@ -268,8 +268,8 @@ export function createPrioritiesSection(containerId) {
                 </span>
               ` : ''}
               
-              ${priority.dueDate && !alert ? `
-                <span class="priority-due">📅 ${formatDate(priority.dueDate)}</span>
+              ${priority.dueDate ? `
+                <span class="priority-due ${alert?.type || ''}">📅 ${formatDate(priority.dueDate)}</span>
               ` : ''}
               
               ${priority.assignee ? `
@@ -335,7 +335,7 @@ export function createPrioritiesSection(containerId) {
           <div class="priority-list-meta" style="font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 0.5rem; flex-wrap: wrap;"
           >
             ${alert ? `<span class="${alert.type}">${alert.type === 'overdue' ? '🔥' : '⏰'} ${alert.text}</span>` : ''}
-            ${priority.dueDate ? `<span>📅 ${formatDate(priority.dueDate)}</span>` : ''}
+            ${priority.dueDate ? `<span class="${alert?.type || ''}">📅 ${formatDate(priority.dueDate)}</span>` : ''}
             ${priority.assignee ? `<span>${priority.assignee === 'KimiClaw' ? '🤖' : '👤'} ${priority.assignee}</span>` : ''}
             ${priority.board && priority.board !== 'all' ? `<span>${getBoardEmoji(priority.board)} ${priority.board}</span>` : ''}
             ${priority.tags?.length ? `<span>🏷️ ${priority.tags.slice(0, 2).join(', ')}</span>` : ''}

@@ -6,6 +6,7 @@ import { openEventModal } from '../components/EventModal.js'
 let currentDate = new Date()
 let selectedDate = null
 let viewMode = 'month' // 'month', 'week', 'day'
+let showAllHoursFlag = false
 
 export function createCalendarSection(containerId) {
   const container = document.getElementById(containerId)
@@ -181,7 +182,10 @@ export function createCalendarSection(containerId) {
     
     // Determine which hours to show
     let hoursToShow = []
-    if (hoursWithItems.size === 0) {
+    if (showAllHoursFlag) {
+      // Show all 24 hours
+      hoursToShow = Array.from({length: 24}, (_, i) => i)
+    } else if (hoursWithItems.size === 0) {
       // No items - show business hours (8am-6pm)
       hoursToShow = Array.from({length: 11}, (_, i) => i + 8)
     } else {
@@ -603,6 +607,13 @@ export function createCalendarSection(containerId) {
 window.createEventOnDay = (year, month, day) => {
   const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
   openEventModal(null, { date: dateStr })
+}
+
+window.showAllHours = () => {
+  showAllHoursFlag = !showAllHoursFlag
+  // Force re-render by updating store
+  const state = store.getState()
+  store.set('calendarRefresh', Date.now())
 }
 
 function truncateText(text, maxLength) {

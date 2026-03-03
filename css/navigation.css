@@ -340,13 +340,14 @@
   
   .bottom-tab.active {
     color: var(--accent-primary);
+    background: rgba(99, 102, 241, 0.1);
   }
-  
+
   .bottom-tab-icon {
     font-size: 1.25rem;
     transition: transform 0.2s;
   }
-  
+
   .bottom-tab.active .bottom-tab-icon {
     transform: translateY(-2px);
   }

@@ -237,6 +237,9 @@ function showSection(sectionId) {
   }
 }
 
+// Expose showSection globally for section navigation
+window.showSection = showSection
+
 // Initialize app
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init)

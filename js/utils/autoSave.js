@@ -1,7 +1,7 @@
 // Auto-save functionality for forms
 // Saves form data to localStorage periodically
 
-import { toast } from './components/Toast.js'
+import { toast } from '../components/Toast.js'
 
 class AutoSave {
   constructor(options = {}) {

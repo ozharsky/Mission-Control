@@ -97,6 +97,11 @@
   --z-modal: 300;
   --z-popover: 400;
   --z-tooltip: 500;
+
+  /* Aliases for backward compatibility */
+  --border: var(--border-color);
+  --border-hover: var(--border-color-hover);
+  --radius: var(--radius-md);
 }
 
 /* Light Theme */

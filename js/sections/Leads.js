@@ -268,6 +268,11 @@ export function createLeadsSection(containerId) {
     render()
   }
   
+  window.setLeadStatus = (status) => {
+    currentStatus = status
+    render()
+  }
+  
   window.clearBoardFilter = () => {
     store.set('currentBoard', 'all')
     toast.success('Showing all boards')

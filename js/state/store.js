@@ -16,7 +16,7 @@ export const store = {
     leads: [],
     events: [],
     skus: [],
-    docs: [],
+    documents: [],
     notes: [],
     printers: [],
     orders: 0,

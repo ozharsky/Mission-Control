@@ -2,6 +2,7 @@
 // Unified validation for all forms
 
 import { sanitizeInput, sanitizeEmail, sanitizeNumber, sanitizeUrl } from './sanitize.js'
+import { toast } from '../components/Toast.js'
 
 export class FormValidator {
   constructor(schema) {
@@ -319,5 +320,3 @@ export function validateWithToast(data, schemaName) {
   
   return result
 }
-
-import { toast } from '../components/Toast.js'

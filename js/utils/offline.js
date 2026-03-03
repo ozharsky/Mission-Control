@@ -1,5 +1,5 @@
 // Offline Detection and Handling
-import { toast } from './Toast.js'
+import { toast } from '../components/Toast.js'
 
 class OfflineManager {
   constructor() {

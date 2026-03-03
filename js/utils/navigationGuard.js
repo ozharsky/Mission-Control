@@ -1,7 +1,7 @@
 // Navigation Guard
 // Prevents accidental navigation with unsaved changes
 
-import { toast } from './components/Toast.js'
+import { toast } from '../components/Toast.js'
 
 class NavigationGuard {
   constructor() {

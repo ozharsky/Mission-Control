@@ -13,6 +13,7 @@ const STATIC_ASSETS = [
   './js/state/undo.js',
   './js/storage/sync.js',
   './css/variables.css',
+  './css/ui-components.css',
   './css/base.css',
   './css/components.css',
   './css/navigation.css',
@@ -32,6 +33,7 @@ const STATIC_ASSETS = [
   './css/bulk.css',
   './css/tooltips.css',
   './css/scoping.css',
+  './css/mobile-visual.css',
   './favicon.svg',
   './site.webmanifest'
 ]
