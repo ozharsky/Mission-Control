@@ -1,3 +1,5 @@
+import { icon } from './icons.js';
+
 // Time tracking utilities
 export function formatDuration(minutes) {
   if (!minutes || minutes <= 0) return '0h'
@@ -51,7 +53,7 @@ export function renderTimeTracking(priority) {
   return `
     <div style="margin-top: 0.5rem;">
       <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
-        <span>⏱️ ${formatDuration(timeSpent || 0)} / ${formatDuration(timeEstimate || 0)}</span>
+        <span>${icon('clock', 'inline-icon')} ${formatDuration(timeSpent || 0)} / ${formatDuration(timeEstimate || 0)}</span>
         <span>${percent}%</span>
       </div>
       <div style="height: 4px; background: var(--bg-secondary); border-radius: 2px; margin-top: 0.25rem; overflow: hidden;">
@@ -146,7 +148,7 @@ export function renderDependencies(priority, allPriorities) {
   
   return `
     <div style="margin-top: 0.5rem; font-size: 0.75rem; ${isBlocked ? 'color: var(--accent-danger);' : 'color: var(--text-muted);'}">
-      ${isBlocked ? '🔒' : '✓'} Blocked by: ${blockerNames.join(', ')}
+      ${isBlocked ? icon('lock', 'inline-icon') : icon('check', 'inline-icon')} Blocked by: ${blockerNames.join(', ')}
     </div>
   `
 }
