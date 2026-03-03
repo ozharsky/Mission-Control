@@ -1,5 +1,6 @@
 // Markdown Editor Component
 import { sanitizeInput } from '../utils/sanitize.js'
+import { icon } from '../utils/icons.js'
 
 export function createMarkdownEditor(options) {
   const {
@@ -17,38 +18,38 @@ export function createMarkdownEditor(options) {
       <div class="markdown-editor">
         <div class="markdown-toolbar">
           <div class="toolbar-group">
-            <button type="button" class="toolbar-btn ${!isPreview ? 'active' : ''}" onclick="togglePreview()" title="Edit">
-              ✏️ Edit
+            <button type="button" class="toolbar-btn m-touch ${!isPreview ? 'active' : ''}" onclick="togglePreview()" title="Edit">
+              ${icon('pencil', 'toolbar-icon')} Edit
             </button>
-            <button type="button" class="toolbar-btn ${isPreview ? 'active' : ''}" onclick="togglePreview()" title="Preview">
-              👁️ Preview
-            </button>
-          </div>
-          
-          <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('**', '**')" title="Bold">
-              <strong>B</strong>
-            </button>
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('*', '*')" title="Italic">
-              <em>I</em>
-            </button>
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('# ', '')" title="Heading">
-              H
-            </button>
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('- ', '')" title="List">
-              •
-            </button>
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('[]()', '')" title="Link">
-              🔗
-            </button>
-            <button type="button" class="toolbar-btn" onclick="insertMarkdown('\`\`\`\n', '\n\`\`\`')" title="Code">
-              &lt;/&gt;
+            <button type="button" class="toolbar-btn m-touch ${isPreview ? 'active' : ''}" onclick="togglePreview()" title="Preview">
+              ${icon('eye', 'toolbar-icon')} Preview
             </button>
           </div>
           
           <div class="toolbar-group">
-            <button type="button" class="toolbar-btn" onclick="showMarkdownHelp()" title="Help">
-              ❓
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('**', '**')" title="Bold">
+              ${icon('bold', 'toolbar-icon')}
+            </button>
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('*', '*')" title="Italic">
+              ${icon('italic', 'toolbar-icon')}
+            </button>
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('# ', '')" title="Heading">
+              ${icon('heading', 'toolbar-icon')}
+            </button>
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('- ', '')" title="List">
+              ${icon('list', 'toolbar-icon')}
+            </button>
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('[]()', '')" title="Link">
+              ${icon('link', 'toolbar-icon')}
+            </button>
+            <button type="button" class="toolbar-btn m-touch" onclick="insertMarkdown('\`\`\`\n', '\n\`\`\`')" title="Code">
+              ${icon('code', 'toolbar-icon')}
+            </button>
+          </div>
+          
+          <div class="toolbar-group">
+            <button type="button" class="toolbar-btn m-touch" onclick="showMarkdownHelp()" title="Help">
+              ${icon('help-circle', 'toolbar-icon')}
             </button>
           </div>
         </div>
