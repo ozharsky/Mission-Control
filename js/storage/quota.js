@@ -86,7 +86,7 @@ export const quotaManager = {
       localStorage.setItem(key, json)
       
       if (compressed) {
-        console.log('💾 Data saved with compression')
+        console.log('[Storage] Data saved with compression')
       }
       
       return { success: true, compressed }
