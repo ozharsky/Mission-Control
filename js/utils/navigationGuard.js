@@ -89,7 +89,7 @@ class NavigationGuard {
     
     // Show confirmation dialog
     const message = dirtyForms[0].message
-    return confirm(`⚠️ ${message}`)
+    return confirm(`Warning: ${message}`)
   }
   
   // Setup event listeners
