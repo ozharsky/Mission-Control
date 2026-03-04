@@ -2,6 +2,7 @@
 
 import { store } from '../state/store.js'
 import { Toast } from '../components/Toast.js'
+import { icon } from './icons.js'
 
 class PomodoroTimer {
   constructor() {
@@ -175,7 +176,7 @@ class PomodoroTimer {
     
     const status = document.getElementById('pomodoroStatus')
     if (status) {
-      status.textContent = this.isBreak ? '☕ Break' : '🔥 Focus'
+      status.innerHTML = this.isBreak ? `${icon('coffee', 'm-icon-sm')} Break` : `${icon('flame', 'm-icon-sm')} Focus`
     }
     
     // Update page title
