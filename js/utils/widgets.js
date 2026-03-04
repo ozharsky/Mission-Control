@@ -24,14 +24,14 @@ export const weather = {
     const container = document.getElementById(containerId)
     if (!container) return
     
-    container.innerHTML = '<span>🌡️ --°F • Kent, WA</span>'
-    
+    container.innerHTML = '<span>--°F • Kent, WA</span>'
+
     const data = await this.fetch()
-    
+
     if (data) {
       container.innerHTML = `
         <span title="${data.condition}">
-          🌡️ ${data.temp} • ${data.city}
+          ${data.temp} • ${data.city}
         </span>
       `
     }
