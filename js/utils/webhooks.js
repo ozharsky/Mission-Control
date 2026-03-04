@@ -2,6 +2,7 @@
 
 import { store } from '../state/store.js'
 import { Toast } from '../components/Toast.js'
+import { icon } from './icons.js'
 
 class WebhookManager {
   constructor() {
@@ -24,15 +25,15 @@ class WebhookManager {
    */
   getEvents() {
     return [
-      { id: 'priority.created', name: 'Priority Created', icon: '➕' },
-      { id: 'priority.updated', name: 'Priority Updated', icon: '✏️' },
-      { id: 'priority.completed', name: 'Priority Completed', icon: '✅' },
-      { id: 'priority.deleted', name: 'Priority Deleted', icon: '🗑️' },
-      { id: 'project.created', name: 'Project Created', icon: '📁' },
-      { id: 'project.updated', name: 'Project Updated', icon: '📝' },
-      { id: 'project.moved', name: 'Project Moved', icon: '➡️' },
-      { id: 'revenue.updated', name: 'Revenue Updated', icon: '💰' },
-      { id: 'backup.completed', name: 'Backup Completed', icon: '💾' }
+      { id: 'priority.created', name: 'Priority Created', icon: 'plus' },
+      { id: 'priority.updated', name: 'Priority Updated', icon: 'pencil' },
+      { id: 'priority.completed', name: 'Priority Completed', icon: 'check' },
+      { id: 'priority.deleted', name: 'Priority Deleted', icon: 'trash-2' },
+      { id: 'project.created', name: 'Project Created', icon: 'folder' },
+      { id: 'project.updated', name: 'Project Updated', icon: 'file-text' },
+      { id: 'project.moved', name: 'Project Moved', icon: 'arrow-right' },
+      { id: 'revenue.updated', name: 'Revenue Updated', icon: 'dollar-sign' },
+      { id: 'backup.completed', name: 'Backup Completed', icon: 'save' }
     ]
   }
   
@@ -244,12 +245,12 @@ class WebhookManager {
         <div class="card-title">🔗 Webhooks</div>
         
         <div style="margin-bottom: 1rem;">
-          <button class="btn btn-primary" onclick="webhooks.showCreateDialog()">➕ Add Webhook</button>
+          <button class="btn btn-primary m-touch" onclick="webhooks.showCreateDialog()">${icon('plus')} Add Webhook</button>
         </div>
         
         ${this.webhooks.length === 0 ? `
           <div class="empty-state">
-            <div class="empty-state-icon">🔗</div>
+            <div class="empty-state-icon">${icon('link', 'empty-state-lucide-icon')}</div>
             <div class="empty-state-title">No webhooks</div>
             <div class="empty-state-desc">Connect to external services like Zapier, Slack, or your own API</div>
           </div>
@@ -269,17 +270,17 @@ class WebhookManager {
                 <div class="webhook-events">
                   ${w.events.map(e => {
                     const eventInfo = this.getEvents().find(ev => ev.id === e)
-                    return `<span class="webhook-event-tag">${eventInfo?.icon || '🔔'} ${eventInfo?.name || e}</span>`
+                    return `<span class="webhook-event-tag">${eventInfo?.icon ? icon(eventInfo.icon, 'webhook-event-icon') : icon('bell', 'webhook-event-icon')} ${eventInfo?.name || e}</span>`
                   }).join('')}
                 </div>
                 <div class="webhook-stats">
-                  <span>📊 ${w.triggerCount || 0} calls</span>
-                  ${w.errorCount ? `<span style="color: var(--accent-danger);">❌ ${w.errorCount} errors</span>` : ''}
-                  ${w.lastTriggered ? `<span>🕐 ${new Date(w.lastTriggered).toLocaleString()}</span>` : ''}
+                  <span>${icon('bar-chart-2', 'webhook-stat-icon')} ${w.triggerCount || 0} calls</span>
+                  ${w.errorCount ? `<span style="color: var(--accent-danger);">${icon('x', 'webhook-stat-icon')} ${w.errorCount} errors</span>` : ''}
+                  ${w.lastTriggered ? `<span>${icon('clock', 'webhook-stat-icon')} ${new Date(w.lastTriggered).toLocaleString()}</span>` : ''}
                 </div>
                 <div class="webhook-actions">
-                  <button class="btn btn-sm btn-secondary" onclick="webhooks.test('${w.id}')">Test</button>
-                  <button class="btn btn-sm btn-danger" onclick="webhooks.delete('${w.id}')">Delete</button>
+                  <button class="btn btn-sm btn-secondary m-touch" onclick="webhooks.test('${w.id}')">Test</button>
+                  <button class="btn btn-sm btn-danger m-touch" onclick="webhooks.delete('${w.id}')">Delete</button>
                 </div>
               </div>
             `).join('')}
