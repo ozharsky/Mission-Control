@@ -18,17 +18,17 @@ class TestRunner {
   
   // Run all tests
   async runAll() {
-    console.log('🧪 Running tests...\n')
+    console.log('[Test] Running tests...\n')
     
     for (const { name, fn } of this.tests) {
       try {
         await fn()
         this.results.passed++
-        console.log(`✅ ${name}`)
+        console.log(`[PASS] ${name}`)
       } catch (error) {
         this.results.failed++
         this.results.errors.push({ name, error })
-        console.error(`❌ ${name}`)
+        console.error(`[FAIL] ${name}`)
         console.error(`   ${error.message}`)
       }
     }
@@ -39,10 +39,10 @@ class TestRunner {
   
   printSummary() {
     const total = this.results.passed + this.results.failed
-    console.log(`\n📊 Test Results: ${this.results.passed}/${total} passed`)
+    console.log(`\n[Test Results] ${this.results.passed}/${total} passed`)
     
     if (this.results.failed > 0) {
-      console.log(`\n❌ ${this.results.failed} test(s) failed`)
+      console.log(`\n[FAIL] ${this.results.failed} test(s) failed`)
     }
   }
 }

@@ -134,4 +134,4 @@ test('throttle limits execution', async () => {
   assert.equal(count, 2) // Should execute after throttle period
 })
 
-console.log('✅ Unit tests loaded')
+console.log('[Test] Unit tests loaded')
