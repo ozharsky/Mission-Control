@@ -80,12 +80,12 @@ const STATIC_ASSETS = [
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('📦 Service Worker installing...')
+  console.log('[SW] Service Worker installing...')
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('📦 Caching static assets...')
+        console.log('[SW] Caching static assets...')
         // Cache assets individually to handle failures gracefully
         const cachePromises = STATIC_ASSETS.map(async (asset) => {
           try {
@@ -94,11 +94,11 @@ self.addEventListener('install', (event) => {
               await cache.put(asset, response)
               return { asset, success: true }
             } else {
-              console.warn(`⚠️ Failed to cache ${asset}: ${response.status}`)
+              console.warn(`[SW] Failed to cache ${asset}: ${response.status}`)
               return { asset, success: false, status: response.status }
             }
           } catch (err) {
-            console.warn(`⚠️ Error caching ${asset}:`, err.message)
+            console.warn(`[SW] Error caching ${asset}:`, err.message)
             return { asset, success: false, error: err.message }
           }
         })
@@ -107,11 +107,11 @@ self.addEventListener('install', (event) => {
       .then((results) => {
         const successful = results.filter(r => r.success).length
         const failed = results.filter(r => !r.success).length
-        console.log(`✅ Static assets cached: ${successful} success, ${failed} failed`)
+        console.log(`[SW] Static assets cached: ${successful} success, ${failed} failed`)
         return self.skipWaiting()
       })
       .catch(err => {
-        console.error('❌ Cache initialization failed:', err)
+        console.error('[SW] Cache initialization failed:', err)
         // Continue with activation even if caching fails
         return self.skipWaiting()
       })
@@ -120,7 +120,7 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('🚀 Service Worker activating...')
+  console.log('[SW] Service Worker activating...')
   
   event.waitUntil(
     caches.keys()
@@ -129,13 +129,13 @@ self.addEventListener('activate', (event) => {
           cacheNames
             .filter(name => name !== CACHE_NAME)
             .map(name => {
-              console.log('🗑️ Deleting old cache:', name)
+              console.log('[SW] Deleting old cache:', name)
               return caches.delete(name)
             })
         )
       })
       .then(() => {
-        console.log('✅ Service Worker activated')
+        console.log('[SW] Service Worker activated')
         return self.clients.claim()
       })
   )
@@ -337,7 +337,7 @@ self.addEventListener('sync', (event) => {
 })
 
 async function syncData() {
-  console.log('🔄 Syncing data...')
+  console.log('[SW] Syncing data...')
   // This would sync any queued operations
   // Implementation depends on your offline queue system
 }

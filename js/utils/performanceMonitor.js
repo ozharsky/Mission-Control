@@ -25,7 +25,7 @@ export const performanceMonitor = {
     // Monitor layout shifts
     this._observeLayoutShifts()
 
-    console.log('📊 Performance monitoring started')
+    console.log('[Perf] Performance monitoring started')
   },
 
   /**
@@ -132,7 +132,7 @@ export const performanceMonitor = {
         const longTaskObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries()
           entries.forEach(entry => {
-            console.warn('⚠️ Long task detected:', entry.duration.toFixed(2) + 'ms')
+            console.warn('[Perf] Long task detected:', entry.duration.toFixed(2) + 'ms')
             this._recordMetric('longTask', entry.duration)
           })
         })
@@ -293,13 +293,13 @@ export const performanceMonitor = {
    */
   logReport() {
     const report = this.getReport()
-    console.group('📊 Performance Report')
+    console.group('[Perf] Performance Report')
     
     console.group('Core Web Vitals')
     Object.entries(report.webVitals).forEach(([key, value]) => {
-      const emoji = value.rating === 'good' ? '🟢' : value.rating === 'needs-improvement' ? '🟡' : '🔴'
+      const indicator = value.rating === 'good' ? '[OK]' : value.rating === 'needs-improvement' ? '[~]' : '[!]'
       const formatted = key === 'CLS' ? value.value.toFixed(3) : value.value.toFixed(2) + 'ms'
-      console.log(`${emoji} ${key}: ${formatted} (${value.rating})`)
+      console.log(`${indicator} ${key}: ${formatted} (${value.rating})`)
     })
     console.groupEnd()
 
@@ -310,9 +310,9 @@ export const performanceMonitor = {
     console.groupEnd()
 
     console.group('Summary')
-    console.log(`🟢 Good: ${report.summary.good}`)
-    console.log(`🟡 Needs Improvement: ${report.summary['needs-improvement']}`)
-    console.log(`🔴 Poor: ${report.summary.poor}`)
+    console.log(`[OK] Good: ${report.summary.good}`)
+    console.log(`[~] Needs Improvement: ${report.summary['needs-improvement']}`)
+    console.log(`[!] Poor: ${report.summary.poor}`)
     console.groupEnd()
 
     console.groupEnd()
@@ -354,7 +354,7 @@ export const resourceMonitor = {
     const totalSize = resources.reduce((sum, r) => sum + (r.size || 0), 0)
     const totalTime = resources.reduce((sum, r) => sum + r.duration, 0)
 
-    console.group('📦 Resource Loading Summary')
+    console.group('[Perf] Resource Loading Summary')
     console.log(`Total resources: ${resources.length}`)
     console.log(`Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`)
     console.log(`Total time: ${totalTime.toFixed(2)}ms`)
@@ -394,7 +394,7 @@ export const memoryMonitor = {
   log() {
     const usage = this.getUsage()
     if (usage) {
-      console.log(`🧠 Memory: ${(usage.used / 1024 / 1024).toFixed(2)}MB / ${(usage.limit / 1024 / 1024).toFixed(2)}MB (${usage.percent}%)`)
+      console.log(`[Mem] Memory: ${(usage.used / 1024 / 1024).toFixed(2)}MB / ${(usage.limit / 1024 / 1024).toFixed(2)}MB (${usage.percent}%)`)
     }
   }
 }

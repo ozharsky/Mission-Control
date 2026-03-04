@@ -78,46 +78,46 @@ export async function diagnoseDatabaseConnection() {
   }
   
   // Print results
-  console.log('🔍 Database Connection Diagnostics')
+  console.log('[DB] Database Connection Diagnostics')
   console.log('====================================')
   console.log('Timestamp:', results.timestamp)
   console.log('')
-  console.log('📦 LocalStorage Config:')
-  console.log('  - Firebase URL:', results.localStorage.hasFirebaseUrl ? '✅' : '❌')
-  console.log('  - Firebase Secret:', results.localStorage.hasFirebaseSecret ? '✅' : '❌')
-  console.log('  - GitHub Token:', results.localStorage.hasGitHubToken ? '✅' : '❌')
-  console.log('  - Gist ID:', results.localStorage.hasGistId ? '✅' : '❌')
+  console.log('[CFG] LocalStorage Config:')
+  console.log('  - Firebase URL:', results.localStorage.hasFirebaseUrl ? 'YES' : 'NO')
+  console.log('  - Firebase Secret:', results.localStorage.hasFirebaseSecret ? 'YES' : 'NO')
+  console.log('  - GitHub Token:', results.localStorage.hasGitHubToken ? 'YES' : 'NO')
+  console.log('  - Gist ID:', results.localStorage.hasGistId ? 'YES' : 'NO')
   console.log('')
-  console.log('🔥 Firebase:')
-  console.log('  - Configured:', results.firebase.configured ? '✅' : '❌')
-  console.log('  - Connected:', results.firebase.connected ? '✅' : '❌')
+  console.log('[FB] Firebase:')
+  console.log('  - Configured:', results.firebase.configured ? 'YES' : 'NO')
+  console.log('  - Connected:', results.firebase.connected ? 'YES' : 'NO')
   if (results.firebase.error) console.log('  - Error:', results.firebase.error)
   console.log('')
-  console.log('🐙 GitHub:')
-  console.log('  - Configured:', results.github.configured ? '✅' : '❌')
-  console.log('  - Connected:', results.github.connected ? '✅' : '❌')
+  console.log('[GH] GitHub:')
+  console.log('  - Configured:', results.github.configured ? 'YES' : 'NO')
+  console.log('  - Connected:', results.github.connected ? 'YES' : 'NO')
   if (results.github.error) console.log('  - Error:', results.github.error)
   console.log('')
-  console.log('💾 Local Data:')
-  console.log('  - Has Data:', results.dataStatus.hasLocalData ? '✅' : '❌')
+  console.log('[Data] Local Data:')
+  console.log('  - Has Data:', results.dataStatus.hasLocalData ? 'YES' : 'NO')
   console.log('  - Size:', results.dataStatus.localDataSize)
   console.log('  - Priorities:', results.dataStatus.prioritiesCount)
   console.log('  - Projects:', results.dataStatus.projectsCount)
   console.log('')
   
   // Recommendations
-  console.log('📋 Recommendations:')
+  console.log('[INFO] Recommendations:')
   if (!results.firebase.configured && !results.github.configured) {
-    console.log('  ⚠️ No cloud storage configured. Go to Settings and add Firebase or GitHub credentials.')
+    console.log('  [!] No cloud storage configured. Go to Settings and add Firebase or GitHub credentials.')
   }
   if (results.firebase.configured && !results.firebase.connected) {
-    console.log('  ⚠️ Firebase configured but not connecting. Check your URL and secret.')
+    console.log('  [!] Firebase configured but not connecting. Check your URL and secret.')
   }
   if (results.github.configured && !results.github.connected) {
-    console.log('  ⚠️ GitHub configured but not connecting. Check your token and Gist ID.')
+    console.log('  [!] GitHub configured but not connecting. Check your token and Gist ID.')
   }
   if (!results.dataStatus.hasLocalData) {
-    console.log('  ⚠️ No local data found. You may need to reload the page or add some data.')
+    console.log('  [!] No local data found. You may need to reload the page or add some data.')
   }
   
   return results
@@ -126,5 +126,5 @@ export async function diagnoseDatabaseConnection() {
 // Auto-run on load
 if (typeof window !== 'undefined') {
   window.diagnoseDatabase = diagnoseDatabaseConnection
-  console.log('💡 Run diagnoseDatabase() in console to check database connection')
+  console.log('[TIP] Run diagnoseDatabase() in console to check database connection')
 }

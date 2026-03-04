@@ -172,4 +172,4 @@ Object.defineProperty(window, 'showSection', {
   set(fn) { mc.showSection = fn }
 })
 
-console.log('✅ Mission Control namespace initialized')
+console.log('[MC] Mission Control namespace initialized')
