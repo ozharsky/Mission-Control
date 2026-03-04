@@ -362,5 +362,5 @@ export function initMobileInteractions() {
     }
   })
   
-  console.log('📱 Mobile interactions initialized')
+  console.log('Mobile interactions initialized')
 }
