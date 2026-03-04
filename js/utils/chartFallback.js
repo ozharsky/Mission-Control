@@ -1,6 +1,8 @@
 // Chart.js Fallback
 // Provides placeholder when Chart.js fails to load
 
+import { icon } from './icons.js';
+
 export function createChartFallback(canvas, data, options = {}) {
   const ctx = canvas.getContext('2d')
   const { width, height } = canvas
@@ -71,11 +73,11 @@ export function showOfflineChartMessage(container) {
       text-align: center;
       padding: 2rem;
     ">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+      <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent-primary);">${icon('bar-chart-2', 'offline-chart-icon')}</div>
       <h3>Charts Unavailable Offline</h3>
       <p>Connect to the internet to view charts.</p>
-      <button class="btn btn-secondary" onclick="window.location.reload()">
-        🔄 Retry
+      <button class="btn btn-secondary m-touch" onclick="window.location.reload()">
+        ${icon('refresh-cw', 'btn-icon')} Retry
       </button>
     </div>
   `
