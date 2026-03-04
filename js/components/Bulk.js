@@ -315,7 +315,7 @@ class BulkManager {
         <div class="bulk-checkbox ${isChecked ? 'checked' : ''}" 
              data-id="${id}" 
              onclick="bulk.toggleSelection(${id})">
-          ${isChecked ? '✓' : ''}
+          ${isChecked ? icon('check', 'icon-xs') : ''}
         </div>
       </div>
     `
